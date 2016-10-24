@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
 import bsu.command.AbsCommand;
 import bsu.command.CommandList;
 import dto.UserDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
 
 /**
  * Servlet implementation class Servlet

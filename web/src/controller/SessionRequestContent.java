@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import bsu.command.AbsCommand;
 import bsu.command.CommandList;
-import resources.MessageManager;
+import managers.MessageManager;
 /**
  * Изоляция запросов для передачи в bsu
  */

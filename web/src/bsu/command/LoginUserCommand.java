@@ -9,9 +9,9 @@ import controller.SessionRequestContent;
 import dao.UserDAO;
 import dto.Account;
 import dto.UserDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
-import resources.PoolConnection;
+import managers.ConfigurationManager;
+import managers.MessageManager;
+import utDao.PoolConnection;
 import utils.org.mindrot.jbcrypt.BCrypt;
 
 /** Login */

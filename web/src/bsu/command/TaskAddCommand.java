@@ -10,9 +10,9 @@ import dao.TaskMetaDAO;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
-import resources.PoolConnection;
+import managers.ConfigurationManager;
+import managers.MessageManager;
+import utDao.PoolConnection;
 
 public class TaskAddCommand extends AbsCommand {
 	private static final String POST_TITLE = "titleTask";

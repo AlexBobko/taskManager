@@ -6,8 +6,8 @@ import controller.SessionRequestContent;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
 
 /** Task set checking status */
 public class TaskInCheckingCommand extends AbsCommand {

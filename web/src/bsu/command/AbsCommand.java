@@ -13,7 +13,7 @@ import dao.TaskDAO;
 import dao.TaskMetaDAO;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.PoolConnection;
+import utDao.PoolConnection;
 
 /** AbstractCommand */
 public abstract class AbsCommand {

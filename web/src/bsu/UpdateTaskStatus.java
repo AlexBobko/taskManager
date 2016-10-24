@@ -11,7 +11,7 @@ import dao.TaskDAO;
 import dao.TaskMetaDAO;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.PoolConnection;
+import utDao.PoolConnection;
 
 public class UpdateTaskStatus {
 	

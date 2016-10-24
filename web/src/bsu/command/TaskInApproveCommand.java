@@ -6,8 +6,8 @@ import controller.SessionRequestContent;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
 
 /** Set task status 2 */
 public class TaskInApproveCommand extends AbsCommand {
