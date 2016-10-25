@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 /**ConfigurationManager*/
 public class ConfigurationManager {
 
-	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources/pageconfig");
+	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("pageconfig");
 
 	private ConfigurationManager() {
 	}

@@ -1,45 +1,38 @@
-package bsu.command;
-
-import java.text.SimpleDateFormat;
+package command;
 
 import controller.SessionRequestContent;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
-import managers.MessageManager;
+import resources.ConfigurationManager;
+import resources.MessageManager;
 
-/**set task status 6 (ready) */
-public class TaskReadyCommand extends AbsCommand {
+public class ViewTaskDetailCommand extends AbsCommand {
+
+	final public static String TASK  = "curTask"; 
+	final public static String TASK_META  = "curTaskMeta"; 
 	private String page;
 	private StringBuffer message;
-	private boolean b;
 
 	@Override
 	public String execute(SessionRequestContent content) {
 		message = new StringBuffer();
-		b = false;
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			int taskId = (int) Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
+//			TaskDTO task = new TaskDTO (); 
 			TaskDTO task = account.getCurrentTasks().get(taskId);
-			SimpleDateFormat dateFormat = account.getDateFormat();
-			meta.setStatusId(6);// устанавливаем статус
-			b = updateTaskMeta(meta, task, dateFormat);
-			if (b) {
-				page = ConfigurationManager.getProperty("path.page.user");
-				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());
-				System.out.println(meta.toString());
-			}
+//			SimpleDateFormat dateFormat = account.getDateFormat();
 			content.getSessionAttributes().put(ACCOUNT, account);
+			content.getSessionAttributes().put(TASK, task);
+			content.getSessionAttributes().put(TASK_META, meta);
+			page = ConfigurationManager.getProperty("path.page.task");
 			// System.out.println("addNewTask: " + meta.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
-			message = message.append(MessageManager.getProperty("task.update.false"));
-		}
-		if (page == null) {
-			page = ConfigurationManager.getProperty("path.page.login");
+			message = message.append(MessageManager.getProperty("task.detail.false"));
+			page = ConfigurationManager.getProperty("path.page.user");
 		}
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;

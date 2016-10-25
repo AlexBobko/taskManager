@@ -1,4 +1,4 @@
-package bsu.command;
+package command;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -9,9 +9,6 @@ import controller.SessionRequestContent;
 import dao.UserDAO;
 import dto.Account;
 import dto.UserDTO;
-import managers.ConfigurationManager;
-import managers.MessageManager;
-import utDao.PoolConnection;
 import utils.org.mindrot.jbcrypt.BCrypt;
 
 /** Login */

@@ -1,8 +1,8 @@
-package bsu.command;
+package command;
 
 import controller.SessionRequestContent;
 
-public class UpdateTaskCommand  extends AbsCommand{
+public class ViewTaskHistoryCommand   extends AbsCommand {
 
 	@Override
 	public String execute(SessionRequestContent content) {

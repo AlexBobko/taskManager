@@ -1,4 +1,4 @@
-package tmp;
+package main.java.tmp;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

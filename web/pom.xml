@@ -29,14 +29,14 @@
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
-    <!--<resources>-->
-      <!--<resource>-->
-        <!--<directory>src</directory>-->
-        <!--<excludes>-->
-          <!--<exclude>**/*.java</exclude>-->
-        <!--</excludes>-->
-      <!--</resource>-->
-    <!--</resources>-->
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -55,7 +55,7 @@
           <username>ideaUs</username>
           <password>ideaPas</password>
           <!--<path>/${project.build.finalName}</path>-->
-          <path>/taskManagerMultiModule</path>
+          <path>/taskman</path>
           <warFile>target/${project.build.finalName}.war</warFile>
         </configuration>
         </plugin>

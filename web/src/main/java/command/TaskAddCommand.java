@@ -1,4 +1,4 @@
-package bsu.command;
+package command;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,9 +10,9 @@ import dao.TaskMetaDAO;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
-import managers.MessageManager;
-import utDao.PoolConnection;
+import resources.ConfigurationManager;
+import resources.MessageManager;
+import resources.PoolConnection;
 
 public class TaskAddCommand extends AbsCommand {
 	private static final String POST_TITLE = "titleTask";

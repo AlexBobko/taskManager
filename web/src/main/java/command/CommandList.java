@@ -1,4 +1,4 @@
-package bsu.command;
+package command;
 
 public enum CommandList {
 	LOGIN {

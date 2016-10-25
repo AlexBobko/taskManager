@@ -1,4 +1,4 @@
-package bsu.command;
+package command;
 
 import java.text.SimpleDateFormat;
 
@@ -6,8 +6,8 @@ import controller.SessionRequestContent;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
-import managers.MessageManager;
+import resources.ConfigurationManager;
+import resources.MessageManager;
 
 /** Task set checking status */
 public class TaskInCheckingCommand extends AbsCommand {

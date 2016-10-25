@@ -1,15 +1,15 @@
 package controller;
 
+import command.AbsCommand;
+import command.CommandList;
+import managers.MessageManager;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import bsu.command.AbsCommand;
-import bsu.command.CommandList;
-import managers.MessageManager;
 /**
  * Изоляция запросов для передачи в bsu
  */

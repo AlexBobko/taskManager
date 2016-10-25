@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 /**All message */
 public class MessageManager {
 
-	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources.error");
+	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("error");
 
 	private MessageManager() {
 	}

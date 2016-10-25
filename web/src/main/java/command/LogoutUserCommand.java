@@ -1,7 +1,7 @@
-package bsu.command;
+package command;
 
 import controller.SessionRequestContent;
-import managers.ConfigurationManager;
+import resources.ConfigurationManager;
 
 public class LogoutUserCommand extends AbsCommand {
 	@Override

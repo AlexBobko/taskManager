@@ -1,4 +1,11 @@
-package bsu.command;
+package command;
+
+import controller.SessionRequestContent;
+import dao.TaskDAO;
+import dao.TaskMetaDAO;
+import dto.TaskDTO;
+import dto.TaskMetaDTO;
+import utDao.PoolConnection;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -7,13 +14,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import controller.SessionRequestContent;
-import dao.TaskDAO;
-import dao.TaskMetaDAO;
-import dto.TaskDTO;
-import dto.TaskMetaDTO;
-import utDao.PoolConnection;
 
 /** AbstractCommand */
 public abstract class AbsCommand {
@@ -39,8 +39,8 @@ public abstract class AbsCommand {
 	}
 	protected boolean updateTaskMeta(TaskMetaDTO meta, TaskDTO task, SimpleDateFormat dateFormat) {
 		boolean b = false;
-		TaskMetaDAO metaDao = null;
-		TaskDAO taskDao = null;
+		TaskMetaDAO metaDao;
+		TaskDAO taskDao;
 		Connection connection = null;
 		try {
 			connection = PoolConnection.getInstance().getConnection();

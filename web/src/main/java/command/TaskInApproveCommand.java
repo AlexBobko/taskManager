@@ -1,4 +1,4 @@
-package bsu.command;
+package command;
 
 import java.text.SimpleDateFormat;
 
@@ -6,11 +6,12 @@ import controller.SessionRequestContent;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
-import managers.MessageManager;
+import resources.ConfigurationManager;
+import resources.MessageManager;
 
-/** назначить время приема */
-public class TaskInPayCommand extends AbsCommand {
+/** Set task status 2 */
+public class TaskInApproveCommand extends AbsCommand {
+
 	private String page;
 	private StringBuffer message;
 	private boolean b;
@@ -25,7 +26,7 @@ public class TaskInPayCommand extends AbsCommand {
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
 			TaskDTO task = account.getCurrentTasks().get(taskId);
 			SimpleDateFormat dateFormat = account.getDateFormat();
-			meta.setStatusId(5);// устанавливаем статус #send a document for approval
+			meta.setStatusId(2);// устанавливаем статус #send a document for approval
 			b = updateTaskMeta(meta, task, dateFormat);
 			if (b) {
 				page = ConfigurationManager.getProperty("path.page.user");
@@ -44,4 +45,5 @@ public class TaskInPayCommand extends AbsCommand {
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;
 	}
+
 }

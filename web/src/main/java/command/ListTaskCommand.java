@@ -1,12 +1,12 @@
-package bsu.command;
+package command;
 
 import controller.SessionRequestContent;
 
-public class DeleteTaskCommand extends AbsCommand {
+public class ListTaskCommand extends AbsCommand {
 
 	@Override
 	public String execute(SessionRequestContent content) {
+		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
