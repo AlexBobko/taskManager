@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import dao.TaskDAO;
 import dao.TaskMetaDAO;
 import dto.Account;
@@ -26,7 +26,7 @@ public class TaskAddCommand extends AbsCommand {
 	}
 
 	@Override
-	public String execute(SessionRequestContent content) {
+	public String execute(RequestHandler content) {
 		message = new StringBuffer();
 		// page = ConfigurationManager.getProperty("path.page.login");
 		page = ConfigurationManager.getProperty("path.page.user");

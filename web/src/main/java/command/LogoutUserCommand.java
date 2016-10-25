@@ -1,11 +1,11 @@
 package command;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import resources.ConfigurationManager;
 
 public class LogoutUserCommand extends AbsCommand {
 	@Override
-	public String execute(SessionRequestContent content) {
+	public String execute(RequestHandler content) {
 		try {
 			content.setSessionAttributes(null);
 		} catch (Exception e) {

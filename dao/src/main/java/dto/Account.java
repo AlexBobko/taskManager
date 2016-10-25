@@ -1,11 +1,7 @@
 package dto;
 
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.TreeMap;
-
-import dao.TaskDAO;
 
 public class Account extends Entity {
 	private static final long serialVersionUID = 1L;
@@ -17,31 +13,13 @@ public class Account extends Entity {
 	private int levelAccess = 1;
 
 	public Account() {
-
 	}
-
-	@SuppressWarnings({ "unchecked" })
-	public Account(UserDTO user, Connection connection) {
+	public Account(UserDTO user, TreeMap<Integer, TaskDTO> currentTasks, TreeMap<Integer, TaskMetaDTO> tasksMeta) {
 		this.id = user.getId();
 		this.user = user;
-		TaskDAO dao = new TaskDAO(connection);
-		ArrayList<TreeMap<Integer, ?>> data = dao.findAllByUser(user.getId());
-		this.currentTasks = (TreeMap<Integer, TaskDTO>) data.get(0);
-		this.tasksMeta = (TreeMap<Integer, TaskMetaDTO>) data.get(1);
+		this.currentTasks = currentTasks;
+		this.tasksMeta = tasksMeta ;
 	}
-	// for (Map.Entry<Integer, TaskMetaDTO> meta : tasksMeta.entrySet()) {
-	// System.out.println("akk**");
-	// System.out.println(meta.getKey());
-	// System.out.println(meta.getValue());
-	// }
-
-	// long i = 0;
-	// for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-	// i += pair.getKey() + pair.getValue();
-	// }
-	//
-	// final long[] i = {0};
-	// map.forEach((k, v) -> i[0] += k + v);
 
 	public UserDTO getUser() {
 		return user;

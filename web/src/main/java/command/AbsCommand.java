@@ -1,6 +1,6 @@
 package command;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import dao.TaskDAO;
 import dao.TaskMetaDAO;
 import dto.TaskDTO;
@@ -24,7 +24,7 @@ public abstract class AbsCommand {
 	public static final String ACCOUNT = "account";
 	public static final String MESSAGE = "message";
 
-	public abstract String execute(SessionRequestContent content);
+	public abstract String execute(RequestHandler content);
 	
 	protected GregorianCalendar convertDate(String postDate) {
 		String[] dl = postDate.split("/");

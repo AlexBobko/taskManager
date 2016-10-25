@@ -2,7 +2,7 @@ package servlets;
 
 import command.AbsCommand;
 import command.CommandList;
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import dto.UserDTO;
 import managers.ConfigurationManager;
 import managers.MessageManager;
@@ -49,10 +49,10 @@ public class Servlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String page;
-		SessionRequestContent content = new SessionRequestContent();
+		RequestHandler content = new RequestHandler();
 		CommandList currentCommand = content.extractValues(request);
 		page = currentCommand.getCurrentCommand().execute(content);
-		request = content.insertAttributes(request);
+		request = content.insertInRequest(request);
 		System.out.println(page);
 		// getServletContext().getRequestDispatcher(page).forward(request, response);
 		getServletContext().getRequestDispatcher(page).include(request, response);

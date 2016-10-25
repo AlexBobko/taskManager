@@ -1,18 +1,14 @@
 package dao;
 
+import dto.TaskDTO;
+import dto.TaskMetaDTO;
+import utDao.ManagerSQL;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import dto.TaskDTO;
-import dto.TaskMetaDTO;
-import utDao.ManagerSQL;
+import java.util.*;
 
 public class TaskDAO extends AbstractDAO<TaskDTO> {
 	// private final static String PREFIX = "task"; // resources.sql.properties
@@ -105,7 +101,7 @@ public class TaskDAO extends AbstractDAO<TaskDTO> {
 	public ArrayList<TreeMap<Integer, ?>> findAllByUser(int currentUserId) {
 		TreeMap<Integer, TaskDTO> tasks = new TreeMap<>();
 		TreeMap<Integer, TaskMetaDTO> meta = new TreeMap<>();
-		ArrayList<TreeMap<Integer, ?>> tasksMeta = new ArrayList<TreeMap<Integer, ?>>();
+		ArrayList<TreeMap<Integer, ?>> tasksMeta = new ArrayList<>();
 		PreparedStatement ps = null;
 		ResultSet result = null;
 		try {

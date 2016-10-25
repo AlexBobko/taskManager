@@ -1,14 +1,14 @@
 package dao;
 
+import dto.UserDTO;
+import utDao.ManagerSQL;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
-
-import dto.UserDTO;
-import utDao.ManagerSQL;
 
 public class UserDAO extends AbstractDAO<UserDTO> {
 	// private final static String TABLE = ManagerSQL.getProperty(PREFIX.concat(".table"));
@@ -62,7 +62,7 @@ public class UserDAO extends AbstractDAO<UserDTO> {
 		return user;
 	}
 
-	public UserDTO findEntityById(String login) {
+	public UserDTO findEntityByLogin(String login) {
 		UserDTO user = null;
 		PreparedStatement ps = null;
 		try {

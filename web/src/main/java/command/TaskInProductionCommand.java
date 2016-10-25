@@ -2,7 +2,7 @@ package command;
 
 import java.text.SimpleDateFormat;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
@@ -15,7 +15,7 @@ public class TaskInProductionCommand extends AbsCommand {
 	private StringBuffer message;
 
 	@Override
-	public String execute(SessionRequestContent content) {
+	public String execute(RequestHandler content) {
 		boolean b = false;
 		message = new StringBuffer();
 		try {

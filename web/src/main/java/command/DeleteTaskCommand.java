@@ -1,11 +1,11 @@
 package command;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 
 public class DeleteTaskCommand extends AbsCommand {
 
 	@Override
-	public String execute(SessionRequestContent content) {
+	public String execute(RequestHandler content) {
 		return null;
 	}
 

@@ -1,6 +1,6 @@
 package command;
 
-import controller.SessionRequestContent;
+import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
@@ -15,7 +15,7 @@ public class ViewTaskDetailCommand extends AbsCommand {
 	private StringBuffer message;
 
 	@Override
-	public String execute(SessionRequestContent content) {
+	public String execute(RequestHandler content) {
 		message = new StringBuffer();
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
