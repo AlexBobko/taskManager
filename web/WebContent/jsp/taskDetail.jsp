@@ -75,7 +75,7 @@
 			</form>
 		</div>
 	</div>
-	<%@ include file="/jsp/addNewTask.jsp"%>
+
 
 </div>
 <%@ include file="/jsp/statuslist.jsp"%>

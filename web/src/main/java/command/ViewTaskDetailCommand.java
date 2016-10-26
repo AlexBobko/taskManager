@@ -4,13 +4,13 @@ import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
+
 
 public class ViewTaskDetailCommand extends AbsCommand {
 
-	final public static String TASK  = "curTask"; 
-	final public static String TASK_META  = "curTaskMeta"; 
+
 	private String page;
 	private StringBuffer message;
 

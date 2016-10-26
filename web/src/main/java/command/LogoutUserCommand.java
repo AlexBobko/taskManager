@@ -1,19 +1,18 @@
 package command;
 
 import controller.RequestHandler;
-import resources.ConfigurationManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
 
 public class LogoutUserCommand extends AbsCommand {
-	@Override
-	public String execute(RequestHandler content) {
-		try {
-			content.setSessionAttributes(null);
-		} catch (Exception e) {
-		}
-		String page = ConfigurationManager.getProperty("path.page.login");
-		/*
-		 * message = MessageManager.getProperty("message.logout"); content.getSessionAttributes().put(PARAM_MESSAGE, message);
-		 */
-		return page;
-	}
+    @Override
+    public String execute(RequestHandler content) {
+        try {
+            content.setSessionAttributes(null);
+        } catch (Exception e) {
+        }
+        String page = ConfigurationManager.getProperty("path.page.login");
+        content.getRequestAttributes().put(MESSAGE, MessageManager.getProperty("message.logout"));
+        return page;
+    }
 }

@@ -23,6 +23,8 @@ public abstract class AbsCommand {
 	public static final String PARAM_SESSION_USER = "currentUser";
 	public static final String ACCOUNT = "account";
 	public static final String MESSAGE = "message";
+	public static final String TASK  = "curTask";
+	public static final String TASK_META  = "curTaskMeta";
 
 	public abstract String execute(RequestHandler content);
 	

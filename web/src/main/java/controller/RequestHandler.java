@@ -2,8 +2,6 @@ package controller;
 
 import command.AbsCommand;
 import command.CommandList;
-import managers.MessageManager;
-import service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,25 +27,18 @@ public class RequestHandler {
     public CommandList extractValues(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         Enumeration<String> attributeSessionNames = session.getAttributeNames();
-        Enumeration<String> parameterNames = request.getParameterNames();
-
         while (attributeSessionNames.hasMoreElements()) {
-            String key;
-            key = attributeSessionNames.nextElement();
+            String key = attributeSessionNames.nextElement();
             sessionAttributes.put(key, session.getAttribute(key));
         }
-
-
+        Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
-            String key;
-            String value;
-            key = parameterNames.nextElement();
-            value = request.getParameter(key);
+            String key = parameterNames.nextElement();
+            String value= request.getParameter(key);
 
             System.out.println("<br/>***<b>key:" + key + "| - value:|" + value + "|-успешно </b>***<br/>");
             //отсеиваем пустые значения
             if (value != null && !(value.isEmpty())) {
-                LoginService loginService =new LoginService();
                 try {
                     //TODO ?? вынести определение типа комманды в CommandClient или зачем гонять 2 раза цикл
                     currentCommand = CommandList.valueOf(key.toUpperCase());
@@ -67,8 +58,8 @@ public class RequestHandler {
     public HttpServletRequest insertInRequest(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         if (sessionAttributes == null) {
-//				session.invalidate();
-            request.setAttribute(AbsCommand.MESSAGE, MessageManager.getProperty("message.logout"));
+            //session.invalidate(); //TODO проверить на ошибку и включить
+//            request.setAttribute(AbsCommand.MESSAGE, MessageManager.getProperty("message.logout")); добавил в комманде
         } else {
             for (Map.Entry<String, Object> entry : sessionAttributes.entrySet()) {
                 String key = entry.getKey();
@@ -80,7 +71,8 @@ public class RequestHandler {
             for (Map.Entry<String, String[]> entry : requestParameters.entrySet()) {
                 String key = entry.getKey();
                 String[] value = entry.getValue();
-                session.setAttribute(key, value);
+//                session.setAttribute(key, value);
+                //закинуть данные обратно в ответ
             }
         }
         return request;

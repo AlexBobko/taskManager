@@ -51,26 +51,20 @@ public class LoginService {
                 if (BCrypt.checkpw(userPassword, user.getPassHash())) {
 //                        System.out.println("It matches");
                     account = getUserAccount(user, connection);
-                } else {
-//                        System.out.println("It does not match");
-                    user = null;
                 }
             }
         } catch (IOException e) {
-//                e.printStackTrace();
         } catch (SQLException e) {
-//                e.printStackTrace();
         } catch (PropertyVetoException e) {
-//                e.printStackTrace();
         } finally {
             try {
                 if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
+                //TODO add all e to log
             }
         }
-        // e.printStackTrace();
         return account;
     }
 
