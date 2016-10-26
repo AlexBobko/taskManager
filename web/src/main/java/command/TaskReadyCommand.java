@@ -1,16 +1,18 @@
 package command;
 
-import java.text.SimpleDateFormat;
-
 import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
+import service.TaskService;
+
+import java.text.SimpleDateFormat;
+
 
 /**set task status 6 (ready) */
-public class TaskReadyCommand extends AbsCommand {
+public class TaskReadyCommand implements ICommand {
 	private String page;
 	private StringBuffer message;
 	private boolean b;
@@ -26,7 +28,9 @@ public class TaskReadyCommand extends AbsCommand {
 			TaskDTO task = account.getCurrentTasks().get(taskId);
 			SimpleDateFormat dateFormat = account.getDateFormat();
 			meta.setStatusId(6);// устанавливаем статус
-			b = updateTaskMeta(meta, task, dateFormat);
+
+			TaskService taskService=new TaskService();
+			b = taskService.updateTaskMeta(task, meta, dateFormat);
 			if (b) {
 				page = ConfigurationManager.getProperty("path.page.user");
 				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());

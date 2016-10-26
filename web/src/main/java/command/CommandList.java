@@ -67,9 +67,9 @@ public enum CommandList {
         }
     };
 
-    AbsCommand command;
+    ICommand command;
 
-    public AbsCommand getCurrentCommand() {
+    public ICommand getCurrentCommand() {
         return command;
     }
 }

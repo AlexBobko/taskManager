@@ -4,7 +4,7 @@ import controller.RequestHandler;
 import managers.ConfigurationManager;
 import managers.MessageManager;
 
-public class LogoutUserCommand extends AbsCommand {
+public class LogoutUserCommand implements ICommand {
     @Override
     public String execute(RequestHandler content) {
         try {

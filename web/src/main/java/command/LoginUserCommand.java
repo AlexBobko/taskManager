@@ -9,7 +9,7 @@ import service.LoginService;
 /**
  * Login
  */
-public class LoginUserCommand extends AbsCommand {
+public class LoginUserCommand implements ICommand {
 
     private LoginService loginService;
 

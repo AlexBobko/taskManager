@@ -1,8 +1,7 @@
 package command;
 
 import controller.RequestHandler;
-
-public class ListTaskCommand extends AbsCommand {
+public class ListTaskCommand implements ICommand {
 
 	@Override
 	public String execute(RequestHandler content) {

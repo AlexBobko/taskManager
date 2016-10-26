@@ -11,7 +11,7 @@ import service.TaskService;
 import java.text.SimpleDateFormat;
 
 /** Set task status 2 */
-public class TaskInApproveCommand extends AbsCommand {
+public class TaskInApproveCommand implements ICommand {
 
 	private String page;
 	private StringBuffer message;

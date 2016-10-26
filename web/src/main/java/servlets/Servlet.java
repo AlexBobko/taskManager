@@ -1,6 +1,6 @@
 package servlets;
 
-import command.AbsCommand;
+import command.ICommand;
 import command.CommandList;
 import controller.RequestHandler;
 import dto.UserDTO;
@@ -31,8 +31,8 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = ConfigurationManager.getProperty("path.page.login");
         HttpSession session = request.getSession(true);
-        String messageFildName = AbsCommand.MESSAGE;    //TODO
-        String userFildName = AbsCommand.PARAM_SESSION_USER;    //TODO
+        String messageFildName = ICommand.MESSAGE;    //TODO
+        String userFildName = ICommand.PARAM_SESSION_USER;    //TODO
         try {
             UserDTO user = (UserDTO) session.getAttribute(userFildName);
             if (user != null) {

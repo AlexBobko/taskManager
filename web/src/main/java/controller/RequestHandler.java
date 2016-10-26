@@ -1,6 +1,6 @@
 package controller;
 
-import command.AbsCommand;
+import command.ICommand;
 import command.CommandList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class RequestHandler {
                 try {
                     //TODO ?? вынести определение типа комманды в CommandClient или зачем гонять 2 раза цикл
                     currentCommand = CommandList.valueOf(key.toUpperCase());
-                    requestAttributes.put(AbsCommand.CMD_VALUE, value); //.trim()
+                    requestAttributes.put(ICommand.CMD_VALUE, value); //.trim()
 
                     System.out.println("<br/>***<b>currentCommand:" + key + " cmdValue:" + value + "- успешно " + "</b>***<br/>");
                 } catch (IllegalArgumentException e) {
@@ -59,7 +59,7 @@ public class RequestHandler {
         HttpSession session = request.getSession(true);
         if (sessionAttributes == null) {
             //session.invalidate(); //TODO проверить на ошибку и включить
-//            request.setAttribute(AbsCommand.MESSAGE, MessageManager.getProperty("message.logout")); добавил в комманде
+//            request.setAttribute(ICommand.MESSAGE, MessageManager.getProperty("message.logout")); добавил в комманде
         } else {
             for (Map.Entry<String, Object> entry : sessionAttributes.entrySet()) {
                 String key = entry.getKey();

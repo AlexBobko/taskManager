@@ -8,9 +8,7 @@ import managers.ConfigurationManager;
 import managers.MessageManager;
 
 
-public class ViewTaskDetailCommand extends AbsCommand {
-
-
+public class ViewTaskDetailCommand implements ICommand {
 	private String page;
 	private StringBuffer message;
 
@@ -21,7 +19,6 @@ public class ViewTaskDetailCommand extends AbsCommand {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
-//			TaskDTO task = new TaskDTO (); 
 			TaskDTO task = account.getCurrentTasks().get(taskId);
 //			SimpleDateFormat dateFormat = account.getDateFormat();
 			content.getSessionAttributes().put(ACCOUNT, account);

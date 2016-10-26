@@ -1,16 +1,18 @@
 package command;
 
-import java.text.SimpleDateFormat;
-
 import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import resources.ConfigurationManager;
-import resources.MessageManager;
+import managers.ConfigurationManager;
+import managers.MessageManager;
+import service.TaskService;
 
-/** назначить время приема */
-public class TaskInPayCommand extends AbsCommand {
+import java.text.SimpleDateFormat;
+
+/** назначить время приема 5 */
+//TODO !! дату приема вписать
+public class TaskInPayCommand implements ICommand {
 	private String page;
 	private StringBuffer message;
 	private boolean b;
@@ -21,12 +23,14 @@ public class TaskInPayCommand extends AbsCommand {
 		b = false;
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-			int taskId = (int) Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
+			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
 			TaskDTO task = account.getCurrentTasks().get(taskId);
 			SimpleDateFormat dateFormat = account.getDateFormat();
 			meta.setStatusId(5);// устанавливаем статус #send a document for approval
-			b = updateTaskMeta(meta, task, dateFormat);
+
+			TaskService taskService=new TaskService();
+			b = taskService.updateTaskMeta(task, meta, dateFormat);
 			if (b) {
 				page = ConfigurationManager.getProperty("path.page.user");
 				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());

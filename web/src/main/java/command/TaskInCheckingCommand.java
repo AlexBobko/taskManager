@@ -10,8 +10,8 @@ import service.TaskService;
 
 import java.text.SimpleDateFormat;
 
-/** Task set checking status */
-public class TaskInCheckingCommand extends AbsCommand {
+/** Task set checking status 4 */
+public class TaskInCheckingCommand implements ICommand {
 	private String page;
 	private StringBuffer message;
 	private boolean b;

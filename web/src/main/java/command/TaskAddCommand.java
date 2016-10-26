@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class TaskAddCommand extends AbsCommand {
+public class TaskAddCommand implements ICommand {
     private static final String POST_TITLE = "titleTask";
     private static final String POST_BODY = "bodyTask";
     private static final String POST_DEADLINE = "taskDeadline";
