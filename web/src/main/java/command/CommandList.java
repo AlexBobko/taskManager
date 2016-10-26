@@ -61,6 +61,21 @@ public enum CommandList {
             this.command = new TaskInPayCommand(); // set status 5
         }
     },
+    GO_ADD{
+        {
+            this.command = new GoAddCommand(); // go page add task //TODO перенести в гет
+        }
+    },
+    GO_TASK_LIST{
+        {
+            this.command = new GoTaskListCommand(); // go page add task //TODO перенести в гет
+        }
+    },
+    TASK_CORRECT {
+        {
+            this.command = new TaskCorrectCommand(); // set status 6
+        }
+    },
     TASK_READY {
         {
             this.command = new TaskReadyCommand(); // set status 6

@@ -93,14 +93,5 @@ public abstract class AbstractDAO<T extends Entity> {
 			// лог о невозможности закрытия Statement
 		}
 	}
-	public void close(Connection conn) {
-		try {
-			if (conn != null) {
-				conn.close();
-			}
-		} catch (SQLException e) {
-			// лог о невозможности закрытия Statement
-		}
-	}
 
 }

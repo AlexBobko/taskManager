@@ -18,7 +18,7 @@ public class PoolConnection {
 	
 	private PoolConnection() throws IOException, SQLException, PropertyVetoException {
 		cpds = new ComboPooledDataSource();
-		ResourceBundle resource = ResourceBundle.getBundle("resources/database");
+		ResourceBundle resource = ResourceBundle.getBundle("database");
 		String url = resource.getString("db.host");
 		String driver = resource.getString("driver");
 		String user = resource.getString("db.login");

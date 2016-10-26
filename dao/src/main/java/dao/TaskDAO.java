@@ -13,8 +13,9 @@ import java.util.*;
 public class TaskDAO extends AbstractDAO<TaskDTO> {
 	// private final static String PREFIX = "task"; // resources.sql.properties
 	private final static String SQL_INSERT = ManagerSQL.getProperty("task.insert").replace(TASK_ALIAS, TASK_TABLE);
+	private final static String SQL_UPDATE = ManagerSQL.getProperty("task.update").replace(TASK_ALIAS, TASK_TABLE);
 //	private final static String SQL_INSERT_ASSIGN = ManagerSQL.getProperty("user.task.insert").replace(META_ALIAS, META_TABLE);
-	private final static String SQL_SELECT = ManagerSQL.getProperty("task.insert").replace(TASK_ALIAS, TASK_TABLE);
+//	private final static String SQL_SELECT = ManagerSQL.getProperty("task.insert").replace(TASK_ALIAS, TASK_TABLE);
 	private final static String SQL_UPDATE_HISTORY = ManagerSQL.getProperty("task.update.history").replace(TASK_ALIAS, TASK_TABLE);
 	private final static String SQL_DELETE = ManagerSQL.getProperty("task.insert").replace(TASK_ALIAS, TASK_TABLE);
 	private final static String SQL_SELECT_FOR_ID = ManagerSQL.getProperty("task.select.current.for.id").replace(TASK_ALIAS, TASK_TABLE).replace(META_ALIAS,
@@ -58,6 +59,7 @@ public class TaskDAO extends AbstractDAO<TaskDTO> {
 		}
 		return b;
 	}
+
 	
 //// наначение исполнителя //update к удалению
 //	public boolean assignUser(int taskId, int userId) {
@@ -193,11 +195,38 @@ public class TaskDAO extends AbstractDAO<TaskDTO> {
 		return rs;// b = (rs != 0);
 	}
 
-	@Override
+
 	public TaskDTO update(TaskDTO entity) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		int rs = 0;
+		try {
+			ps = getPreparedStatement(SQL_UPDATE);
+			ps.setInt(1, entity.getId());
+			ps.setInt(7, entity.getId());
+			ps.setString(2, entity.getTitle());
+			java.util.Date dateCreation = (java.util.Date) entity.getDateCreation().getTime();
+			java.sql.Timestamp sqlDateCreation = new java.sql.Timestamp(dateCreation.getTime());
+			ps.setTimestamp(3, sqlDateCreation);
+
+			ps.setString(4, entity.getBody());
+			// ps.setInt(5, entity.getStatus());
+			java.util.Date dateDeadline = (java.util.Date) entity.getDeadline().getTime();
+			java.sql.Timestamp sqlDateDeadline = new java.sql.Timestamp(dateDeadline.getTime());
+			ps.setTimestamp(5, sqlDateDeadline);
+			ps.setString(6, entity.getHistory().toString());
+			rs = ps.executeUpdate();
+			if (rs != 0) {
+				return entity;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(ps);
+		}
+
+		return null;//b = (rs != 0);
 	}
+
 
 	
 

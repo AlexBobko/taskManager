@@ -3,7 +3,7 @@ package utDao;
 import java.util.ResourceBundle;
 
 public class ManagerSQL {
-	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources.sql");
+	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("sql");
 
 	public ManagerSQL() {
 	}

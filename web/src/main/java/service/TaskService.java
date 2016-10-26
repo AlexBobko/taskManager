@@ -39,7 +39,7 @@ public class TaskService {
 
     }
 
-    public TaskService(TaskDTO task, TaskMetaDTO taskMeta,SimpleDateFormat dateFormat) {
+    public TaskService(TaskDTO task, TaskMetaDTO taskMeta, SimpleDateFormat dateFormat) {
         this.currentTask = task;
         this.currentTaskMeta = taskMeta;
 
@@ -94,7 +94,7 @@ public class TaskService {
         return bodyDeadline;
     }
 
-    public boolean updateTaskMeta(TaskDTO task,TaskMetaDTO meta, SimpleDateFormat dateFormat) {
+    public boolean updateTaskMeta(TaskDTO task, TaskMetaDTO meta, SimpleDateFormat dateFormat) {
         boolean b = false;
         TaskMetaDAO metaDao;
         TaskDAO taskDao;
@@ -112,6 +112,10 @@ public class TaskService {
                 history.append(dateFormat.format(calendar.getTime())).append("~status:").append(meta.getStatusId()).append("~~");
                 taskDao = new TaskDAO(connection);
                 b = taskDao.updateHistory(task);
+                if (b) {
+                    TaskDTO taskDTO = taskDao.update(task);
+                    b = (taskDTO != null);
+                }
             }
             if (b) {
                 connection.commit();
@@ -136,6 +140,54 @@ public class TaskService {
         }
         return b;
     }
+
+    public boolean updateTaskBody(TaskDTO task, TaskMetaDTO meta, SimpleDateFormat dateFormat) {
+        boolean b = false;
+        TaskMetaDAO metaDao;
+        TaskDAO taskDao;
+        Connection connection = null;
+        try {
+            connection = PoolConnection.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            metaDao = new TaskMetaDAO(connection);
+            b = metaDao.updateStatus(meta);
+            if (b) {
+                Calendar calendar = Calendar.getInstance();
+//				SimpleDateFormat dateFormat = Account.dateFormat;
+                // System.out.println("** AddNewTaskComandImpl.convertDate ** date: " + dateFormat.format(bodyDeadline.getTime()));
+                StringBuffer history = task.getHistory();
+                history.append(dateFormat.format(calendar.getTime())).append("~status:").append("~korrect body").append(meta.getStatusId()).append("~~");
+                taskDao = new TaskDAO(connection);
+//                b = taskDao.updateHistory(task);
+                if (b) {
+                    TaskDTO taskDTO = taskDao.update(task);
+                    b = (taskDTO != null);
+                }
+            }
+            if (b) {
+                connection.commit();
+            } else {
+                connection.rollback();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true); //актуальность удалить и проверить
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
+    }
+
     public TaskDTO getCurrentTask() {
         return currentTask;
     }

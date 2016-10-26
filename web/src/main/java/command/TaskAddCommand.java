@@ -13,9 +13,6 @@ import java.util.regex.Pattern;
 
 
 public class TaskAddCommand implements ICommand {
-    private static final String POST_TITLE = "titleTask";
-    private static final String POST_BODY = "bodyTask";
-    private static final String POST_DEADLINE = "taskDeadline";
     private String page;
     private StringBuffer message;
 
@@ -33,7 +30,7 @@ public class TaskAddCommand implements ICommand {
             String bodyTask = (String) content.getRequestAttributes().get(POST_BODY);
             String strTaskDeadline = (String) content.getRequestAttributes().get(POST_DEADLINE);
             //TODO добавить проверку на дату: текущая дата+ //10/21/2016
-            Pattern p = Pattern.compile("[0-9]{1,2}[/][0-9]{1,2}[/][0-9]{4}]");
+            Pattern p = Pattern.compile("[0-9]{1,2}[/][0-9]{1,2}[/][0-9]{4}");
             Matcher m = p.matcher(strTaskDeadline);
             if (!m.matches()) {
                 message.append(MessageManager.getProperty("message.task.add.false"));
@@ -43,7 +40,7 @@ public class TaskAddCommand implements ICommand {
             }
             //TODO назначаем создателя исполнителем, добавить возможность назначать, если создает директор
             int userId = account.getUser().getId();
-            TaskService taskService = new TaskService(titleTask, bodyTask, strTaskDeadline, userId);
+            TaskService taskService = new TaskService(titleTask, bodyTask, strTaskDeadline, userId);//TODO поправить под дефолт.констр.
             TaskDTO newTask = taskService.getCurrentTask();
             TaskMetaDTO newTaskMeta = taskService.getCurrentTaskMeta();
             if (newTask != null && newTaskMeta != null) {

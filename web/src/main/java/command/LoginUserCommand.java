@@ -50,8 +50,8 @@ public class LoginUserCommand implements ICommand {
             page = ConfigurationManager.getProperty("path.page.login");
             message.append(MessageManager.getProperty("message.login.error"));
         }
-//        content.getSessionAttributes().put(MESSAGE, message.toString());
-        content.getRequestAttributes().put(MESSAGE, message.toString());
+        content.getSessionAttributes().put(MESSAGE, message.toString());
+//        content.getRequestAttributes().put(MESSAGE, message.toString());
         return page;
     }
 }

@@ -1,7 +1,7 @@
 package controller;
 
-import command.ICommand;
 import command.CommandList;
+import command.ICommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -58,7 +58,7 @@ public class RequestHandler {
     public HttpServletRequest insertInRequest(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         if (sessionAttributes == null) {
-            //session.invalidate(); //TODO проверить на ошибку и включить
+            session.invalidate();
 //            request.setAttribute(ICommand.MESSAGE, MessageManager.getProperty("message.logout")); добавил в комманде
         } else {
             for (Map.Entry<String, Object> entry : sessionAttributes.entrySet()) {
