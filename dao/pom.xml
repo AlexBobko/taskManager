@@ -20,6 +20,11 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.5.1</version>
         </dependency>
+        <dependency>
+            <artifactId>dao</artifactId>
+            <groupId>loc.task</groupId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
