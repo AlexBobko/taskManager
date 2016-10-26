@@ -35,6 +35,17 @@ public class TaskService {
         }
     }
 
+    public TaskService() {
+
+    }
+
+    public TaskService(TaskDTO task, TaskMetaDTO taskMeta,SimpleDateFormat dateFormat) {
+        this.currentTask = task;
+        this.currentTaskMeta = taskMeta;
+
+    }
+
+
     private boolean addNewTask(TaskDTO newTask, TaskMetaDTO newTaskMeta) {
         boolean b = false;
         int id = 0;
@@ -83,7 +94,7 @@ public class TaskService {
         return bodyDeadline;
     }
 
-    protected boolean updateTaskMeta(TaskMetaDTO meta, TaskDTO task, SimpleDateFormat dateFormat) {
+    public boolean updateTaskMeta(TaskDTO task,TaskMetaDTO meta, SimpleDateFormat dateFormat) {
         boolean b = false;
         TaskMetaDAO metaDao;
         TaskDAO taskDao;

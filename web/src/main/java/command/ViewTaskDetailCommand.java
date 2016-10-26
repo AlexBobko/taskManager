@@ -19,7 +19,7 @@ public class ViewTaskDetailCommand extends AbsCommand {
 		message = new StringBuffer();
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-			int taskId = (int) Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
+			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
 //			TaskDTO task = new TaskDTO (); 
 			TaskDTO task = account.getCurrentTasks().get(taskId);

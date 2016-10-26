@@ -19,44 +19,48 @@ import java.io.IOException;
 /**
  * Servlet implementation class Servlet
  */
-@WebServlet({ "/Servlet", "/go", "/user*", "/admin*", "/index.jspx", "/index.jsp" })
+@WebServlet({"/Servlet", "/go", "/user*", "/admin*", "/index.jspx", "/index.jsp"})
 
 public class Servlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public Servlet() {
-		super();
-	}
+    public Servlet() {
+        super();
+    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String page = ConfigurationManager.getProperty("path.page.login");
-		HttpSession session = request.getSession(true);
-		String messageFildName = AbsCommand.MESSAGE;	//TODO
-		String userFildName = AbsCommand.PARAM_SESSION_USER;	//TODO
-		try {
-			UserDTO user = (UserDTO) session.getAttribute(userFildName);
-			if (user != null) {
-				page = ConfigurationManager.getProperty("path.page.user");
-				session.setAttribute(messageFildName, MessageManager.getProperty("message.hello.user"));
-			}
-		} catch (Exception e) {
-			session.setAttribute(messageFildName, MessageManager.getProperty("message.need.login"));
-		}
-		// getServletContext().getRequestDispatcher(page).forward(request, response);
-		getServletContext().getRequestDispatcher(page).include(request, response);
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page = ConfigurationManager.getProperty("path.page.login");
+        HttpSession session = request.getSession(true);
+        String messageFildName = AbsCommand.MESSAGE;    //TODO
+        String userFildName = AbsCommand.PARAM_SESSION_USER;    //TODO
+        try {
+            UserDTO user = (UserDTO) session.getAttribute(userFildName);
+            if (user != null) {
+                page = ConfigurationManager.getProperty("path.page.user");
+                session.setAttribute(messageFildName, MessageManager.getProperty("message.hello.user"));
+            }
+        } catch (Exception e) {
+            session.setAttribute(messageFildName, MessageManager.getProperty("message.need.login"));
+        }
+        // getServletContext().getRequestDispatcher(page).forward(request, response);
+        getServletContext().getRequestDispatcher(page).include(request, response);
+    }
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String page;
-		RequestHandler content = new RequestHandler();
-		CommandList currentCommand = content.extractValues(request);
-		page = currentCommand.getCurrentCommand().execute(content);
-		request = content.insertInRequest(request);
-		System.out.println(page);
-		// getServletContext().getRequestDispatcher(page).forward(request, response);
-		getServletContext().getRequestDispatcher(page).include(request, response);
-	}
+        String page;
+        RequestHandler content = new RequestHandler();
+        CommandList currentCommand = content.extractValues(request);
+        page = currentCommand.getCurrentCommand().execute(content);
+        request = content.insertInRequest(request);
+//        System.out.println(page);
+        if (page == null) {
+            // out.println("<br/>***<b>page = null!! " + " </b>***<br/>");
+            page = ConfigurationManager.getProperty("path.page.login");
+        }
+        // getServletContext().getRequestDispatcher(page).forward(request, response);
+        getServletContext().getRequestDispatcher(page).include(request, response);
+    }
 
 }
 
@@ -69,9 +73,3 @@ public class Servlet extends HttpServlet {
 // PrintWriter out = response.getWriter();
 // HttpSession session = request.getSession(true);
 // doGet(request, response);
-
-// if (page == null) {
-//// out.println("<br/>***<b>page = null!! " + " </b>***<br/>");//TODO
-// page = ConfigurationManager.getProperty("path.page.user");
-//
-// }
