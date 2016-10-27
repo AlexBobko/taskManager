@@ -32,6 +32,7 @@
 
     </dependencies>
     <build>
+
         <plugins>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat7-maven-plugin -->
@@ -52,9 +53,12 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <!--<warSourceDirectory>WebContent</warSourceDirectory>-->
-                    <webappDirectory>WebContent</webappDirectory>
+                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <!--<webappDirectory>WebContent</webappDirectory>-->
+                    <!--<webappDirectory>WebContent</webappDirectory>-->
+                    <webappDirectory>/usr/share/tomcat7/webapps/taskManager</webappDirectory>
                 </configuration>
+
             </plugin>
         </plugins>
     </build>
