@@ -1,11 +1,11 @@
 package servlets;
 
-import command.ICommand;
 import command.CommandList;
+import command.ICommand;
 import controller.RequestHandler;
-import dto.UserDTO;
-import managers.PageManager;
+import dto.Account;
 import managers.MessageManager;
+import managers.PageManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * Servlet implementation class Servlet
  */
-@WebServlet({"/Servlet", "/go", "/user*", "/admin*", "/index.jspx", "/index.jsp"})
+@WebServlet({"/Servlet", "/go", "/user*", "/admin*", "/index.jsp"})
 
 public class Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -27,19 +27,26 @@ public class Servlet extends HttpServlet {
     public Servlet() {
         super();
     }
-
+    //TODO ?? doGet сделать отдельный RequestHandler?
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = PageManager.getProperty("path.page.login");
+        String page=null;
         HttpSession session = request.getSession(true);
-        String messageFildName = ICommand.MESSAGE;    //TODO
-        String userFildName = ICommand.PARAM_SESSION_USER;    //TODO
+        String messageFildName = ICommand.MESSAGE;
         try {
-            UserDTO user = (UserDTO) session.getAttribute(userFildName);
-            if (user != null) {
+            Account account = (Account) session.getAttribute(ICommand.ACCOUNT);
+            int role = account.getUser().getRole();
+            if (role == 1) {
                 page = PageManager.getProperty("path.page.user");
+                session.setAttribute(messageFildName, MessageManager.getProperty("message.hello.user"));
+            }else if (role == 2) {
+                page = PageManager.getProperty("path.page.superior");
                 session.setAttribute(messageFildName, MessageManager.getProperty("message.hello.user"));
             }
         } catch (Exception e) {
+            //log add
+        }
+        if (page==null) {
+            page= PageManager.getProperty("path.page.login");
             session.setAttribute(messageFildName, MessageManager.getProperty("message.need.login"));
         }
         // getServletContext().getRequestDispatcher(page).forward(request, response);
@@ -63,13 +70,3 @@ public class Servlet extends HttpServlet {
     }
 
 }
-
-// ошибку авторизации добавить
-
-// PrintWriter out = response.getWriter();
-// HttpSession session = request.getSession(true);
-// doGet(request, response);
-
-// PrintWriter out = response.getWriter();
-// HttpSession session = request.getSession(true);
-// doGet(request, response);

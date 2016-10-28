@@ -70,6 +70,29 @@ public class UserDTO extends Entity {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof UserDTO)) return false;
+
+		UserDTO userDTO = (UserDTO) o;
+
+		if (getId() != userDTO.getId()) return false;
+		if (getRole() != userDTO.getRole()) return false;
+		if (!getLogin().equals(userDTO.getLogin())) return false;
+		return getPassHash().equals(userDTO.getPassHash());
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getId();
+		result = 31 * result + getLogin().hashCode();
+		result = 31 * result + getPassHash().hashCode();
+		result = 31 * result + getRole();
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", login=" + login + ", passHash=" + passHash + "]";
 	}

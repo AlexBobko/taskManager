@@ -45,8 +45,7 @@ public class TaskAddCommand implements ICommand {
             }else {
                 responsiblePersonId =account.getUser().getId();
             }
-            //TODO поправить под дефолт.констр.
-//            TaskService taskService = new TaskService(titleTask, bodyTask, strTaskDeadline, responsiblePersonId);
+
             TaskService taskService = new TaskService();
             GregorianCalendar taskDeadline = taskService.convertDate(strTaskDeadline);
             TaskDTO newTask=new TaskDTO (titleTask, bodyTask, taskDeadline);

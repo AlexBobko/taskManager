@@ -68,7 +68,7 @@ public enum CommandList {
     },
     TASK_LIST {
         {
-            this.command = new ListTaskCommand(); //TODO (не готово) список тасков, пагинация
+            this.command = new ListTaskCommand(); //(не готово) список тасков, пагинация
         }
     },
     TASK_DEL {

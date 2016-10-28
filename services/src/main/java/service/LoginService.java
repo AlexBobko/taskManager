@@ -40,8 +40,8 @@ public class LoginService {
                 user = dao.findEntityById(userId);
             }
             if (user != null) {
-//                    pass = "sваываыsd" + "dsdf@@"; // удалить строку
-                userPassword = userPassword + "dsdf@@"; //проконтролить соль
+//                    pass = "sваываыsd" + "dsdf@@"; //чтобы не вводить пароль :)
+                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
                 if (BCrypt.checkpw(userPassword, user.getPassHash())) {
 //                        System.out.println("It matches");
                     account = getUserAccount(user, connection);

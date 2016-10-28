@@ -8,14 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-
-
 /**
- * Servlet Filter implementation class InFiltr
+ * Servlet Filter implementation class InFilter
  */
 @WebFilter("/*")
-public class InFiltr implements Filter {
-	public InFiltr() {
+public class InFilter implements Filter {
+	public InFilter() {
 	}
 
 	/**
@@ -33,7 +31,7 @@ public class InFiltr implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 //		final static Locale locale = new Locale("ru", "RU");
 		HttpSession session = httpRequest.getSession(true);
-		if ((boolean) session.isNew()) {
+		if (session.isNew()) {
 			String page = PageManager.getProperty("path.page.login");
 			httpRequest.getRequestDispatcher(page).forward(request, response); 
 		} 

@@ -10,7 +10,7 @@ public class ViewTaskHistoryCommand implements ICommand {
 
     @Override
     public String execute(RequestHandler content) {
-        // TODO Auto-generated method stub
+        // TODO Просмотр истории отдельно, не реализовано, выводится в деталях таска
         return null;
     }
 }

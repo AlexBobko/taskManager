@@ -18,9 +18,9 @@ public class UserDAO extends AbstractDAO<UserDTO> {
 	private final static String SQL_DELETE = ManagerSQL.getProperty("user.delete").replace(USERS_ALIAS, USER_TABLE);
 //	boolean b = false;
 
-//	public UserDAO(boolean b) {
-//		super(b);
-//	}
+	public UserDAO(boolean b) {
+		super(b);
+	}
 
 	public UserDAO(Connection connection) {
 		super(connection);
