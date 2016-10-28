@@ -4,7 +4,7 @@ import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
+import managers.PageManager;
 import managers.MessageManager;
 import service.TaskService;
 
@@ -23,7 +23,11 @@ public class TaskReadyCommand implements ICommand {
 		b = false;
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-			int taskId = (int) Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
+			if (account.getUser().getRole() != 2) {
+				message = message.append(MessageManager.getProperty("error.illegal.operation"));
+				return PageManager.getProperty("path.page.user");
+			}
+			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
 			TaskDTO task = account.getCurrentTasks().get(taskId);
 			SimpleDateFormat dateFormat = account.getDateFormat();
@@ -32,7 +36,7 @@ public class TaskReadyCommand implements ICommand {
 			TaskService taskService=new TaskService();
 			b = taskService.updateTaskMeta(task, meta, dateFormat);
 			if (b) {
-				page = ConfigurationManager.getProperty("path.page.user");
+				page = PageManager.getProperty("path.page.superior");
 				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());
 				System.out.println(meta.toString());
 			}
@@ -43,7 +47,7 @@ public class TaskReadyCommand implements ICommand {
 			message = message.append(MessageManager.getProperty("task.update.false"));
 		}
 		if (page == null) {
-			page = ConfigurationManager.getProperty("path.page.login");
+			page = PageManager.getProperty("path.page.login");
 		}
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;

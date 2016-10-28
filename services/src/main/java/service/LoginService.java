@@ -17,25 +17,19 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class LoginService {
-    private int userId;
-    private String userPassword;
-    private String userLogin;
 
-    public LoginService(int userId, String userPassword) {
-        this.userId = userId;
-        this.userPassword = userPassword;
+    //TODO переделать на синглтон? синхронизация методов (параметров)?
+    public Account getAccount(int userId, String userPassword) {
+        return getAccount(userId, null, userPassword);
     }
 
-    public LoginService(String userLogin, String userPassword) {
-        this.userLogin = userLogin;
-        this.userPassword = userPassword;
+    public Account getAccount(String userLogin, String userPassword) {
+        return getAccount(0, userLogin, userPassword);
     }
 
-    public Account getAccount() {
+    private Account getAccount(int userId, String userLogin, String userPassword) {
         Account account = null;
         UserDTO user;
-//			userId = 1; // TODO удалить вход по табельному номеру
-//			String userLogin = "testik"; // TODO удалить
         Connection connection = null;
         try {
             connection = PoolConnection.getInstance().getConnection();
@@ -53,6 +47,7 @@ public class LoginService {
                     account = getUserAccount(user, connection);
                 }
             }
+        //TODO log add e
         } catch (IOException e) {
         } catch (SQLException e) {
         } catch (PropertyVetoException e) {
@@ -62,7 +57,6 @@ public class LoginService {
                     connection.close();
                 }
             } catch (SQLException e) {
-                //TODO add all e to log
             }
         }
         return account;
@@ -70,11 +64,9 @@ public class LoginService {
 
     private Account getUserAccount(UserDTO user, Connection connection) {
         TaskDAO dao = new TaskDAO(connection);
-        //TODO добавить обработку нулевых результатов
-        ArrayList<TreeMap<Integer, ?>> data = dao.findAllByUser(user.getId());
+        ArrayList<TreeMap<Integer, ?>> data = dao.findAllBySuperior(user);
         TreeMap<Integer, TaskDTO> currentTasks = (TreeMap<Integer, TaskDTO>) data.get(0);
         TreeMap<Integer, TaskMetaDTO> tasksMeta = (TreeMap<Integer, TaskMetaDTO>) data.get(1);
-        Account account = new Account(user, currentTasks, tasksMeta);
-        return account;
+        return new Account(user, currentTasks, tasksMeta);
     }
 }

@@ -5,7 +5,7 @@ public class ListTaskCommand implements ICommand {
 
 	@Override
 	public String execute(RequestHandler content) {
-		// TODO Auto-generated method stub
+		// TODO список тасков с пагинацией, например архивных
 		return null;
 	}
 }

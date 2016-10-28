@@ -19,8 +19,10 @@
 <div class="current-user">
 	Пользователь ID:
 	<c:out value="${account.user.id}" />
-	LOGIN:
+	| LOGIN:
 	<c:out value="${account.user.login}" />
+	| ROLE:
+	<c:out value="${account.user.role}" />
 </div>
 <div class="logout">
 	<form name="logout" action="go" method="post">

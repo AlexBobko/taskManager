@@ -2,12 +2,12 @@ package managers;
 
 import java.util.ResourceBundle;
 
-/**ConfigurationManager*/
-public class ConfigurationManager {
+/**PageManager*/
+public class PageManager {
 
 	private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("pageconfig");
 
-	private ConfigurationManager() {
+	private PageManager() {
 	}
 
 	public static String getProperty(String key) {

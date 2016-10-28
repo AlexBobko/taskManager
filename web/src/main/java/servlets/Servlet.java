@@ -4,7 +4,7 @@ import command.ICommand;
 import command.CommandList;
 import controller.RequestHandler;
 import dto.UserDTO;
-import managers.ConfigurationManager;
+import managers.PageManager;
 import managers.MessageManager;
 
 import javax.servlet.ServletException;
@@ -29,14 +29,14 @@ public class Servlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = ConfigurationManager.getProperty("path.page.login");
+        String page = PageManager.getProperty("path.page.login");
         HttpSession session = request.getSession(true);
         String messageFildName = ICommand.MESSAGE;    //TODO
         String userFildName = ICommand.PARAM_SESSION_USER;    //TODO
         try {
             UserDTO user = (UserDTO) session.getAttribute(userFildName);
             if (user != null) {
-                page = ConfigurationManager.getProperty("path.page.user");
+                page = PageManager.getProperty("path.page.user");
                 session.setAttribute(messageFildName, MessageManager.getProperty("message.hello.user"));
             }
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class Servlet extends HttpServlet {
 //        System.out.println(page);
         if (page == null) {
             // out.println("<br/>***<b>page = null!! " + " </b>***<br/>");
-            page = ConfigurationManager.getProperty("path.page.login");
+            page = PageManager.getProperty("path.page.login");
         }
         // getServletContext().getRequestDispatcher(page).forward(request, response);
         getServletContext().getRequestDispatcher(page).include(request, response);

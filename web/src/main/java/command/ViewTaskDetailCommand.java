@@ -4,17 +4,16 @@ import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
+import managers.PageManager;
 import managers.MessageManager;
 
 
 public class ViewTaskDetailCommand implements ICommand {
-	private String page;
-	private StringBuffer message;
-
+//TODO перенести в doGET
 	@Override
 	public String execute(RequestHandler content) {
-		message = new StringBuffer();
+		StringBuffer message = new StringBuffer();
+		String page=null;
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
@@ -24,12 +23,11 @@ public class ViewTaskDetailCommand implements ICommand {
 			content.getSessionAttributes().put(ACCOUNT, account);
 			content.getSessionAttributes().put(TASK, task);
 			content.getSessionAttributes().put(TASK_META, meta);
-			page = ConfigurationManager.getProperty("path.page.task");
+			page = PageManager.getProperty("path.page.task");
 			// System.out.println("addNewTask: " + meta.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			message = message.append(MessageManager.getProperty("task.detail.false"));
-			page = ConfigurationManager.getProperty("path.page.user");
+//			page = PageManager.getProperty("path.page.login");
 		}
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;

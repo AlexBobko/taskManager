@@ -9,6 +9,7 @@ public class UserDTO extends Entity {
 	private int id;
 	private String login;
 	private String passHash;
+	private int role;
 
 	public UserDTO() {
 
@@ -18,6 +19,13 @@ public class UserDTO extends Entity {
 		this.id = id;
 		this.login = login;
 		this.passHash = passHash;
+		this.role = 1;
+	}
+	public UserDTO(int id, String login, String passHash, int role) {
+		this.id = id;
+		this.login = login;
+		this.passHash = passHash;
+		this.role = role;
 	}
 
 	public UserDTO(int id) {
@@ -39,6 +47,14 @@ public class UserDTO extends Entity {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
 	}
 
 	public static long getSerialversionuid() {

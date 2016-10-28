@@ -10,7 +10,7 @@ public class Account extends Entity {
 	private UserDTO user;
 	private TreeMap<Integer, TaskDTO> currentTasks;
 	private TreeMap<Integer, TaskMetaDTO> tasksMeta;
-	private int levelAccess = 1;
+	private int levelAccess = 1; //TODO пока уровень доступа через user.getRole()
 
 	public Account() {
 	}

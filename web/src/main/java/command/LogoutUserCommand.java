@@ -1,7 +1,7 @@
 package command;
 
 import controller.RequestHandler;
-import managers.ConfigurationManager;
+import managers.PageManager;
 import managers.MessageManager;
 
 public class LogoutUserCommand implements ICommand {
@@ -11,7 +11,7 @@ public class LogoutUserCommand implements ICommand {
             content.setSessionAttributes(null);
         } catch (Exception e) {
         }
-        String page = ConfigurationManager.getProperty("path.page.login");
+        String page = PageManager.getProperty("path.page.login");
         content.getRequestAttributes().put(MESSAGE, MessageManager.getProperty("message.logout"));
         return page;
     }

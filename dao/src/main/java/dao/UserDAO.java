@@ -16,46 +16,39 @@ public class UserDAO extends AbstractDAO<UserDTO> {
 	private final static String SQL_SELECT = ManagerSQL.getProperty("user.select").replace(USERS_ALIAS, USER_TABLE);
 	private final static String SQL_SELECT_LOGIN = ManagerSQL.getProperty("user.select.login").replace(USERS_ALIAS, USER_TABLE);
 	private final static String SQL_DELETE = ManagerSQL.getProperty("user.delete").replace(USERS_ALIAS, USER_TABLE);
-	boolean b = false;
+//	boolean b = false;
 
-	public UserDAO(boolean b) {
-		super(b);
-	}
+//	public UserDAO(boolean b) {
+//		super(b);
+//	}
 
 	public UserDAO(Connection connection) {
 		super(connection);
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserDAO() {
-		super();
-		System.out.println(SQL_INSERT);
-		System.out.println(SQL_SELECT);
-		System.out.println(SQL_DELETE);
-
-	}
+//	public UserDAO() {
+//		super();
+//	}
 
 	@Override
 	public UserDTO findEntityById(int id) {
 		UserDTO user = null;
 		PreparedStatement ps = null;
-		ResultSet rs = null;
+		ResultSet rs;
 
 		try {
 			System.out.println(SQL_SELECT);
-			// System.out.println(TABLE);
 			ps = getPreparedStatement(SQL_SELECT);
-			// ps.setString(1, TABLE);
 			ps.setInt(1, id);
-			// System.out.println(ps);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				user = new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3));
+				user = new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3),rs.getInt(4));
 			}
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			// TODO SQLException
+//			e.printStackTrace();
+			// TODO SQLException to log
 		} finally {
 			close(ps);
 		}
@@ -67,15 +60,12 @@ public class UserDAO extends AbstractDAO<UserDTO> {
 		PreparedStatement ps = null;
 		try {
 			// System.out.println(SQL_SELECT);
-			// System.out.println(TABLE);
 			ps = getPreparedStatement(SQL_SELECT_LOGIN);
-			// ps.setString(1, TABLE);
 			ps.setString(1, login);
-			// System.out.println(ps);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				user = new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3));
-				System.out.println("***findEntityById id:" + user.getId() + " log:" + user.getLogin() + "pas:" + user.getPassHash());
+				user = new UserDTO(rs.getInt(1), rs.getString(2), rs.getString(3),rs.getInt(4));
+//				System.out.println("***findEntityById id:" + user.getId() + " log:" + user.getLogin() + "pas:" + user.getPassHash());
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -124,6 +114,7 @@ public class UserDAO extends AbstractDAO<UserDTO> {
 			ps.setInt(1, user.getId());
 			ps.setString(2, user.getLogin());
 			ps.setString(3, user.getPassHash());
+			ps.setInt(4, user.getRole());
 			rs = ps.executeUpdate();
 			if (rs != 0) {
 				ResultSet result;

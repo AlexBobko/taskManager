@@ -1,12 +1,12 @@
 package command;
 
 import controller.RequestHandler;
-import managers.ConfigurationManager;
+import managers.PageManager;
 
-/**Перенести в гет*/
+/**Go to task add page*/
 public class GoAddCommand implements ICommand {
     @Override
     public String execute(RequestHandler content) {
-        return ConfigurationManager.getProperty("path.page.add.task");
+        return PageManager.getProperty("path.page.add.task");//TODO закинуть в сессию список исполнителей
     }
 }

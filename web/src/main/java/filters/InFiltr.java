@@ -1,6 +1,6 @@
 package filters;
 
-import managers.ConfigurationManager;
+import managers.PageManager;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -34,7 +34,7 @@ public class InFiltr implements Filter {
 //		final static Locale locale = new Locale("ru", "RU");
 		HttpSession session = httpRequest.getSession(true);
 		if ((boolean) session.isNew()) {
-			String page = ConfigurationManager.getProperty("path.page.login");
+			String page = PageManager.getProperty("path.page.login");
 			httpRequest.getRequestDispatcher(page).forward(request, response); 
 		} 
 		chain.doFilter(request, response);

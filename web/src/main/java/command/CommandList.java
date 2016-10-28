@@ -3,27 +3,12 @@ package command;
 public enum CommandList {
     LOGIN {
         {
-            this.command = new LoginUserCommand();
+            this.command = new LoginUserICommand();
         }
     },
     LOGOUT {
         {
-            this.command = new LogoutUserCommand(); //
-        }
-    },
-    TASK_DEL {
-        {
-            this.command = new DeleteTaskCommand();
-        }
-    },
-    TASK_UPDATE {
-        {
-            this.command = new UpdateTaskCommand();
-        }
-    },
-    TASK_LIST {
-        {
-            this.command = new ListTaskCommand();
+            this.command = new LogoutUserCommand();
         }
     },
     TASK_ADD {
@@ -31,14 +16,9 @@ public enum CommandList {
             this.command = new TaskAddCommand(); // add task to BD
         }
     },
-    VIEW_HISTORY {
+    TASK_UPDATE {
         {
-            this.command = new ViewTaskHistoryCommand(); // TODO история видна в подробном описании
-        }
-    },
-    TASK_DETAIL {
-        {
-            this.command = new ViewTaskDetailCommand(); // детали, подробное описание
+            this.command = new UpdateTaskCommand(); //task add correction
         }
     },
     APPROVE_TASK {
@@ -61,24 +41,39 @@ public enum CommandList {
             this.command = new TaskInPayCommand(); // set status 5
         }
     },
+    TASK_READY {
+        {
+            this.command = new TaskReadyCommand(); // set status 6
+        }
+    },
+    TASK_DETAIL {
+        {
+            this.command = new ViewTaskDetailCommand(); //детали, подробное описание //TODO перенести в GET?
+        }
+    },
     GO_ADD{
         {
-            this.command = new GoAddCommand(); // go page add task //TODO перенести в гет
+            this.command = new GoAddCommand(); // go page add task //TODO перенести в GET
         }
     },
     GO_TASK_LIST{
         {
-            this.command = new GoTaskListCommand(); // go page add task //TODO перенести в гет
+            this.command = new GoTaskListCommand(); // go page add task //TODO перенести в GET
         }
     },
-    TASK_CORRECT {
+    VIEW_HISTORY {
         {
-            this.command = new TaskCorrectCommand(); // set status 6
+            this.command = new ViewTaskHistoryCommand(); //TODO история видна в подробном описании
         }
     },
-    TASK_READY {
+    TASK_LIST {
         {
-            this.command = new TaskReadyCommand(); // set status 6
+            this.command = new ListTaskCommand(); //TODO (не готово) список тасков, пагинация
+        }
+    },
+    TASK_DEL {
+        {
+            this.command = new DeleteTaskCommand(); //(не реализовано) таски не удаляются, только корректируются
         }
     };
 

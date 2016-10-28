@@ -4,7 +4,7 @@ import controller.RequestHandler;
 import dto.Account;
 import dto.TaskDTO;
 import dto.TaskMetaDTO;
-import managers.ConfigurationManager;
+import managers.PageManager;
 import managers.MessageManager;
 import service.TaskService;
 
@@ -30,7 +30,7 @@ public class TaskInCheckingCommand implements ICommand {
 			TaskService taskService=new TaskService();
 			b = taskService.updateTaskMeta(task, meta, dateFormat);
 			if (b) {
-				page = ConfigurationManager.getProperty("path.page.user");
+				page = PageManager.getProperty("path.page.user");
 				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());
 				System.out.println(meta.toString());
 			}
@@ -41,7 +41,7 @@ public class TaskInCheckingCommand implements ICommand {
 			message = message.append(MessageManager.getProperty("task.update.false"));
 		}
 		if (page == null) {
-			page = ConfigurationManager.getProperty("path.page.login");
+			page = PageManager.getProperty("path.page.login");
 		}
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;

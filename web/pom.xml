@@ -28,11 +28,8 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-
-
     </dependencies>
     <build>
-
         <plugins>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat7-maven-plugin -->
@@ -54,8 +51,6 @@
                 <version>3.0.0</version>
                 <configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
-                    <!--<webappDirectory>WebContent</webappDirectory>-->
-                    <!--<webappDirectory>WebContent</webappDirectory>-->
                     <webappDirectory>/usr/share/tomcat7/webapps/taskManager</webappDirectory>
                 </configuration>
 
