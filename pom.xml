@@ -8,21 +8,40 @@
     <artifactId>bobko-task-manager</artifactId>
     <packaging>pom</packaging>
     <version>1.2-SNAPSHOT</version>
+
+    <properties>
+        <hibernate.version>4.3.9.Final</hibernate.version>
+        <cobertura.version>2.7</cobertura.version>
+        <junit.version>4.12</junit.version>
+        <mysql.connector.version>5.1.39</mysql.connector.version>
+    </properties>
+
     <modules>
         <module>dao</module>
         <module>services</module>
         <module>web</module>
     </modules>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>git
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>cobertura-maven-plugin</artifactId>
-            <version>2.7</version>
+            <version>${cobertura.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -72,7 +91,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
+                <version>${cobertura.version}</version>
             </plugin>
         </plugins>
     </reporting>
