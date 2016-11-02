@@ -7,13 +7,14 @@
         <meta attribute="class-description">
             This class contains the employee detail.
         </meta>
-        <id name="id" type="int" column="id">
+        <id name="id" type="int" column="task_id">
             <generator class="native"/>
         </id>
-
-
-        <property name="firstName" column="first_name" type="string"/>
-        <property name="lastName" column="last_name" type="string"/>
-        <property name="salary" column="salary" type="int"/>
+        <!--private GregorianCalendar dateCreation , deadline-->
+        <property name="title" column="title" type="string"/>
+        <property name="dateCreation" column="date_creation" type="string"/>
+        <property name="body" column="body" type="string"/>
+        <property name="deadline" column="deadline" type="string"/>
+        <property name="history" column="history" type="string"/>
     </class>
 </hibernate-mapping>

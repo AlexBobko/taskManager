@@ -8,25 +8,41 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>dao</artifactId>
-
     <packaging>jar</packaging>
+    <properties>
+        <hibernate.version>4.3.9.Final</hibernate.version>
+        <cobertura.version>2.7</cobertura.version>
+        <mysql.connector.version>5.1.39</mysql.connector.version>
+        <c3p0.version>0.9.5.1</c3p0.version>
+        <jdbc.version>0.6.1</jdbc.version>
+    </properties>
+    <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
-            <version>0.9.5.1</version>
+            <version>${c3p0.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>mysql</groupId>-->
-            <!--<artifactId>mysql-connector-java</artifactId>-->
-            <!--<version>5.1.39</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.clojure</groupId>
             <artifactId>java.jdbc</artifactId>
-            <version>0.6.1</version>
+            <version>${jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
     <name>DaoTaskMan</name>

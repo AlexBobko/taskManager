@@ -13,9 +13,9 @@ public class TaskDTO extends Entity implements Serializable {
 	private String title;
 	private GregorianCalendar dateCreation /* = new GregorianCalendar() */;
 	private String body;
-//	private int status; //переписать под TaskStatusDTO
 	private GregorianCalendar deadline /* = new GregorianCalendar() */;
 	private StringBuffer history;
+//	private int status; //переписать под TaskStatusDTO
 //	private int executorId;
 
 	public TaskDTO() {
@@ -27,11 +27,11 @@ public class TaskDTO extends Entity implements Serializable {
 		this.title = title;
 		this.dateCreation = dateCreation;
 		this.body = body;
-//		this.status = status;
 		this.deadline = deadline;
 		this.history = history;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd':'HH-mm");
 		history.append(dateFormat.format(dateCreation.getTime())).append("~status:").append(1).append("~~");
+//		this.status = status;
 //		this.executorId = executorId;
 	}
 
