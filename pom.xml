@@ -14,20 +14,20 @@
         <cobertura.version>2.7</cobertura.version>
         <junit.version>4.12</junit.version>
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
-        <log4j.version>2.6.1</log4j.version>
+        <!--<log4j.version>2.6.1</log4j.version>-->
         <!--добавить лог-->
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Logger -->
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!--<dependencyManagement>-->
+        <!--<dependencies>-->
+            <!--&lt;!&ndash; Logger &ndash;&gt;-->
+            <!--<dependency>-->
+                <!--<groupId>log4j</groupId>-->
+                <!--<artifactId>log4j</artifactId>-->
+                <!--<version>${log4j.version}</version>-->
+            <!--</dependency>-->
+        <!--</dependencies>-->
+    <!--</dependencyManagement>-->
 
     <dependencies>
         <dependency>
