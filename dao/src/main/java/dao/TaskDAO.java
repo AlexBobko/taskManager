@@ -7,6 +7,7 @@ import utDao.ManagerSQL;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class TaskDAO extends AbstractDAO<TaskDTO> {
     // private final static String PREFIX = "task"; // resources.sql.properties
@@ -113,7 +114,7 @@ public class TaskDAO extends AbstractDAO<TaskDTO> {
                 int id = result.getInt("task_id");
                 userId = result.getInt("user_id");
                 String title = result.getString("title");
-                GregorianCalendar dateCreation = new GregorianCalendar();
+                Date dateCreation = new GregorianCalendar();
                 dateCreation.setTime(result.getTimestamp("date_creation"));
                 String body = result.getString("body");
                 int status = result.getInt("status_id");
@@ -160,7 +161,7 @@ public class TaskDAO extends AbstractDAO<TaskDTO> {
                 int id = result.getInt("task_id");
                 userId = result.getInt("user_id");
                 String title = result.getString("title");
-                GregorianCalendar dateCreation = new GregorianCalendar();
+                Date dateCreation = new GregorianCalendar();
                 dateCreation.setTime(result.getTimestamp("date_creation"));
                 String body = result.getString("body");
                 int status = result.getInt("status_id");

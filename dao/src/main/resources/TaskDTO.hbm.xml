@@ -12,9 +12,11 @@
         </id>
         <!--private GregorianCalendar dateCreation , deadline-->
         <property name="title" column="title" type="string"/>
-        <property name="dateCreation" column="date_creation" type="string"/>
+        <!--<property name="dateCreation" column="date_creation" type="calendar"/>-->
+        <property name="dateCreation" column="date_creation" type="timestamp"/>
         <property name="body" column="body" type="string"/>
-        <property name="deadline" column="deadline" type="string"/>
+        <!--<property name="deadline" column="deadline" type="calendar"/>-->
+        <property name="deadline" column="deadline" type="timestamp"/>
         <property name="history" column="history" type="string"/>
     </class>
 </hibernate-mapping>

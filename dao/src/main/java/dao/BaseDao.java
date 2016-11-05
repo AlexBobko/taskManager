@@ -14,7 +14,7 @@ import java.lang.reflect.ParameterizedType;
 public class BaseDao<T> implements Dao<T> {
     private static Logger log = Logger.getLogger(BaseDao.class);
     private Transaction transaction = null;
-    HibernateUtil util= HibernateUtil.getHibernateUtil(); //TODO праильность
+    protected HibernateUtil util= HibernateUtil.getHibernateUtil(); //TODO праильность
 
     public BaseDao() {
 
@@ -29,8 +29,7 @@ public class BaseDao<T> implements Dao<T> {
             transaction.commit();
             log.info("Save or update (commit):" + t);
         } catch (HibernateException e) {
-            //TODO поправить
-            log.error("Error save or update "+ t.getClass().getName() + " in Dao" + e);
+            log.error("Error save or update "+ getPersistentClass() + " in Dao" + e);
             transaction.rollback();
             throw new DaoException(e);
         }
@@ -80,7 +79,7 @@ public class BaseDao<T> implements Dao<T> {
             transaction.commit();
             log.info("Delete:" + t);
         } catch (HibernateException e) {
-            log.error("Error save or update PERSON in Dao" + e);
+            log.error("Error delete " + getPersistentClass() + " in Dao" + e);
             transaction.rollback();
             throw new DaoException(e);
         }

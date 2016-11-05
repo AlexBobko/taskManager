@@ -2,7 +2,6 @@ package dto;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -11,17 +10,18 @@ public class TaskDTO extends Entity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String title;
-	private GregorianCalendar dateCreation /* = new GregorianCalendar() */;
-	private String body;
+	private Date dateCreation /* = new GregorianCalendar() */;
 	private GregorianCalendar deadline /* = new GregorianCalendar() */;
+	private String body;
 	private StringBuffer history;
+	private TaskContent content;
 //	private int status; //переписать под TaskStatusDTO
 //	private int executorId;
 
 	public TaskDTO() {
 	}
 
-	public TaskDTO(int id, String title, GregorianCalendar dateCreation, String body, GregorianCalendar deadline, StringBuffer history) {
+	public TaskDTO(int id, String title, Date dateCreation, String body, GregorianCalendar deadline, StringBuffer history) {
 		// super();
 		this.id = id;
 		this.title = title;
@@ -80,11 +80,11 @@ public class TaskDTO extends Entity implements Serializable {
 		this.title = title;
 	}
 
-	public Calendar getDateCreation() {
-		return dateCreation;
+	public Date getDateCreation() {
+		return this.dateCreation;
 	}
 
-	public void setDateCreation(GregorianCalendar dateCreation) {
+	public void setDateCreation(Date dateCreation) {
 		this.dateCreation = dateCreation;
 	}
 
