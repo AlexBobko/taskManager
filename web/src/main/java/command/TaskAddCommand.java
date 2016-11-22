@@ -1,19 +1,20 @@
 package command;
 
 import controller.RequestHandler;
-import dto.Account;
-import dto.TaskDTO;
-import dto.TaskMetaDTO;
-import managers.PageManager;
+import loc.task.db.exceptions.DaoException;
+import loc.task.entity.Task;
+import loc.task.vo.Account;
 import managers.MessageManager;
+import managers.PageManager;
+import org.apache.log4j.Logger;
 import service.TaskService;
 
-import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class TaskAddCommand implements ICommand {
+    private static Logger log = Logger.getLogger(TaskAddCommand.class);
     private String page;
     private StringBuffer message;
 
@@ -43,34 +44,26 @@ public class TaskAddCommand implements ICommand {
             if (account.getUser().getRole()==2){
                 responsiblePersonId= Integer.parseInt((String) content.getRequestAttributes().get(TASK_EMPLOYEE));
             }else {
-                responsiblePersonId =account.getUser().getId();
+                responsiblePersonId = 0;
             }
-
-            TaskService taskService = new TaskService();
-            GregorianCalendar taskDeadline = taskService.convertDate(strTaskDeadline);
-            TaskDTO newTask=new TaskDTO (titleTask, bodyTask, taskDeadline);
-            TaskMetaDTO newTaskMeta =new TaskMetaDTO(0, responsiblePersonId, 1);
-            if (taskService.addNewTask(newTask,newTaskMeta)){
-                message.append(MessageManager.getProperty("message.task.add") + newTask.getId());
-                account.getCurrentTasks().put(newTask.getId(), newTask);
-                account.getTasksMeta().put(newTaskMeta.getTaskId(), newTaskMeta);
+            try {
+                TaskService taskService = new TaskService();
+                Task newTask = taskService.addNewTask(account, responsiblePersonId, titleTask, bodyTask, strTaskDeadline);
+                message.append(MessageManager.getProperty("message.task.add") + newTask.getTaskId());
                 content.getSessionAttributes().put(TASK, newTask);
-                content.getSessionAttributes().put(TASK_META, newTaskMeta);
                 page = PageManager.getProperty("path.page.task");
-                System.out.println("addNewTask: " + newTask.getId()); //для лога
-            } else {
-                //TODO ?? пробросить Exception чтобы код не дублировать?
-                message.append(MessageManager.getProperty("message.task.add.false"));
-                page = PageManager.getProperty("path.page.add.task");
-                return page;
+                System.out.println("addNewTask: " + newTask.getTaskId()); //для лога
+            }catch (DaoException e)
+            {
+                log.error(e, e);
             }
         } catch (Exception e) {
-//			e.printStackTrace();
+            log.error(e, e);
             message.append(MessageManager.getProperty("message.task.add.false"));
             page = PageManager.getProperty("path.page.add.task");
         } finally {
             content.getSessionAttributes().put(ACCOUNT, account);
-            content.getSessionAttributes().put(MESSAGE, message.toString());//TODO переложить все собщения в атрибуты
+            content.getSessionAttributes().put(MESSAGE, message.toString());
         }
         return page;
     }

@@ -1,14 +1,17 @@
 package command;
 
 import controller.RequestHandler;
-import dto.Account;
-import dto.TaskDTO;
-import dto.TaskMetaDTO;
-import managers.PageManager;
+import loc.task.entity.Task;
+import loc.task.vo.Account;
 import managers.MessageManager;
+import managers.PageManager;
+import org.apache.log4j.Logger;
+import service.TaskService;
 
+//			content.getSessionAttributes().put(TASK_META, meta);
 
 public class ViewTaskDetailCommand implements ICommand {
+	private static Logger log = Logger.getLogger(ViewTaskDetailCommand.class);
 //TODO перенести в doGET
 	@Override
 	public String execute(RequestHandler content) {
@@ -16,21 +19,21 @@ public class ViewTaskDetailCommand implements ICommand {
 		String page=null;
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
-			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
-			TaskDTO task = account.getCurrentTasks().get(taskId);
-//			SimpleDateFormat dateFormat = account.getDateFormat();
-			content.getSessionAttributes().put(ACCOUNT, account);
-			content.getSessionAttributes().put(TASK, task);
-			content.getSessionAttributes().put(TASK_META, meta);
-			page = PageManager.getProperty("path.page.task");
+			Long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
+			TaskService taskService = new TaskService();
+			Task task = taskService.getTask(account,taskId);
+			if (task!=null) {
+				content.getSessionAttributes().put(TASK, task);
+				page = PageManager.getProperty("path.page.task");
+				content.getSessionAttributes().put(ACCOUNT, account);
+			}
 			// System.out.println("addNewTask: " + meta.getId());
 		} catch (Exception e) {
+			log.error(e,e);
 			message = message.append(MessageManager.getProperty("task.detail.false"));
 //			page = PageManager.getProperty("path.page.login");
 		}
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;
 	}
-
 }

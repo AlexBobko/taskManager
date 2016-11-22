@@ -1,7 +1,7 @@
 package command;
 
 import controller.RequestHandler;
-import dto.Account;
+import loc.task.vo.Account;
 import managers.PageManager;
 
 public class GoTaskListCommand implements ICommand {

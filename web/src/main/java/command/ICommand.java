@@ -2,7 +2,7 @@ package command;
 
 import controller.RequestHandler;
 
-/** AbstractCommand */
+/** ICommand */
 public interface ICommand {
 	// Attribute name
 	public static final String CMD_VALUE = "cmdValue";

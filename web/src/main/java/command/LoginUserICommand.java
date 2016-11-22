@@ -1,17 +1,17 @@
 package command;
 
 import controller.RequestHandler;
-import dto.Account;
-import managers.PageManager;
+import loc.task.vo.Account;
 import managers.MessageManager;
-import service.LoginService;
+import managers.PageManager;
+import service.UserService;
 
 /**
  * Login
  */
 public class LoginUserICommand implements ICommand {
 
-    private LoginService loginService;
+//    private LoginService loginService;
 
     private static final String LOGIN = "username";
     private static final String PASSWORD = "password";
@@ -21,6 +21,7 @@ public class LoginUserICommand implements ICommand {
 
     @Override
     public String execute(RequestHandler content) {
+
         String page=null;
         StringBuffer message = new StringBuffer();
 //        System.out.println("It LoginUserComandImpl");
@@ -28,13 +29,14 @@ public class LoginUserICommand implements ICommand {
         try {
             String userLogin = (String) content.getRequestAttributes().get(LOGIN);
             String userPassword = (String) content.getRequestAttributes().get(PASSWORD);
-            LoginService loginService = new LoginService();
+            UserService userService = new UserService();
             try {
                 int userId = Integer.parseInt(userLogin);
-                account= loginService.getAccount(userId, userPassword);
+                account= userService.getAccount(userId, userPassword);
             } catch (NumberFormatException e) {
-                account= loginService.getAccount(userLogin, userPassword);
+                account= userService.getAccount(userLogin, userPassword);
             }
+
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
                 if (account.getUser().getRole() == 1) {

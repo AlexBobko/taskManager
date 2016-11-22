@@ -3,7 +3,7 @@ package servlets;
 import command.CommandList;
 import command.ICommand;
 import controller.RequestHandler;
-import dto.Account;
+import loc.task.vo.Account;
 import managers.MessageManager;
 import managers.PageManager;
 

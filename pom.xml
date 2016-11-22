@@ -47,7 +47,7 @@
         <module>dao</module>
         <module>services</module>
         <module>web</module>
-        <module>testHibernate</module>
+        <!--<module>dao</module>-->
     </modules>
 
     <build>

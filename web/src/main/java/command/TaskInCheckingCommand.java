@@ -1,49 +1,40 @@
 package command;
 
 import controller.RequestHandler;
-import dto.Account;
-import dto.TaskDTO;
-import dto.TaskMetaDTO;
-import managers.PageManager;
+import loc.task.vo.Account;
 import managers.MessageManager;
+import managers.PageManager;
+import org.apache.log4j.Logger;
 import service.TaskService;
 
-import java.text.SimpleDateFormat;
-
-/** Task set checking status 4 */
+/**
+ * Task set checking status 4
+ */
 public class TaskInCheckingCommand implements ICommand {
-	private String page;
-	private StringBuffer message;
-	private boolean b;
+    private static Logger log = Logger.getLogger(TaskInCheckingCommand.class);
+    final private Integer newStatus = 4;
 
-	@Override
-	public String execute(RequestHandler content) {
-		message = new StringBuffer();
-		b = false;
-		try {
-			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-			int taskId = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
-			TaskMetaDTO meta = account.getTasksMeta().get(taskId);
-			TaskDTO task = account.getCurrentTasks().get(taskId);
-			SimpleDateFormat dateFormat = account.getDateFormat();
-			meta.setStatusId(4);// устанавливаем статус на проверке
-			TaskService taskService=new TaskService();
-			b = taskService.updateTaskMeta(task, meta, dateFormat);
-			if (b) {
-				page = PageManager.getProperty("path.page.user");
-				message = message.append(MessageManager.getProperty("task.update")).append(meta.getTaskId());
-				System.out.println(meta.toString());
-			}
-			content.getSessionAttributes().put(ACCOUNT, account);
-			// System.out.println("addNewTask: " + meta.getId());
-		} catch (Exception e) {
-			e.printStackTrace();
-			message = message.append(MessageManager.getProperty("task.update.false"));
-		}
-		if (page == null) {
-			page = PageManager.getProperty("path.page.login");
-		}
-		content.getSessionAttributes().put(MESSAGE, message.toString());
-		return page;
-	}
+    @Override
+    public String execute(RequestHandler content) {
+        String page = null;
+        StringBuffer message = new StringBuffer();
+        try {
+            Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
+            long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
+            TaskService taskService = new TaskService();
+            if (taskService.updateTask(account, taskId, newStatus)) {
+                page = PageManager.getProperty("path.page.user");
+                message = message.append(MessageManager.getProperty("task.update")).append(taskId);
+            }
+            content.getSessionAttributes().put(ACCOUNT, account);
+        } catch (Exception e) {
+            log.error(e, e);
+            message = message.append(MessageManager.getProperty("task.update.false"));
+        }
+        if (page == null) {
+            page = PageManager.getProperty("path.page.login");
+        }
+        content.getSessionAttributes().put(MESSAGE, message.toString());
+        return page;
+    }
 }

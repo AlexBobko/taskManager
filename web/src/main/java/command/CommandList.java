@@ -61,11 +61,6 @@ public enum CommandList {
             this.command = new GoTaskListCommand(); // go page add task //TODO перенести в GET
         }
     },
-    VIEW_HISTORY {
-        {
-            this.command = new ViewTaskHistoryCommand(); //TODO история видна в подробном описании
-        }
-    },
     TASK_LIST {
         {
             this.command = new ListTaskCommand(); //(не готово) список тасков, пагинация
@@ -73,7 +68,7 @@ public enum CommandList {
     },
     TASK_DEL {
         {
-            this.command = new DeleteTaskCommand(); //(не реализовано) таски не удаляются, только корректируются
+            this.command = new DeleteTaskCommand(); // таски не удаляются, только корректируются
         }
     };
 

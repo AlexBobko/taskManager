@@ -2,34 +2,99 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>bobko-task-manager</artifactId>
         <groupId>loc.task</groupId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>dao</artifactId>
     <packaging>jar</packaging>
+
     <properties>
-        <hibernate.version>4.3.9.Final</hibernate.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hibernate.version>4.3.6.Final</hibernate.version>
+        <!--<hibernate.version>4.3.9.Final</hibernate.version>-->
+        <lombok.version>1.16.6</lombok.version>
+        <lang3.version>3.5</lang3.version>
+        <log4j.version>1.2.17</log4j.version>
+        <!--<log4j.version>1.2.17</log4j.version>-->
+        <mysql.version>5.1.34</mysql.version>
+        <!--<mysql.connector.version>5.1.39</mysql.connector.version>-->
+        <ehcache.version>2.6.9</ehcache.version>
+
         <cobertura.version>2.7</cobertura.version>
-        <mysql.connector.version>5.1.39</mysql.connector.version>
         <c3p0.version>0.9.5.1</c3p0.version>
         <jdbc.version>0.6.1</jdbc.version>
         <slf4j.version>1.5.6</slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
+
+
+
     </properties>
+    <name>DaoTaskMan</name>
     <url>http://maven.apache.org</url>
+    <build>
+        <finalName>managePerson</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <!--<configuration>-->
+                <!--<archive>-->
+                <!--<manifest>-->
+                <!--<mainClass>loc.task.loader.PersonLoader</mainClass>-->
+                <!--<addClasspath>true</addClasspath>-->
+                <!--<classpathPrefix>lib/</classpathPrefix>-->
+                <!--</manifest>-->
+                <!--</archive>-->
+                <!--</configuration>-->
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>JBoss</id>
+            <name>JBoss Repsitory</name>
+            <layout>default</layout>
+            <url>http://repository.jboss.org/maven2</url>
+        </repository>
+        <repository>
+            <id>codelds</id>
+            <url>https://code.lds.org/nexus/content/groups/main-repo</url>
+        </repository>
+        <repository>
+            <id>oracleOr</id>
+            <url>http://maven-us.nuxeo.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>sourceforge</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <dependencies>
+<!--остатки от прошлого-->
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>${c3p0.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.connector.version}</version>
         </dependency>
         <dependency>
             <groupId>org.clojure</groupId>
@@ -41,6 +106,10 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+
+
+
+<!--остатки от прошлого-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -56,17 +125,59 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+        <!-- Hibernate EHCache API -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <!-- EHCache Core APIs -->
+        <!--<dependency>-->
+        <!--<groupId>net.sf.ehcache</groupId>-->
+        <!--<artifactId>ehcache</artifactId>-->
+        <!--<version>${ehcache.version}</version>-->
+        <!--<type>pom</type>-->
+        <!--</dependency>-->
+
+        <!-- EHCache Core APIs -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency>
+        <!-- EHCache uses slf4j for logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${lang3.version}</version>
+        </dependency>
     </dependencies>
-    <name>DaoTaskMan</name>
 </project>
