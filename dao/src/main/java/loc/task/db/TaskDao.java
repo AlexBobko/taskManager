@@ -161,7 +161,12 @@ public class TaskDao extends BaseDao<Task> {
             includeStatus.add(2);
             includeStatus.add(4);
         }
-        String hql = "SELECT COUNT (T) FROM Task T JOIN User U WHERE T.statusId IN (:statusId) AND U.userId IN (:userId)";
+        System.out.println(includeStatus);
+
+//        SELECT COUNT(*) FROM `user` WHERE  `user`.`user_id` IN (2, 3) AND `user`.`F_accountStatus` IN (1);
+//        String hql = "SELECT COUNT (T) FROM Task T JOIN User U WHERE T.statusId IN (:statusId)";
+        String hql = "SELECT DISTINCT COUNT (T) FROM Task T JOIN T.personList U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
+//        String hql = "SELECT COUNT (T) FROM Task T JOIN User U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
         System.out.println(hql);
 //        Session session = util.getSession();
         Query query = session.createQuery(hql);

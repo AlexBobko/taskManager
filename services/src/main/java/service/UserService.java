@@ -6,6 +6,7 @@ import loc.task.entity.Task;
 import loc.task.entity.User;
 import loc.task.vo.*;
 import org.apache.log4j.Logger;
+import org.hibernate.Transaction;
 import utils.org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashSet;
@@ -15,6 +16,7 @@ public class UserService {
 
     private static Logger log = Logger.getLogger(UserService.class);
     private static UserDao userDao = null;
+    private Transaction transaction = null;
 
     //TODO переделать на синглтон
 
@@ -29,32 +31,36 @@ public class UserService {
     private Account getAccount(int userId, String userLogin, String userPassword) {
         Account account = null;
         User user;
+
+
         try {
+//            transaction=
             if (userLogin != null) {
                 user = getUserDao().findEntityByLogin(userLogin);
             } else {
                 user = getUserDao().get(userId);
             }
             if (user != null) {
-//                    pass = "sваываыsd" + "dsdf@@"; //чтобы не вводить пароль :)
-                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
+                userPassword = "sваываыsd" + "dsdf@@"; //TODO !ХАРДКОД //чтобы не вводить пароль :)
+//                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
                 if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
 //                        System.out.println("It matches");
-
-                    Privileges privileges= getUserPrivileges (user);
+                    Privileges privileges = getUserPrivileges(user);
                     account = new Account(user);
+                    System.out.println("Количество тасков в коллекции:" + user.getTaskList().size());
+                    for (Task task : user.getTaskList()) {
+                        account.getCurrentTasks().put((int) task.getTaskId(), task); //TODO перепилить в SET или лист
+                    }
                     account.setPrivileges(privileges);
                 } else {
                     user = null;
                 }
             }
-        }catch (DaoException e)
-        {
+        } catch (DaoException e) {
             log.error(e, e);
         }
         return account;
     }
-
 
     private Privileges getUserPrivileges(User user) {
         //Default settints
@@ -90,13 +96,13 @@ public class UserService {
                 if (totalCount % (long) tasksPerPage > 0) {
                     countPage++;
                 }
-                privileges = new EmployeePrivileges(totalCount,includeStatus,countPage,currentTasks);
+                privileges = new EmployeePrivileges(totalCount, includeStatus, countPage, currentTasks);
                 break;
         }
-         return privileges;
+        return privileges;
     }
 
-    public User getUser(int userId) throws DaoException{
+    public User getUser(int userId) throws DaoException {
         return getUserDao().get(userId);
     }
 

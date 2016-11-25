@@ -26,11 +26,11 @@
                         <td><c:out value="${account.dateFormat.format(task.value.deadline.getTime())}"/></td>
                         <td>
                             <button name="TASK_DETAIL" type="submit" value="${task.key}">Детали</button>
-                            <c:choose><c:when test="${account.tasksMeta[task.key].statusId == 1}">
+                            <c:choose><c:when test="${task.value.statusId == 1}">
                                 <button name="APPROVE_TASK" type="submit" value="${task.key}">На утверждение
                                 </button>
                             </c:when>
-                                <c:when test="${account.tasksMeta[task.key].statusId == 3}">
+                                <c:when test="${task.value.statusId == 3}">
                                     <button name="FOR_CHECKING" type="submit" value="${task.key}">На проверку</button>
                                 </c:when>
                                 <c:otherwise>

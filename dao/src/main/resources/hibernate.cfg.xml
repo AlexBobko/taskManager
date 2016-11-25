@@ -20,7 +20,7 @@
         <!-- enable second level cache and query cache -->
         <property name="hibernate.cache.use_second_level_cache">true</property>
         <property name="hibernate.cache.use_query_cache">true</property>
-        <property name="net.sf.ehcache.configurationResourceName">/myehcache.xml</property>
+        <property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
         <!-- Mapping files -->
         <mapping class="loc.task.entity.Task"/>
         <mapping class="loc.task.entity.User"/>

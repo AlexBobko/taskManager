@@ -15,6 +15,8 @@ public class LoginUserICommand implements ICommand {
 
     private static final String LOGIN = "username";
     private static final String PASSWORD = "password";
+    private static final int employeeRole =1;
+    private static final int superiorRole =2;
 
     LoginUserICommand() {
     }
@@ -39,9 +41,9 @@ public class LoginUserICommand implements ICommand {
 
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
-                if (account.getUser().getRole() == 1) {
+                if (account.getUser().getRole() == employeeRole) {
                     page=PageManager.getProperty("path.page.user");
-                }else if (account.getUser().getRole() == 2){
+                }else if (account.getUser().getRole() == superiorRole){
                     page=PageManager.getProperty("path.page.superior");
                 }
                 message.append(MessageManager.getProperty("message.true.login"));

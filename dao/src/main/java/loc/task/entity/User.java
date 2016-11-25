@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity //(name = "users")
-@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="user")
 public class User {
     private static final long serialVersionUID = 1L;
     @Id
@@ -30,7 +29,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private PersonalData personalData;
-    @Where(clause = "status_id < 6 LIMIT = 12") //TODO проверить ограничение
+    @Where(clause = "status_id < 6 ") //TODO проверить ограничение LIMIT 12
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "user_task",
             joinColumns = @JoinColumn(name = "user_id"),
