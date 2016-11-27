@@ -11,19 +11,25 @@
                     <c:out value="${curTask.title}"/>
                     &quot;
                 </h2>
+
                 <p>
                     № задачи в системе:
-                    <c:out value="${curTask.id}"/>
+                    <c:out value="${curTask.taskId}"/>
                     <br/> Ответственный:
-                    <c:out value="${curTaskMeta.userId}"/>
+                    <c:forEach items="${curTask.personList}" var="user">
+                        <c:out value="${user.userId}"/>:
+                        <c:out value="${user.login}"/><br/>
+                    </c:forEach>
                     <br/>Дата создания:
-                    <c:out value="${account.dateFormat.format(curTask.dateCreation.getTime())}"/>
+                    <c:out value="${account.dateFormat.format(curTask.dateCreation)}"/>
                     <br/> Дедлайн:
-                    <c:out value="${account.dateFormat.format(curTask.deadline.getTime())}"/>
+                    <c:out value="${account.dateFormat.format(curTask.deadline)}"/>
                     <br/> Статус:
-                    <c:out value="${curTaskMeta.statusId}"/>
+                    <c:out value="${curTask.statusId}"/>
                 </p>
+
                 <p>
+
                 <form name="tasks-form" action="go" method="post">
                     <button name="GO_ADD" type="submit" value="GO_ADD">Новая задача</button>
                     <button name="GO_TASK_LIST" type="submit" value="GO_TASK_LIST">К списку задач</button>
@@ -34,7 +40,7 @@
                 <h2>Описание задачи</h2>
 
                 <p>
-                    <c:out value="${curTask.body}"/>
+                    <c:out value="${curTask.content.body}"/>
                 </p>
             </div>
             <div class="task-correct">
@@ -50,12 +56,8 @@
             </div>
             <div class="task-history">
                 <h2>История изменений</h2>
-
                 <p>
-                    <c:forEach items="${curTask.getStringHistory()}" var="hist">
-                        <c:out value="${hist}"/>
-                        <br/>
-                    </c:forEach>
+                    <c:out value="${curTask.content.history}"/>
                 </p>
             </div>
         </div>

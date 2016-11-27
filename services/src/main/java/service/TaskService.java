@@ -7,29 +7,20 @@ import loc.task.entity.TaskContent;
 import loc.task.entity.User;
 import loc.task.util.HibernateUtil;
 import loc.task.vo.Account;
+import loc.task.vo.TaskOutFilter;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-//              статусы важные руководителю: 2, 4, 5
-//            1(1) - Создано (новый) - еще можно редактировать. <br/>
-//            2(1) - На утверждении - ждет утвеждения начальника, для начала работы<br/>
-//            3(2) - В работе, подчиненный выполняет задание<br/>
-//            4(1) - На проверкe - задание передано на проверку руководителю для назначения времени приема<br/>
-//            5(2) - К сдаче - назначено время приема<br/>
-//            6(2) - Выполнено - задача закрывается и уходит в архив<br/>
-//            7     добавить на UI -  7 удалена
 
 public class TaskService {
     private static Logger log = Logger.getLogger(TaskService.class); //TODO log add e  log.error(e, e);
     private static TaskDao taskDao = null;
     final private Integer employeeRole = 1;
+    final private Integer superiorRole = 2;
     final private Integer defaultStatusTask = 1;
     private Transaction transaction = null;
 
@@ -39,10 +30,45 @@ public class TaskService {
 
     }
 
+    //TODO на каком этапе проверять права на операцию, например пагинации
+    public Account updateTaskList(Account ac) {
+        if (ac.getUser().getRole() == employeeRole) {
+            ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), ac.getUser().getUserId()));
+
+
+        } else if (ac.getUser().getRole() == superiorRole) {
+            ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter()));
+        }
+        return ac;
+    }
+
+    public Map<Long, Task> getTasksList(TaskOutFilter f, Integer userId) {
+        Set<Integer> usersId = new HashSet<>(1);
+        usersId.add(userId);
+        List<Task> tasksList = getTaskDao().getCurrentTaskUser(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), usersId);
+        Map<Long, Task> currentTasks = new HashMap(f.getTasksPerPage());
+        for (Task task : tasksList) {
+            currentTasks.put(task.getTaskId(), task);
+
+            System.out.println("task.getTaskId "+task.getTaskId());
+        }
+        return currentTasks;
+    }
+
+    public Map<Long,Task> getTasksList(TaskOutFilter f) {
+        List<Task> tasksList =getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk());
+        Map<Long, Task> currentTasks = new HashMap(f.getTasksPerPage());
+        for (Task task : tasksList) {
+            currentTasks.put(task.getTaskId(), task);
+        }
+        return currentTasks;
+    }
+
     public static long getCountTask(Set<Integer> includeStatus, int userId) {
 
         return getTaskDao().getCountTask(includeStatus, userId);
     }
+
 
     public Task addNewTask(Account account, int responsiblePersonId,
                            String titleTask, String bodyTask, String strTaskDeadline) throws DaoException {
@@ -81,6 +107,7 @@ public class TaskService {
             final Integer taskStatusToApprove = 2;
             final Integer taskStatusInChecking = 4;
             if (account.getUser().getRole() == employeeRole) {
+                System.out.println(taskStatusToApprove.equals(status) + " "+ taskStatusInChecking.equals(status));
                 if (taskStatusToApprove.equals(status) || taskStatusInChecking.equals(status)) {
                     task = getTaskDao().getTaskToUser(taskId, account.getUser().getUserId());
                 } else {
@@ -98,6 +125,7 @@ public class TaskService {
             task.getContent().setHistory(history);
             getTaskDao().saveOrUpdate(task);
             transaction.commit();
+            account.getCurrentTasks().put(task.getTaskId(),task);
             b = true;
         } catch (DaoException e) {
             transaction.rollback();
@@ -109,14 +137,15 @@ public class TaskService {
     public Task getTask(Account account, Long taskId) {
         User user = account.getUser();
         int role = user.getRole();
-        Task task=null;
+        Task task = null;
         if (role == 1) {
+            System.out.println(user.getUserId());
             task = getTaskDao().getTaskToUser(taskId, user.getUserId());
         } else {
             try {
                 task = getTaskDao().get(taskId);
-            }catch (DaoException e) {
-                log.error(e,e);
+            } catch (DaoException e) {
+                log.error(e, e);
             }
         }
         return task;
@@ -128,7 +157,9 @@ public class TaskService {
         boolean b;
         try {
             transaction = session.beginTransaction();
+            System.out.println("2" + task);
             getTaskDao().refresh(task);
+            System.out.println("3" + task);
             int userId = account.getUser().getUserId();
             task.setStatusId(newStatus);// устанавливаем статус на проверке
             String currentTaskBody = task.getContent().getBody();
@@ -138,7 +169,11 @@ public class TaskService {
             StringBuffer history = new StringBuffer(task.getContent().getHistory());
             history = history.append(dateFormat.format(calendar.getTime())).append("~status:").append("~korrect body").append(newStatus).append("~~");
             task.getContent().setHistory(history.toString());
+            System.out.println("4" + task);
+//            getTaskDao().saveOrUpdate(task.getContent());
             getTaskDao().saveOrUpdate(task);
+            System.out.println("5" + task);
+            account.getCurrentTasks().put(task.getTaskId(),task); //обновление в обход кэша?
             transaction.commit();
             b = true;
         } catch (DaoException e) {

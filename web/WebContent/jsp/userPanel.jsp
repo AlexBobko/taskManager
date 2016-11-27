@@ -18,7 +18,7 @@
 </div>
 <div class="current-user">
 	Пользователь ID:
-	<c:out value="${account.user.id}" />
+	<c:out value="${account.user.userId}" />
 	| LOGIN:
 	<c:out value="${account.user.login}" />
 	| ROLE:

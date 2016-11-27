@@ -38,14 +38,12 @@ public class HibernateUtil {
             // Create the SessionFactory from hibernate.cfg.xml
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml").setNamingStrategy(new CustomNamingStrategy());
-            System.out.println("Hibernate Configuration loaded");
-
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-            System.out.println("Hibernate serviceRegistry created");
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-            System.out.println("Hibernate sessionFactory created");
-            stats = sessionFactory.getStatistics();
 
+            System.out.println("Hibernate sessionFactory created");
+
+            stats = sessionFactory.getStatistics();
             System.out.println("Stats enabled=" + stats.isStatisticsEnabled());
             stats.setStatisticsEnabled(true);
             System.out.println("Stats enabled=" + stats.isStatisticsEnabled());

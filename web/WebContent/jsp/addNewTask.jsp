@@ -21,7 +21,7 @@
 
             <p><b>Исполнитель(не реализовано, закинуть в сессию исписок исполнителей): </b>
                 <select name="employee">
-                    <option selected="selected">Выберите героя</option>
+                    <option selected="selected">Выберите исполнителя</option>
                     <option value="1">Чебурашка</option>
                     <option value="3">Крокодил Гена</option>
                     <option value="1">Шапокляк</option>

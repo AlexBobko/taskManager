@@ -15,5 +15,7 @@ public interface ICommand {
 	static final String POST_TITLE = "titleTask";
 	static final String POST_BODY = "bodyTask";
 	static final String POST_DEADLINE = "taskDeadline";
+	static final Integer employeeRole = 1;
+	static final Integer superiorRole = 2;
 	String execute(RequestHandler content);
 }

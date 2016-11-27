@@ -7,34 +7,31 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-/**
- * Set task status 2
- */
-public class TaskInApproveCommand implements ICommand {
-    private static Logger log = Logger.getLogger(TaskInApproveCommand.class);
-    final private Integer newStatus = 2;
-
+public class PageCommand implements ICommand {
+    private static Logger log = Logger.getLogger(PageCommand.class);
     @Override
     public String execute(RequestHandler content) {
         String page = null;
         StringBuffer message = new StringBuffer();
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
-            long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
+            int pageNumber = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
+
+            System.out.println(account.getCurrentTasksFilter());
+
+            account.getCurrentTasksFilter().setPage(pageNumber);
+
             TaskService taskService = new TaskService();
-            if (account.getUser().getRole() == employeeRole) {
-                if (taskService.updateTask(account, taskId, newStatus)) {
-                    page = PageManager.getProperty("path.page.user");
-                    message = message.append(MessageManager.getProperty("task.update")).append(taskId);
-                }
-            } else if (account.getUser().getRole() == superiorRole) {
 
-            }
+            System.out.println("new task F " + account.getCurrentTasksFilter());
 
+            account=taskService.updateTaskList(account);
+
+            page = PageManager.getProperty("path.page.user");
             content.getSessionAttributes().put(ACCOUNT, account);
         } catch (Exception e) {
             log.error(e, e);
-            message = message.append(MessageManager.getProperty("task.update.false"));
+            message = message.append(MessageManager.getProperty("error.illegal.operation"));
         }
         if (page == null) {
             page = PageManager.getProperty("path.page.login");

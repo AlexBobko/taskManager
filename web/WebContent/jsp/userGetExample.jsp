@@ -3,11 +3,11 @@
 <%@ include file="/jsp/header.jsp" %>
 <!-- user.jsp -->
 <div class="content">
-    <form name="user-form" action="go" method="post">
-        <div class="main">
-            <h1>Список текущих задач</h1>
+    <div class="main">
+        <h1>Список текущих задач</h1>
+
+        <form name="user-form" action="go" method="post">
             <button name="GO_ADD" type="submit" value="GO_ADD">Новая задача</button>
-            Результатов: <c:out value="${account.currentTasksFilter.totalCount}" />
             <table class="tasks">
                 <tr>
                     <th>номер</th>
@@ -44,43 +44,37 @@
                     </tr>
                 </c:forEach>
             </table>
-        </div>
-        <div class="pagination">
-            <%--For displaying Page numbers.
-            The when condition does not display a link for the current page--%>
-            <table border="1" cellpadding="5" cellspacing="5">
-                <tr><%--For displaying Previous link except for the 1st page --%>
-                    <c:if test="${account.currentTasksFilter.page != 1}">
-                        <%--<c:if test="${account.currentTasksFilter.countPage != 1}">--%>
-                        <%--<c:if test="${currentPage != 1}">--%>
-                        <td>
-                            <button name="PAGE" type="submit" value="${account.currentTasksFilter.page - 1}">Previous
-                            </button>
-                        </td>
-                    </c:if>
-                    <%--<c:forEach begin="1" end="${noOfPages}" var="i">--%>
-                    <c:forEach begin="1" end="${account.currentTasksFilter.countPage}" var="i">
-                        <c:choose>
-                            <c:when test="${account.currentTasksFilter.page eq i}">
-                                <td>${i}</td>
-                            </c:when>
-                            <c:otherwise>
-                                <td>
-                                    <button name="PAGE" type="submit" value="${i}">${i}</button>
-                                </td>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach> <%--For displaying Next link --%>
-                    <c:if test="${account.currentTasksFilter.page lt account.currentTasksFilter.countPage}">
-                        <td>
-                            <button name="PAGE" type="submit" value="${account.currentTasksFilter.page + 1}">Next
-                            </button>
-                        </td>
-                    </c:if>
-                </tr>
-            </table>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div class="pagination">
+
+
+        <%--For displaying Page numbers.
+        The when condition does not display a link for the current page--%>
+        <table border="1" cellpadding="5" cellspacing="5">
+            <tr><%--For displaying Previous link except for the 1st page --%>
+                <c:if test="${account.currentTasksFilter.page != 1}">
+                    <%--<c:if test="${account.currentTasksFilter.countPage != 1}">--%>
+                    <%--<c:if test="${currentPage != 1}">--%>
+                    <td><a href="employee.do?page=${account.currentTasksFilter.page - 1}">Previous</a></td>
+                </c:if>
+                <%--<c:forEach begin="1" end="${noOfPages}" var="i">--%>
+                <c:forEach begin="1" end="${account.currentTasksFilter.countPage}" var="i">
+                    <c:choose>
+                        <c:when test="${account.currentTasksFilter.page eq i}">
+                            <td>${i}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td><a href="employee.do?page=${i}">${i}</a></td>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach> <%--For displaying Next link --%>
+                <c:if test="${account.currentTasksFilter.page lt account.currentTasksFilter.countPage}">
+                    <td><a href="employee.do?page=${account.currentTasksFilter.page + 1}">Next</a></td>
+                </c:if>
+            </tr>
+        </table>
+    </div>
 </div>
 <br/>
 <br/>

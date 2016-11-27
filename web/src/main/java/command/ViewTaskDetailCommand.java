@@ -8,8 +8,6 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-//			content.getSessionAttributes().put(TASK_META, meta);
-
 public class ViewTaskDetailCommand implements ICommand {
 	private static Logger log = Logger.getLogger(ViewTaskDetailCommand.class);
 //TODO перенести в doGET
@@ -22,17 +20,19 @@ public class ViewTaskDetailCommand implements ICommand {
 			Long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
 			TaskService taskService = new TaskService();
 			Task task = taskService.getTask(account,taskId);
+			System.out.println("task1");
+
 			if (task!=null) {
 				content.getSessionAttributes().put(TASK, task);
 				page = PageManager.getProperty("path.page.task");
 				content.getSessionAttributes().put(ACCOUNT, account);
 			}
-			// System.out.println("addNewTask: " + meta.getId());
 		} catch (Exception e) {
 			log.error(e,e);
 			message = message.append(MessageManager.getProperty("task.detail.false"));
 //			page = PageManager.getProperty("path.page.login");
 		}
+
 		content.getSessionAttributes().put(MESSAGE, message.toString());
 		return page;
 	}

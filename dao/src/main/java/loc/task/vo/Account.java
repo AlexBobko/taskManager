@@ -4,18 +4,19 @@ import loc.task.entity.Task;
 import loc.task.entity.User;
 
 import java.text.SimpleDateFormat;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Account {
     private static final long serialVersionUID = 1L;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd':'HH-mm");
     private User user;
-    private TreeMap<Integer, Task> currentTasks;
 
-    //	private TreeMap<Integer, TaskMetaDTO> tasksMeta;
+    private Map<Long, Task> currentTasks = new HashMap<>();
+    private TaskOutFilter currentTasksFilter = new TaskOutFilter();
+
     private Integer id;
     private Integer levelAccess;
-    private Privileges privileges;
 
     public Account() {
     }
@@ -24,6 +25,14 @@ public class Account {
         this.id=user.getUserId();
         this.levelAccess=user.getRole();
     }
+    public Account(User user,TaskOutFilter currentTasksFilter,Map<Long,Task> currentTasks) {
+        this.user=user;
+        this.id=user.getUserId();
+        this.levelAccess=user.getRole();
+        this.currentTasksFilter=currentTasksFilter;
+        this.currentTasks=currentTasks;
+    }
+
 
     public User getUser() {
         return user;
@@ -53,19 +62,19 @@ public class Account {
         this.dateFormat = dateFormat;
     }
 
-    public Privileges getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(Privileges privileges) {
-        this.privileges = privileges;
-    }
-
-    public TreeMap<Integer, Task> getCurrentTasks() {
+    public Map<Long, Task> getCurrentTasks() {
         return currentTasks;
     }
 
-    public void setCurrentTasks(TreeMap<Integer, Task> currentTasks) {
+    public void setCurrentTasks(Map<Long, Task> currentTasks) {
         this.currentTasks = currentTasks;
+    }
+
+    public TaskOutFilter getCurrentTasksFilter() {
+        return currentTasksFilter;
+    }
+
+    public void setCurrentTasksFilter(TaskOutFilter currentTasksFilter) {
+        this.currentTasksFilter = currentTasksFilter;
     }
 }

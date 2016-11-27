@@ -13,7 +13,7 @@ public class TaskDao extends BaseDao<Task> {
     private static Logger log = Logger.getLogger(TaskDao.class);
 
     public Task getTaskToUser(long taskId, int userId) {
-        String hql = "SELECT T FROM Task T JOIN User U WHERE T.taskId =:taskId AND U.userId=:userId";
+        String hql = "SELECT T FROM Task T JOIN T.personList U WHERE T.taskId =:taskId AND U.userId=:userId";
         Query query = session.createQuery(hql);
         query.setParameter("taskId", taskId);
         query.setParameter("userId", userId);
@@ -112,6 +112,41 @@ public class TaskDao extends BaseDao<Task> {
         return results;
     }
 
+
+
+    public List<Task> getTasks(int page, int tasksPerPage, long totalCount,
+                                         Set<Integer> includeStatus, int sort, boolean ask) {
+        long countPage = totalCount / (long) tasksPerPage;
+        if (totalCount % (long) tasksPerPage > 0) {
+            countPage++;
+        }
+        if (page > (int) countPage) {
+            page = (int) countPage;
+        }else if(page<=0){page=1;}
+
+        System.out.println("countPage:" + countPage);
+        System.out.println("tasksPerPage:" + tasksPerPage);
+        System.out.println("Page:" + page);
+
+        int firstResult = (page - 1) * tasksPerPage;
+
+//        Session session = util.getSession();
+        String hql = "SELECT DISTINCT T FROM Task T JOIN T.personList U WHERE T.statusId IN (:statusId)";
+        hql = hql.concat(getSorting(sort, ask));
+
+        System.out.println(hql);
+
+        Query query = session.createQuery(hql);
+//        query.getQueryString().join(" ORDER BY T.statusId");
+        query.setCacheable(true);
+        query.setCacheRegion("task");
+        query.setParameterList("statusId", includeStatus);
+        query.setFirstResult(firstResult);
+        query.setMaxResults(tasksPerPage);
+        List<Task> results = query.list();
+        return results;
+    }
+
     private String getSorting(int sort, boolean ask) {
         StringBuffer sorting = new StringBuffer();
         switch (sort) {
@@ -138,7 +173,7 @@ public class TaskDao extends BaseDao<Task> {
     }
 
 
-    public long getCountTask(HashSet<Integer> includeStatus) {
+    public long getCountTask(Set<Integer> includeStatus) {
         if (includeStatus.isEmpty()) {
             includeStatus.add(2);
             includeStatus.add(4);
@@ -187,27 +222,27 @@ public class TaskDao extends BaseDao<Task> {
         return getCurrentTaskUser(includeStatus);
     }
 
-    public List<Task> getCurrentTaskUser(HashSet<Integer> includeStatus) {
+    public List<Task> getCurrentTaskUser(Set<Integer> includeStatus) {
         int page = 1;
         return getCurrentTaskUser(page, includeStatus);
     }
 
-    public List<Task> getCurrentTaskUser(int page, HashSet<Integer> includeStatus) {
+    public List<Task> getCurrentTaskUser(int page, Set<Integer> includeStatus) {
         int tasksPerPage = 10;
         return getCurrentTaskUser(page, tasksPerPage, includeStatus);
     }
 
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, HashSet<Integer> includeStatus) {
+    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, Set<Integer> includeStatus) {
         long totalCount = getCountTask(includeStatus);
         return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus);
     }
-
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, HashSet<Integer> includeStatus) {
+//TODO нужна?
+    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus) {
         HashSet<Integer> userId = new HashSet<Integer>(); //пустая коллекция юзеров
         return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus, userId);
     }
 
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, HashSet<Integer> includeStatus, HashSet<Integer> userId) {
+    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus, Set<Integer> userId) {
 
         long countPage = totalCount / (long) tasksPerPage;
         if (totalCount % (long) tasksPerPage > 0) {

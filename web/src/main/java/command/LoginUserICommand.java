@@ -26,7 +26,6 @@ public class LoginUserICommand implements ICommand {
 
         String page=null;
         StringBuffer message = new StringBuffer();
-//        System.out.println("It LoginUserComandImpl");
         Account account;
         try {
             String userLogin = (String) content.getRequestAttributes().get(LOGIN);
@@ -38,7 +37,6 @@ public class LoginUserICommand implements ICommand {
             } catch (NumberFormatException e) {
                 account= userService.getAccount(userLogin, userPassword);
             }
-
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
                 if (account.getUser().getRole() == employeeRole) {

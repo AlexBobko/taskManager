@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table//(name = "task")
-@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="task")
+//@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="task")
 public class Task {
 
     @Id
@@ -31,7 +31,7 @@ public class Task {
     @Column(name = "deadline",length = 19)
     private Date deadline;
 
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY) //TODO при ленивой добавление в equals??
     @Embedded
     private TaskContent content;
 
@@ -141,10 +141,12 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "taskId=" + taskId +
-                ", statusId=" + statusId +
-                ", dateCreation=" + dateCreation +
+                "content=" + content +
+                ", deadline=" + deadline +
                 ", title='" + title + '\'' +
+                ", dateCreation=" + dateCreation +
+                ", statusId=" + statusId +
+                ", taskId=" + taskId +
                 '}';
     }
 }

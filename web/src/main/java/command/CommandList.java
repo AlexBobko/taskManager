@@ -61,9 +61,9 @@ public enum CommandList {
             this.command = new GoTaskListCommand(); // go page add task //TODO перенести в GET
         }
     },
-    TASK_LIST {
+    PAGE {
         {
-            this.command = new ListTaskCommand(); //(не готово) список тасков, пагинация
+            this.command = new PageCommand(); //пагинация
         }
     },
     TASK_DEL {

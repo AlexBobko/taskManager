@@ -17,7 +17,7 @@
 <body>
 <div class="user-panel">
 	<c:choose>
-		<c:when test="${not empty account.user.id}">
+		<c:when test="${not empty account.user.userId}">
 			<%@ include file="/jsp/userPanel.jsp"%>
 		</c:when>
 		<c:otherwise>

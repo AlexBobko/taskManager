@@ -1,51 +1,37 @@
 package loc.task.vo;
 
-import loc.task.entity.Task;
-
 import java.util.Set;
 
-//TODO сделать геттеры и сеттеры через аннотаци
-public class EmployeePrivileges implements Privileges {
-    private Set<Integer> includeStatus;
-    private Set<Task> currentTasks;
+//TODO сделать геттеры и сеттеры через аннотации ломбук
+public class TaskOutFilter {
+    private Set<Integer> includeStatus ; //= new HashSet<>(6)
+//    private Set<Task> currentTasks;
     private int page = 1;
-    private int tasksPerPage = 12;
+    private int tasksPerPage = 3;
     private long totalCount;
     long countPage;
     private int sort = 1;
     boolean ask = true;
 
-    public EmployeePrivileges() {
+    public TaskOutFilter() {
     }
 
-    public EmployeePrivileges(long totalCount,Set<Integer> includeStatus,long countPage ,Set<Task> currentTasks) {
+    public TaskOutFilter(Set<Integer> includeStatus) {
+        this.includeStatus=includeStatus;
+    }
+
+    public TaskOutFilter(long totalCount, Set<Integer> includeStatus, long countPage) {
         this.totalCount=totalCount;
         this.includeStatus=includeStatus;
         this.countPage=countPage;
-        this.currentTasks=currentTasks;
-    }
 
-    @Override
-    public Set<Task> getActiveTasks() {
-        return null;
     }
+    public TaskOutFilter(long totalCount, Set<Integer> includeStatus, long countPage,  int tasksPerPage) {
+        this.tasksPerPage = tasksPerPage;
+        this.totalCount=totalCount;
+        this.includeStatus=includeStatus;
+        this.countPage=countPage;
 
-    @Override
-    public Set<Task> getArhiveTasks() {
-        return null;
-    }
-
-    @Override
-    public Set<Task> getDeleteTasks() {
-        return null;
-    }
-
-    public Set<Task> getCurrentTasks() {
-        return currentTasks;
-    }
-
-    public void setCurrentTasks(Set<Task> currentTasks) {
-        this.currentTasks = currentTasks;
     }
 
     public int getPage() {
@@ -91,6 +77,9 @@ public class EmployeePrivileges implements Privileges {
     public boolean isAsk() {
         return ask;
     }
+    public boolean getAsk() {
+        return ask;
+    }
 
     public void setAsk(boolean ask) {
         this.ask = ask;
@@ -102,5 +91,17 @@ public class EmployeePrivileges implements Privileges {
 
     public void setIncludeStatus(Set<Integer> includeStatus) {
         this.includeStatus = includeStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskOutFilter{" +
+                "page=" + page +
+                ", tasksPerPage=" + tasksPerPage +
+                ", totalCount=" + totalCount +
+                ", countPage=" + countPage +
+                ", sort=" + sort +
+                ", ask=" + ask +
+                '}';
     }
 }

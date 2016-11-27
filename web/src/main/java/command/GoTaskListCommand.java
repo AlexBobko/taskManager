@@ -11,9 +11,11 @@ public class GoTaskListCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             int role=account.getUser().getRole();
-            if (role==1){
+            if (role==employeeRole){
+
                 page=PageManager.getProperty("path.page.user");
-            }else if (role==2){
+            }else if (role==superiorRole){
+
                 page=PageManager.getProperty("path.page.superior");
             }
         } catch (Exception e) {
