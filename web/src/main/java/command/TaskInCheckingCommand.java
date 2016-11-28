@@ -21,8 +21,11 @@ public class TaskInCheckingCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-            TaskService taskService = new TaskService();
-            if (taskService.updateTask(account, taskId, newStatus)) {
+
+            System.out.println("TaskInCheckingCommand: " + taskId );
+            if (TaskService.updateTask(account, taskId, newStatus)) {
+                System.out.println(" 2 TaskInCheckingCommand: " + taskId );
+
                 page = PageManager.getProperty("path.page.user");
                 message = message.append(MessageManager.getProperty("task.update")).append(taskId);
             }

@@ -261,7 +261,7 @@ public class MenuLoader {
             task.setStatusId(random.nextInt(7) + 1);
             task.setDateCreation(new Date(2016 - 1900, random.nextInt(7), random.nextInt(27) + 1, 0, 0, 0));
             task.setDeadline(new Date(2016 - 1900, (random.nextInt(2) + 8), (random.nextInt(27) + 1)));
-            task.getPersonList().add(user);
+            task.getUserList().add(user);
 //            getTaskDao().saveOrUpdate(task);
 //            DELETE FROM `java_annotation`.`tasks`;
         }
@@ -295,7 +295,7 @@ public class MenuLoader {
         task.setContent(content);
         task.setDateCreation(new Date());
         task.setDeadline(new Date());
-        task.getPersonList().add(user);
+        task.getUserList().add(user);
 //        user.getTaskList().add(task);
 
 

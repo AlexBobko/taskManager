@@ -28,10 +28,12 @@ public class User {
     private int accountStatus = 1; //TODO сделать ENUM: deleted, block, active
     @Column(name = "role")
     private int role = 1;
-    @Basic (fetch = FetchType.LAZY)
+
+//    @Basic (fetch = FetchType.LAZY)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private PersonalData personalData; //TODO почему ругается? attribute type should not be
-    @Basic (fetch = FetchType.LAZY)
+
+//    @Basic (fetch = FetchType.LAZY)
     @Where(clause = "status_id < 6 ") //TODO проверить ограничение LIMIT 12
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "user_task",

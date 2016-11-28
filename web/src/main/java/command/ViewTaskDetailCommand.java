@@ -18,12 +18,12 @@ public class ViewTaskDetailCommand implements ICommand {
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			Long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-			TaskService taskService = new TaskService();
-			Task task = taskService.getTask(account,taskId);
-			System.out.println("task1");
-
+			Task task = TaskService.getTask(account,taskId);
 			if (task!=null) {
 				content.getSessionAttributes().put(TASK, task);
+				account.setCurrentTasks(null); //чистим коллекции, чтобы не таскать в сессию
+				account.getUser().setTaskList(null);
+
 				page = PageManager.getProperty("path.page.task");
 				content.getSessionAttributes().put(ACCOUNT, account);
 			}

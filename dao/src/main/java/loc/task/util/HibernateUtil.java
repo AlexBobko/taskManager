@@ -57,6 +57,8 @@ public class HibernateUtil {
     public Session getSession () {
         Session session = (Session) sessions.get();
         if (session == null) {
+            int i=0;
+            System.out.println("NEW Session OPEN: " + ++i);
             session = sessionFactory.openSession();
             sessions.set(session);
         }

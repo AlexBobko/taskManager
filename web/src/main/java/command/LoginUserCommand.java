@@ -4,21 +4,22 @@ import controller.RequestHandler;
 import loc.task.vo.Account;
 import managers.MessageManager;
 import managers.PageManager;
+import org.apache.log4j.Logger;
 import service.UserService;
 
 /**
  * Login
  */
-public class LoginUserICommand implements ICommand {
+public class LoginUserCommand implements ICommand {
 
-//    private LoginService loginService;
+    private static Logger log = Logger.getLogger(LoginUserCommand.class);
 
     private static final String LOGIN = "username";
     private static final String PASSWORD = "password";
     private static final int employeeRole =1;
     private static final int superiorRole =2;
 
-    LoginUserICommand() {
+    LoginUserCommand() {
     }
 
     @Override
@@ -30,12 +31,11 @@ public class LoginUserICommand implements ICommand {
         try {
             String userLogin = (String) content.getRequestAttributes().get(LOGIN);
             String userPassword = (String) content.getRequestAttributes().get(PASSWORD);
-            UserService userService = new UserService();
             try {
                 int userId = Integer.parseInt(userLogin);
-                account= userService.getAccount(userId, userPassword);
+                account= UserService.getAccount(userId, userPassword);
             } catch (NumberFormatException e) {
-                account= userService.getAccount(userLogin, userPassword);
+                account= UserService.getAccount(userLogin, userPassword);
             }
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
@@ -50,6 +50,7 @@ public class LoginUserICommand implements ICommand {
                 page = PageManager.getProperty("path.page.login");
             }
         } catch (IllegalArgumentException e) {
+            log.error(e,e);
             page = PageManager.getProperty("path.page.login");
             message.append(MessageManager.getProperty("message.login.error"));
         }

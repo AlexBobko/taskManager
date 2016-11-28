@@ -1,5 +1,6 @@
 package service;
 
+import loc.task.db.BaseDao;
 import loc.task.db.TaskDao;
 import loc.task.db.exceptions.DaoException;
 import loc.task.entity.Task;
@@ -19,49 +20,41 @@ import java.util.*;
 public class TaskService {
     private static Logger log = Logger.getLogger(TaskService.class); //TODO log add e  log.error(e, e);
     private static TaskDao taskDao = null;
-    final private Integer employeeRole = 1;
-    final private Integer superiorRole = 2;
-    final private Integer defaultStatusTask = 1;
-    private Transaction transaction = null;
+    private static BaseDao baseDao = null;
 
-    Session session = HibernateUtil.getHibernateUtil().getSession();
+    final static Integer defaultStatusTask = 1;
+    //    private Transaction transaction = null;
+    //    Session session = HibernateUtil.getHibernateUtil().getSession();
 
-    public TaskService() {
-
+    private TaskService() {
     }
 
-    //TODO на каком этапе проверять права на операцию, например пагинации
-    public Account updateTaskList(Account ac) {
-        if (ac.getUser().getRole() == employeeRole) {
+    public static Account updateTaskList(Account ac) {
+        //обновить количество постов
+        if (ac.getUser().getRole() == UserService.employeeRole) {
+            updateTaskOutFilter(ac.getCurrentTasksFilter(), ac.getUser().getUserId());
+
             ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), ac.getUser().getUserId()));
 
-
-        } else if (ac.getUser().getRole() == superiorRole) {
+        } else if (ac.getUser().getRole() == UserService.superiorRole) {
+            updateTaskOutFilter(ac.getCurrentTasksFilter(), null);
             ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter()));
         }
         return ac;
     }
 
-    public Map<Long, Task> getTasksList(TaskOutFilter f, Integer userId) {
+    public static List<Task> getTasksList(TaskOutFilter f, Integer userId) {
         Set<Integer> usersId = new HashSet<>(1);
         usersId.add(userId);
-        List<Task> tasksList = getTaskDao().getCurrentTaskUser(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), usersId);
-        Map<Long, Task> currentTasks = new HashMap(f.getTasksPerPage());
-        for (Task task : tasksList) {
-            currentTasks.put(task.getTaskId(), task);
-
-            System.out.println("task.getTaskId "+task.getTaskId());
-        }
-        return currentTasks;
+        ArrayList<Task> userList = (ArrayList<Task>) getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk(),usersId);
+//        for (Task task:userList ) {
+//            System.out.println(task.getTaskId());
+//        }
+        return userList;
     }
 
-    public Map<Long,Task> getTasksList(TaskOutFilter f) {
-        List<Task> tasksList =getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk());
-        Map<Long, Task> currentTasks = new HashMap(f.getTasksPerPage());
-        for (Task task : tasksList) {
-            currentTasks.put(task.getTaskId(), task);
-        }
-        return currentTasks;
+    public static List<Task> getTasksList(TaskOutFilter f) {
+        return getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk());
     }
 
     public static long getCountTask(Set<Integer> includeStatus, int userId) {
@@ -69,25 +62,23 @@ public class TaskService {
         return getTaskDao().getCountTask(includeStatus, userId);
     }
 
-
-    public Task addNewTask(Account account, int responsiblePersonId,
-                           String titleTask, String bodyTask, String strTaskDeadline) throws DaoException {
+    public static Task addNewTask(Account account, int employeeId,
+                                  String titleTask, String bodyTask, String strTaskDeadline) throws DaoException {
         Date taskDeadline = convertDate(strTaskDeadline);
-        Set<User> personList = new HashSet<>();
-        if (responsiblePersonId == 0) {
-            personList.add(account.getUser());
+        Set<User> users = new HashSet<>();
+        if (employeeId == 0) {
+            users.add(account.getUser());
         } else {
-            UserService userService = new UserService();
-            User user = userService.getUser(responsiblePersonId);
-            personList.add(user);
+            User user = UserService.getUser(employeeId);
+            users.add(user);
         }
         TaskContent content = new TaskContent(bodyTask);
-        Task newTask = new Task(defaultStatusTask, new Date(), titleTask, taskDeadline, content, personList);
+        Task newTask = new Task(defaultStatusTask, new Date(), titleTask, taskDeadline, content, users);
         getTaskDao().saveOrUpdate(newTask);
         return newTask;
     }
 
-    public Date convertDate(String postDate) {
+    public static Date convertDate(String postDate) {
         String[] dl = postDate.split("/");
         int year = Integer.parseInt(dl[2]);
         int month = Integer.parseInt(dl[0]);
@@ -98,43 +89,48 @@ public class TaskService {
         return bodyDeadline;
     }
 
-    public boolean updateTask(Account account, long taskId, Integer status) {
+    public static boolean updateTask(Account account, long taskId, Integer status) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
+        Transaction transaction = session.beginTransaction();
         boolean b = false;
-        transaction = session.beginTransaction();
+        Task task;
         try {
-            Task task;
-            //status permitted to employee - 2,4
-            final Integer taskStatusToApprove = 2;
-            final Integer taskStatusInChecking = 4;
-            if (account.getUser().getRole() == employeeRole) {
-                System.out.println(taskStatusToApprove.equals(status) + " "+ taskStatusInChecking.equals(status));
-                if (taskStatusToApprove.equals(status) || taskStatusInChecking.equals(status)) {
-                    task = getTaskDao().getTaskToUser(taskId, account.getUser().getUserId());
-                } else {
-                    return false;
-                }
+            if (account.getUser().getRole() == UserService.employeeRole) {
+                task = getTaskDao().getTaskToUser(taskId, account.getUser().getUserId());
+
+                System.out.println("TASK STATUS UPDATE&??" + task.getTaskId() + " new status: " + task.getStatusId());
             } else {
                 task = getTaskDao().get(taskId);
             }
             SimpleDateFormat dateFormat = account.getDateFormat();
             task.setStatusId(status);
+
             Calendar calendar = Calendar.getInstance();
             String history = task.getContent().getHistory();
             history = history.concat(dateFormat.format(calendar.getTime())).concat("~status:").
                     concat(status.toString()).concat("~~");
             task.getContent().setHistory(history);
-            getTaskDao().saveOrUpdate(task);
+//            getBaseDao().saveOrUpdate(task.getContent());
+            System.out.println("TASK UPDATE 3 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
+
+//            getTaskDao().saveOrUpdate(task);
+
             transaction.commit();
-            account.getCurrentTasks().put(task.getTaskId(),task);
+
+            System.out.println("TASK UPDATE 4 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
+//            account.getCurrentTasks().put(task.getTaskId(), task);
+            System.out.println("TASK UPDATE 5 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
+            session.close();
             b = true;
         } catch (DaoException e) {
             transaction.rollback();
+            session.close();
             log.error(e, e);
         }
         return b;
     }
 
-    public Task getTask(Account account, Long taskId) {
+    public static Task getTask(Account account, Long taskId) {
         User user = account.getUser();
         int role = user.getRole();
         Task task = null;
@@ -152,36 +148,80 @@ public class TaskService {
     }
 
     //    taskService.updateTaskBody(task,newStatus,bodyTask,account)
-    public boolean updateTaskBody(Account account, Task task, String bodyTask, Integer newStatus) {
+    public static boolean updateTaskBody(Account account, Task task, String bodyTask, Integer newStatus) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
+        Transaction transaction = session.beginTransaction();
+//        session.clear();
+        System.out.println(bodyTask);
         SimpleDateFormat dateFormat = account.getDateFormat();
         boolean b;
+
         try {
-            transaction = session.beginTransaction();
-            System.out.println("2" + task);
-            getTaskDao().refresh(task);
-            System.out.println("3" + task);
+//            getTaskDao().refresh(task);
+//            task = getTaskDao().get(task.getTaskId());
+            session.refresh(task);
+//            session.merge(task);
             int userId = account.getUser().getUserId();
             task.setStatusId(newStatus);// устанавливаем статус на проверке
+            session.flush();
+
             String currentTaskBody = task.getContent().getBody();
             Calendar calendar = Calendar.getInstance();
             currentTaskBody = currentTaskBody.concat("\n\r").concat(dateFormat.format(calendar.getTime())).concat(" user:" + userId).concat(bodyTask);
             task.getContent().setBody(currentTaskBody);
+
+            System.out.println("currentTaskBody " + currentTaskBody);
+
             StringBuffer history = new StringBuffer(task.getContent().getHistory());
             history = history.append(dateFormat.format(calendar.getTime())).append("~status:").append("~korrect body").append(newStatus).append("~~");
+            task.getContent().setHistory(currentTaskBody);
             task.getContent().setHistory(history.toString());
-            System.out.println("4" + task);
-//            getTaskDao().saveOrUpdate(task.getContent());
-            getTaskDao().saveOrUpdate(task);
-            System.out.println("5" + task);
-            account.getCurrentTasks().put(task.getTaskId(),task); //обновление в обход кэша?
+//            session.clear();
+            System.out.println("stat:1 " + session.getStatistics() + ": ");
+//            getTaskDao().saveOrUpdate(task);
+            session.flush();
+            System.out.println("stat:2 " + session.getStatistics() + ": ");
+//            session.flush();
+            if (userId == -1) {
+                throw new DaoException(new Exception());
+            }
+//            account.getCurrentTasks().put(task.getTaskId(), task); //обновление в обход кэша?
             transaction.commit();
             b = true;
         } catch (DaoException e) {
             log.error(e, e);
             transaction.rollback();
             b = false;
+        } finally {
+            session.close();
         }
         return b;
+    }
+
+
+    public static TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) {
+        return getTaskOutFilter(includeStatus, null);
+    }
+
+    public static TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) {
+        TaskOutFilter taskOutFilter = new TaskOutFilter(includeStatus);
+        return updateTaskOutFilter(taskOutFilter, userId);
+    }
+
+    public static TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) {
+        long totalCount = 1L;
+        if (userId != null) {
+            totalCount = TaskService.getCountTask(taskOutFilter.getIncludeStatus(), userId);
+        } else {
+            totalCount = getTaskDao().getCountTask(taskOutFilter.getIncludeStatus());
+        }
+        long countPage = totalCount / (long) taskOutFilter.getTasksPerPage();
+        if (totalCount % (long) taskOutFilter.getTasksPerPage() > 0) {
+            countPage++;
+        }
+        taskOutFilter.setTotalCount(totalCount);
+        taskOutFilter.setCountPage(countPage);
+        return taskOutFilter;
     }
 
     public static TaskDao getTaskDao() {
@@ -190,5 +230,13 @@ public class TaskService {
             taskDao = new TaskDao();
         }
         return taskDao;
+    }
+
+    public static BaseDao getBaseDao() {
+
+        if (baseDao == null) {
+            baseDao = new BaseDao();
+        }
+        return baseDao;
     }
 }

@@ -1,7 +1,5 @@
 package loc.task.entity;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +13,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
-    private long taskId;
+    private Long taskId;
 
     @Column (name = "status_id")
     private int statusId = 1;   // 7 с удалением
@@ -31,7 +29,7 @@ public class Task {
     @Column(name = "deadline",length = 19)
     private Date deadline;
 
-    @Basic(fetch = FetchType.LAZY) //TODO при ленивой добавление в equals??
+//    @Basic(fetch = FetchType.LAZY) //TODO при ленивой добавление в equals??
     @Embedded
     private TaskContent content;
 
@@ -40,7 +38,7 @@ public class Task {
     @JoinTable(name = "user_task",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> personList = new HashSet<User>();
+    private Set<User> userList = new HashSet<User>();
 
 
     public Task() {
@@ -52,14 +50,14 @@ public class Task {
         this.title = title;
         this.deadline = deadline;
         this.content = content;
-        this.personList = personList;
+        this.userList = personList;
     }
 
-    public long getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(long taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
@@ -103,12 +101,12 @@ public class Task {
         this.content = content;
     }
 
-    public Set<User> getPersonList() {
-        return personList;
+    public Set<User> getUserList() {
+        return userList;
     }
 
-    public void setPersonList(Set<User> personList) {
-        this.personList = personList;
+    public void setUserList(Set<User> personList) {
+        this.userList = personList;
     }
 
     @Override

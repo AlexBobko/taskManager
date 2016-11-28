@@ -6,10 +6,12 @@ import javax.persistence.Embeddable;
 @Embeddable
 //@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_ONLY, region="task")
 public class TaskContent {
-    @Column(name = "task_body")
+    @Column(columnDefinition = "text")
+//    @Column(name = "task_body")
     public String getBody() {return body;}
 
-    @Column(name = "task_history")
+    @Column(columnDefinition = "text")
+//    @Column(name = "task_history")
     public String getHistory() {return history;}
 
     private String body;

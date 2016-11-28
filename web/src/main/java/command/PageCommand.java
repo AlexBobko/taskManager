@@ -21,11 +21,9 @@ public class PageCommand implements ICommand {
 
             account.getCurrentTasksFilter().setPage(pageNumber);
 
-            TaskService taskService = new TaskService();
-
             System.out.println("new task F " + account.getCurrentTasksFilter());
 
-            account=taskService.updateTaskList(account);
+            account=TaskService.updateTaskList(account);
 
             page = PageManager.getProperty("path.page.user");
             content.getSessionAttributes().put(ACCOUNT, account);

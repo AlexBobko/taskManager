@@ -28,11 +28,8 @@ public class UpdateTaskCommand implements ICommand {
         try {
             account = (Account) content.getSessionAttributes().get(ACCOUNT);
             Task task = (Task) content.getSessionAttributes().get(TASK);
-//            TaskMetaDTO meta = (TaskMetaDTO) content.getSessionAttributes().get(TASK_META);
             String bodyTask = (String) content.getRequestAttributes().get(POST_BODY);
-            TaskService taskService = new TaskService();
-            if (taskService.updateTaskBody(account,task,bodyTask, newTaskStatus)) {
-
+            if (TaskService.updateTaskBody(account,task,bodyTask, newTaskStatus)) {
                 System.out.println("1" + task);
 
                 page = PageManager.getProperty("path.page.task");

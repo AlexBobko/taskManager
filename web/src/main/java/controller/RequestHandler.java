@@ -2,6 +2,8 @@ package controller;
 
 import command.CommandList;
 import command.ICommand;
+import managers.StatusManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,6 +15,7 @@ import java.util.Map;
  * Изоляция запросов для передачи в bsu
  */
 public class RequestHandler {
+    private static Logger log = Logger.getLogger(RequestHandler.class); //log.error(e,e);
     private HashMap<String, Object> requestAttributes;
     private HashMap<String, String[]> requestParameters;
     private HashMap<String, Object> sessionAttributes;
@@ -34,17 +37,24 @@ public class RequestHandler {
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String key = parameterNames.nextElement();
-            String value= request.getParameter(key);
 
-            System.out.println("<br/>***<b>key:" + key + "| - value:|" + value + "|-успешно </b>***<br/>");
+            //TODO хардкод
+            if (key.equals("include_status")){
+                String[] statuses = request.getParameterValues(key);
+                requestAttributes.put(key, statuses);
+                continue;
+            }
+
+            String value= request.getParameter(key);
+            //String[] statuses = request.getParameterValues();
+            System.out.println(RequestHandler.class + ":*1**key: " + key + "| - value:|" + value + "|-успешно </b>***<br/>");
             //отсеиваем пустые значения
             if (value != null && !(value.isEmpty())) {
+//                log.info("log:***currentCommand:");
                 try {
-                    //TODO ?? вынести определение типа комманды в CommandClient или зачем гонять 2 раза цикл
                     currentCommand = CommandList.valueOf(key.toUpperCase());
                     requestAttributes.put(ICommand.CMD_VALUE, value); //.trim()
-
-                    System.out.println("<br/>***<b>currentCommand:" + key + " cmdValue:" + value + "- успешно " + "</b>***<br/>");
+//                    System.out.println("<br/>***<b>currentCommand:" + key + " cmdValue:" + value + "- успешно " + "</b>***<br/>");
                 } catch (IllegalArgumentException e) {
                     requestAttributes.put(key, value);
 //					System.out.println("<br/>***<b>key:" + key + "| - value:|" + value + "|-успешно </b>***<br/>");
@@ -66,6 +76,8 @@ public class RequestHandler {
                 Object value = entry.getValue();
                 session.setAttribute(key, value);
             }
+            //TODO харткод добавляем список статусов
+            session.setAttribute("statuses", StatusManager.getStatus());
         }
         if (requestParameters != null) {
             for (Map.Entry<String, String[]> entry : requestParameters.entrySet()) {

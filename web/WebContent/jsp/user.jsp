@@ -7,7 +7,8 @@
         <div class="main">
             <h1>Список текущих задач</h1>
             <button name="GO_ADD" type="submit" value="GO_ADD">Новая задача</button>
-            Результатов: <c:out value="${account.currentTasksFilter.totalCount}" />
+            Результатов: <c:out value="${account.currentTasksFilter.totalCount}"/>
+            <%@ include file="/jsp/taskFilter.jsp" %>
             <table class="tasks">
                 <tr>
                     <th>номер</th>
@@ -18,24 +19,24 @@
                     <th>Действие</th>
                 </tr>
                 <c:forEach items="${account.currentTasks}" var="task">
-                    <tr id="<c:out value="${task.key}" />">
-                        <td><c:out value="${task.value.taskId}"/></td>
+                    <tr id="<c:out value="${task.taskId}"/>">
+                        <td><c:out value="${task.taskId}"/></td>
                         <td>
-                            <c:out value="${account.dateFormat.format(task.value.dateCreation)}"/>
+                            <c:out value="${account.dateFormat.format(task.dateCreation)}"/>
                         </td>
-                        <td><c:out value="${task.value.title}"/></td>
-                        <td><c:out value="${task.value.statusId}"/></td>
+                        <td><c:out value="${task.title}"/></td>
+                        <td><c:out value="${task.statusId}"/></td>
                         <td>
-                            <c:out value="${account.dateFormat.format(task.value.deadline)}"/>
+                            <c:out value="${account.dateFormat.format(task.deadline)}"/>
                         </td>
                         <td>
-                            <button name="TASK_DETAIL" type="submit" value="${task.key}">Детали</button>
-                            <c:choose><c:when test="${task.value.statusId == 1}">
-                                <button name="APPROVE_TASK" type="submit" value="${task.key}">На утверждение
+                            <button name="TASK_DETAIL" type="submit" value="${task.taskId}">Детали</button>
+                            <c:choose><c:when test="${task.statusId == 1}">
+                                <button name="APPROVE_TASK" type="submit" value="${task.taskId}">На утверждение
                                 </button>
                             </c:when>
-                                <c:when test="${task.value.statusId == 3}">
-                                    <button name="FOR_CHECKING" type="submit" value="${task.key}">На проверку</button>
+                                <c:when test="${task.statusId == 3}">
+                                    <button name="FOR_CHECKING" type="submit" value="${task.taskId}">На проверку</button>
                                 </c:when>
                                 <c:otherwise>
                                 </c:otherwise>

@@ -37,9 +37,11 @@ public class BaseDao<T> implements Dao<T> {
     public void saveOrUpdate(T t) throws DaoException {
         try {
             session.saveOrUpdate(t);
-            log.info("saveOrUpdate(t):" + t);
-            System.out.println("saveOrUpdate(t):" + t);
+            session.flush();
 
+            log.info("saveOrUpdate(t):" + t);
+//            System.out.println("saveOrUpdate(t):" + t);
+            System.out.println("TASK UPDATE 4 "+ session.getStatistics()+ ": " );
         } catch (HibernateException e) {
             log.error("Error save or update " + getPersistentClass() + " in Dao" + e);
             throw new DaoException(e);

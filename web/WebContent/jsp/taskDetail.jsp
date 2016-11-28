@@ -11,7 +11,6 @@
                     <c:out value="${curTask.title}"/>
                     &quot;
                 </h2>
-
                 <p>
                     № задачи в системе:
                     <c:out value="${curTask.taskId}"/>
@@ -27,9 +26,7 @@
                     <br/> Статус:
                     <c:out value="${curTask.statusId}"/>
                 </p>
-
                 <p>
-
                 <form name="tasks-form" action="go" method="post">
                     <button name="GO_ADD" type="submit" value="GO_ADD">Новая задача</button>
                     <button name="GO_TASK_LIST" type="submit" value="GO_TASK_LIST">К списку задач</button>
@@ -38,7 +35,6 @@
             </div>
             <div class="task-body">
                 <h2>Описание задачи</h2>
-
                 <p>
                     <c:out value="${curTask.content.body}"/>
                 </p>

@@ -20,8 +20,7 @@ public class DeleteTaskCommand implements ICommand {
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-			TaskService taskService = new TaskService();
-			if (taskService.updateTask(account, taskId, newStatus)) {
+			if (TaskService.updateTask(account, taskId, newStatus)) {
 				page = PageManager.getProperty("path.page.user");
 				message = message.append(MessageManager.getProperty("task.update")).append(taskId);
 			}

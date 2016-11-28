@@ -3,7 +3,7 @@ package command;
 public enum CommandList {
     LOGIN {
         {
-            this.command = new LoginUserICommand();
+            this.command = new LoginUserCommand();
         }
     },
     LOGOUT {
@@ -69,6 +69,11 @@ public enum CommandList {
     TASK_DEL {
         {
             this.command = new DeleteTaskCommand(); // таски не удаляются, только корректируются
+        }
+    },
+    MAIN_FILTER {
+        {
+            this.command = new TaskFilterCommand(); // фильтрация основная
         }
     };
 
