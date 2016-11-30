@@ -25,7 +25,7 @@ public class Task {
     @Column(name = "title")
     private String title;
 
-    @Temporal(TemporalType.TIMESTAMP )
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deadline",length = 19)
     private Date deadline;
 
@@ -44,13 +44,13 @@ public class Task {
     public Task() {
     }
 
-    public Task(int statusId, Date dateCreation, String title, Date deadline, TaskContent content, Set<User> personList) {
+    public Task(int statusId, Date dateCreation, String title, Date deadline, TaskContent content, Set<User> userSet) {
         this.statusId = statusId;
         this.dateCreation = dateCreation;
         this.title = title;
         this.deadline = deadline;
         this.content = content;
-        this.userList = personList;
+        this.userList = userSet;
     }
 
     public Long getTaskId() {

@@ -18,8 +18,8 @@
         <!-- For singleton factory -->
         <!-- <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property>-->
         <!-- enable second level cache and query cache -->
-        <property name="hibernate.cache.use_second_level_cache">true</property>
-        <property name="hibernate.cache.use_query_cache">true</property>
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+        <property name="hibernate.cache.use_query_cache">false</property>
         <property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
         <!-- Mapping files -->
         <mapping class="loc.task.entity.Task"/>

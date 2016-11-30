@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 import service.TaskService;
 
 /**DEL устанавливаем статус 7*/
-public class DeleteTaskCommand implements ICommand {
+public class TaskDeleteCommand implements ICommand {
 
-	private static Logger log = Logger.getLogger(DeleteTaskCommand.class);
+	private static Logger log = Logger.getLogger(TaskDeleteCommand.class);
 	final private Integer newStatus = 7;
 
 	@Override

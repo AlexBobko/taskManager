@@ -8,8 +8,8 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-public class ViewTaskDetailCommand implements ICommand {
-	private static Logger log = Logger.getLogger(ViewTaskDetailCommand.class);
+public class TaskDetailCommand implements ICommand {
+	private static Logger log = Logger.getLogger(TaskDetailCommand.class);
 //TODO перенести в doGET
 	@Override
 	public String execute(RequestHandler content) {

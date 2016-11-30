@@ -13,12 +13,12 @@ public enum CommandList {
     },
     TASK_ADD {
         {
-            this.command = new TaskAddCommand(); // add task to BD
+            this.command = new TaskNewAddCommand(); // add task to BD
         }
     },
     TASK_UPDATE {
         {
-            this.command = new UpdateTaskCommand(); //task add correction
+            this.command = new TaskUpdateCommand(); //task add correction
         }
     },
     APPROVE_TASK {
@@ -48,27 +48,27 @@ public enum CommandList {
     },
     TASK_DETAIL {
         {
-            this.command = new ViewTaskDetailCommand(); //детали, подробное описание //TODO перенести в GET?
+            this.command = new TaskDetailCommand(); //детали, подробное описание //TODO перенести в GET?
         }
     },
     GO_ADD{
         {
-            this.command = new GoAddCommand(); // go page add task //TODO перенести в GET
+            this.command = new TaskNewCommand(); // go page add task //TODO перенести в GET
         }
     },
     GO_TASK_LIST{
         {
-            this.command = new GoTaskListCommand(); // go page add task //TODO перенести в GET
+            this.command = new TaskListCommand(); // go page add task //TODO перенести в GET
         }
     },
     PAGE {
         {
-            this.command = new PageCommand(); //пагинация
+            this.command = new TaskGetPageCommand(); //пагинация
         }
     },
     TASK_DEL {
         {
-            this.command = new DeleteTaskCommand(); // таски не удаляются, только корректируются
+            this.command = new TaskDeleteCommand(); // таски не удаляются, только корректируются
         }
     },
     MAIN_FILTER {

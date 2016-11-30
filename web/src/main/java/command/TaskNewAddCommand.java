@@ -13,12 +13,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class TaskAddCommand implements ICommand {
-    private static Logger log = Logger.getLogger(TaskAddCommand.class);
+public class TaskNewAddCommand implements ICommand {
+    private static Logger log = Logger.getLogger(TaskNewAddCommand.class);
     private String page;
     private StringBuffer message;
 
-    public TaskAddCommand() {
+    public TaskNewAddCommand() {
 
     }
 

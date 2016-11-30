@@ -33,11 +33,9 @@ public class TaskFilterCommand implements ICommand {
 //                throw new IllegalArgumentException (e);
             }
             String ask = (String) content.getRequestAttributes().get("ask");
-            System.out.println("---*** ask: " + ask);
             if (ask == null) {
                 taskOutFilter.setAsk(true);
             } else taskOutFilter.setAsk(false);
-
 
             taskOutFilter.setSort(Integer.parseInt((String) content.getRequestAttributes().get("sorting_column")));
             taskOutFilter.setTasksPerPage(Integer.parseInt((String) content.getRequestAttributes().get("task_per_page")));

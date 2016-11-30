@@ -16,8 +16,8 @@ import service.TaskService;
 
 
 
-public class UpdateTaskCommand implements ICommand {
-    private static Logger log = Logger.getLogger(UpdateTaskCommand.class);
+public class TaskUpdateCommand implements ICommand {
+    private static Logger log = Logger.getLogger(TaskUpdateCommand.class);
     final private Integer newTaskStatus = 2;
 
     @Override

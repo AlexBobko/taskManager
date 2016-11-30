@@ -15,7 +15,7 @@
                     № задачи в системе:
                     <c:out value="${curTask.taskId}"/>
                     <br/> Ответственный:
-                    <c:forEach items="${curTask.personList}" var="user">
+                    <c:forEach items="${curTask.userList}" var="user">
                         <c:out value="${user.userId}"/>:
                         <c:out value="${user.login}"/><br/>
                     </c:forEach>

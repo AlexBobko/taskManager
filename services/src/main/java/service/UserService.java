@@ -9,9 +9,6 @@ import loc.task.vo.TaskOutFilter;
 import org.apache.log4j.Logger;
 import utils.org.mindrot.jbcrypt.BCrypt;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class UserService {
 
     //    private Transaction transaction = null;
@@ -20,13 +17,6 @@ public class UserService {
     private static UserDao userDao = null;
     public final static Integer employeeRole = 1;
     public final static Integer superiorRole = 2;
-    public final static Integer statusTaskNew = 1;
-    public final static Integer statusTaskInApprove= 2;
-    public final static Integer statusTaskInProduction = 3;
-    public final static Integer statusTaskInChecking = 4;
-    public final static Integer statusTaskReport = 5;
-    public final static Integer statusTaskReady = 6;
-    public final static Integer statusTaskDelete = 7;
 
     private UserService() {
     }
@@ -50,7 +40,8 @@ public class UserService {
                 userPassword = "sваываыsd" + "dsdf@@"; //TODO !ХАРДКОД //чтобы не вводить пароль :)
 //                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
                 if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
-                    account = createAccount(user); //System.out.println("It matches");
+                    account = createAccount(user);
+                    System.out.println("It matches");
                 } else {
                     user = null;
                 }
@@ -63,38 +54,18 @@ public class UserService {
     private static Account createAccount(User user) {
         Account account = null;
         if (user.getRole() == employeeRole) {
-            TaskOutFilter currentTasksFilter = TaskService.getTaskOutFilter(getDefaultEmployeeStatusList(), user.getUserId());
+            TaskOutFilter currentTasksFilter = TaskService.getTaskOutFilter(TaskService.getDefaultEmployeeStatusList(), user.getUserId());
             account = new Account(user, currentTasksFilter, TaskService.getTasksList(currentTasksFilter, user.getUserId()));
         } else if (user.getRole() == superiorRole) {
+
             //TODO могут быть проблемы с LAZY userID  можно еще размер мапки ограничить
-            TaskOutFilter currentTasksFilter = TaskService.getTaskOutFilter(getDefaultSuperiorStatusList()); //общий фильтр
-            TaskOutFilter reportTaskFilter = TaskService.getTaskOutFilter(getSuperiorReportStatusList());//дополнительный фильтр
+            TaskOutFilter currentTasksFilter = TaskService.getTaskOutFilter(TaskService.getDefaultSuperiorStatusList()); //общий фильтр
+            TaskOutFilter reportTaskFilter = TaskService.getTaskOutFilter(TaskService.getSuperiorReportStatusList());//дополнительный фильтр
             account = new AccountSuperior(user, currentTasksFilter, TaskService.getTasksList(currentTasksFilter),
                     reportTaskFilter, TaskService.getTasksList(reportTaskFilter));
             //TODO ?? загружается полностью юзер обленили юзера )))
         }
         return account;
-    }
-    //TODO тоже в таск сервис закинуть?
-    private static Set<Integer> getSuperiorReportStatusList() {
-        Set<Integer> statusList = new HashSet<>(1);
-        statusList.add(statusTaskReport); //Назначено время
-        return statusList;
-    }
-    private static Set<Integer> getDefaultSuperiorStatusList() {
-        Set<Integer> statusList = new HashSet<>(2);
-        statusList.add(statusTaskInApprove);
-        statusList.add(statusTaskInChecking);
-        return statusList;
-    }
-    private static Set<Integer> getDefaultEmployeeStatusList() {
-        Set<Integer> statusList = new HashSet<>(5);
-        statusList.add(statusTaskNew);
-        statusList.add(statusTaskInApprove);
-        statusList.add(statusTaskInProduction);
-        statusList.add(statusTaskInChecking);
-        statusList.add(statusTaskReport);
-        return statusList;
     }
     public static User getUser(int userId) throws DaoException {
         return getUserDao().get(userId);

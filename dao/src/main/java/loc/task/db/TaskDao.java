@@ -43,12 +43,7 @@ public class TaskDao extends BaseDao<Task> {
         return result;
     }
 
-
     public List<Object[]> getCurrentTask(HashSet<Integer> includeStatus) {
-        if (includeStatus.isEmpty()) {
-            includeStatus.add(2);
-            includeStatus.add(4);
-        }
         int page = 1;
         return getCurrentTask(page, includeStatus);
     }
@@ -103,42 +98,6 @@ public class TaskDao extends BaseDao<Task> {
         return results;
     }
 
-
-//удалить
-    public List<Task> getTasks(long i, int page, int tasksPerPage, long totalCount,
-                                         Set<Integer> includeStatus, int sort, boolean ask) {
-        long countPage = totalCount / (long) tasksPerPage;
-        if (totalCount % (long) tasksPerPage > 0) {
-            countPage++;
-        }
-        if (page > (int) countPage) {
-            page = (int) countPage;
-        }else if(page<=0){page=1;}
-
-        System.out.println("getTasks:");
-        System.out.println("countPage:" + countPage);
-        System.out.println("tasksPerPage:" + tasksPerPage);
-        System.out.println("Page:" + page);
-
-        int firstResult = (page - 1) * tasksPerPage;
-
-//        Session session = util.getSession();
-        String hql = "SELECT DISTINCT T FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId)";
-        System.out.println("1:"+hql);
-        hql = hql.concat(getSorting(sort, ask));
-        System.out.println(hql);
-
-        Query query = session.createQuery(hql);
-//        query.setCacheable(true);
-//        query.setCacheRegion("task");
-        query.setParameterList("statusId", includeStatus);
-        query.setFirstResult(firstResult);
-        query.setMaxResults(tasksPerPage);
-        List<Task> results = query.list();
-        return results;
-    }
-
-
     public List<Task> getTasks(int page, int tasksPerPage, long totalCount,
                                Set<Integer> includeStatus, int sort, boolean ask) {
         Set<Integer> usersId = null;
@@ -180,6 +139,7 @@ public class TaskDao extends BaseDao<Task> {
         if (usersId!=null) {
             query.setParameterList("userId", usersId);
         }
+
 //        query.setCacheable(true);
 //        query.setCacheRegion("task");
         query.setParameterList("statusId", includeStatus);
@@ -217,16 +177,13 @@ public class TaskDao extends BaseDao<Task> {
     }
 
     public long getCountTask(Set<Integer> includeStatus) {
-        if (includeStatus.isEmpty()) {
-            includeStatus.add(2);
-            includeStatus.add(4);
-        }
         String hql = "SELECT COUNT (T) FROM Task T WHERE T.statusId IN (:statusId)";
         System.out.println(hql);
-//        Session session = util.getSession();
+
         Query query = session.createQuery(hql);
-        query.setCacheable(true);
-        query.setCacheRegion("task");
+        //TODO кэш оключил
+//        query.setCacheable(true);
+//        query.setCacheRegion("task");
         query.setParameterList("statusId", includeStatus);
         Long result = (Long) query.uniqueResult();
         System.out.println("count results: " + result);
@@ -235,21 +192,12 @@ public class TaskDao extends BaseDao<Task> {
 
     //TODO объединить
     public long getCountTask(Set<Integer> includeStatus, int userId) {
-        if (includeStatus.isEmpty()) {
-            includeStatus.add(2);
-            includeStatus.add(4);
-        }
-        System.out.println(includeStatus);
-
-//        SELECT COUNT(*) FROM `user` WHERE  `user`.`user_id` IN (2, 3) AND `user`.`F_accountStatus` IN (1);
-//        String hql = "SELECT COUNT (T) FROM Task T JOIN User U WHERE T.statusId IN (:statusId)";
+        System.out.println("includeStatus: " + includeStatus);
         String hql = "SELECT DISTINCT COUNT (T) FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
-//        String hql = "SELECT COUNT (T) FROM Task T JOIN User U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
         System.out.println(hql);
-//        Session session = util.getSession();
         Query query = session.createQuery(hql);
-        query.setCacheable(true);
-        query.setCacheRegion("task");
+//        query.setCacheable(true);
+//        query.setCacheRegion("task");
         query.setParameterList("statusId", includeStatus);
         query.setParameter("userId", userId);
         Long result = (Long) query.uniqueResult();
@@ -257,62 +205,99 @@ public class TaskDao extends BaseDao<Task> {
         return result;
     }
 
-    public List<Task> getCurrentTaskUser() {
-        HashSet<Integer> includeStatus = new HashSet<Integer>();
-        includeStatus.add(2);
-        includeStatus.add(4);
-        includeStatus.add(5);
-        return getCurrentTaskUser(includeStatus);
-    }
 
-    public List<Task> getCurrentTaskUser(Set<Integer> includeStatus) {
-        int page = 1;
-        return getCurrentTaskUser(page, includeStatus);
-    }
 
-    public List<Task> getCurrentTaskUser(int page, Set<Integer> includeStatus) {
-        int tasksPerPage = 10;
-        return getCurrentTaskUser(page, tasksPerPage, includeStatus);
-    }
-
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, Set<Integer> includeStatus) {
-        long totalCount = getCountTask(includeStatus);
-        return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus);
-    }
 //TODO нужна?
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus) {
-        HashSet<Integer> userId = new HashSet<Integer>(); //пустая коллекция юзеров
-        return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus, userId);
-    }
+//    public List<Task> getCurrentTaskUser(Set<Integer> includeStatus) {
+//        int page = 1;
+//        return getCurrentTaskUser(page, includeStatus);
+//    }
 
-    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus, Set<Integer> userId) {
+//    public List<Task> getCurrentTaskUser(int page, Set<Integer> includeStatus) {
+//        int tasksPerPage = 10;
+//        return getCurrentTaskUser(page, tasksPerPage, includeStatus);
+//    }
 
-        long countPage = totalCount / (long) tasksPerPage;
-        if (totalCount % (long) tasksPerPage > 0) {
-            countPage++;
-        }
-        if (page > (int) countPage) {
-            page = (int) countPage;
-        }
+//    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, Set<Integer> includeStatus) {
+//        long totalCount = getCountTask(includeStatus);
+//        return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus);
+//    }
 
-        System.out.println("countPage:" + countPage);
-        System.out.println("Page:" + page);
+//    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus) {
+//        HashSet<Integer> userId = new HashSet<Integer>(); //пустая коллекция юзеров
+//        return getCurrentTaskUser(page, tasksPerPage, totalCount, includeStatus, userId);
+//    }
 
-        int firstResult = (page - 1) * tasksPerPage;
-//        Session session = util.getSession();
-        String hql = "SELECT DISTINCT T FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
-//        hql = hql.concat(getSorting(sort, ask));
-
-        Query query = session.createQuery(hql);
-//        query.setCacheable(true);
-//        query.setCacheRegion("task");
-
-        query.setParameterList("statusId", includeStatus);
-        query.setParameterList("userId", userId);
-        query.setFirstResult(firstResult);
-        query.setMaxResults(tasksPerPage);
-        List<Task> results = query.list();
-        return results;
-    }
+//    public List<Task> getCurrentTaskUser(int page, int tasksPerPage, long totalCount, Set<Integer> includeStatus, Set<Integer> userId) {
+//
+//        long countPage = totalCount / (long) tasksPerPage;
+//        if (totalCount % (long) tasksPerPage > 0) {
+//            countPage++;
+//        }
+//        if (page > (int) countPage) {
+//            page = (int) countPage;
+//        }
+//
+//        System.out.println("countPage:" + countPage);
+//        System.out.println("Page:" + page);
+//
+//        int firstResult = (page - 1) * tasksPerPage;
+////        Session session = util.getSession();
+//        String hql = "SELECT DISTINCT T FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
+////        hql = hql.concat(getSorting(sort, ask));
+//
+//        Query query = session.createQuery(hql);
+////        query.setCacheable(true);
+////        query.setCacheRegion("task");
+//
+//        query.setParameterList("statusId", includeStatus);
+//        query.setParameterList("userId", userId);
+//        query.setFirstResult(firstResult);
+//        query.setMaxResults(tasksPerPage);
+//        List<Task> results = query.list();
+//        return results;
+//    }
 
 }
+
+//    public List<Task> getCurrentTaskUser() {
+//        HashSet<Integer> includeStatus = new HashSet<Integer>();
+//        includeStatus.add(2);
+//        includeStatus.add(4);
+//        includeStatus.add(5);
+//        return getCurrentTaskUser(includeStatus);
+//    }
+
+////удалить
+//    public List<Task> getTasks(long i, int page, int tasksPerPage, long totalCount,
+//                                         Set<Integer> includeStatus, int sort, boolean ask) {
+//        long countPage = totalCount / (long) tasksPerPage;
+//        if (totalCount % (long) tasksPerPage > 0) {
+//            countPage++;
+//        }
+//        if (page > (int) countPage) {
+//            page = (int) countPage;
+//        }else if(page<=0){page=1;}
+//
+//        System.out.println("getTasks:");
+//        System.out.println("countPage:" + countPage);
+//        System.out.println("tasksPerPage:" + tasksPerPage);
+//        System.out.println("Page:" + page);
+//
+//        int firstResult = (page - 1) * tasksPerPage;
+//
+////        Session session = util.getSession();
+//        String hql = "SELECT DISTINCT T FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId)";
+//        System.out.println("1:"+hql);
+//        hql = hql.concat(getSorting(sort, ask));
+//        System.out.println(hql);
+//
+//        Query query = session.createQuery(hql);
+////        query.setCacheable(true);
+////        query.setCacheRegion("task");
+//        query.setParameterList("statusId", includeStatus);
+//        query.setFirstResult(firstResult);
+//        query.setMaxResults(tasksPerPage);
+//        List<Task> results = query.list();
+//        return results;
+//    }

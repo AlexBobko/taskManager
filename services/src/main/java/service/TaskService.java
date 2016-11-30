@@ -22,20 +22,40 @@ public class TaskService {
     private static TaskDao taskDao = null;
     private static BaseDao baseDao = null;
 
+    public final static Integer statusTaskNew = 1;
+    public final static Integer statusTaskInApprove= 2;
+    public final static Integer statusTaskInProduction = 3;
+    public final static Integer statusTaskInChecking = 4;
+    public final static Integer statusTaskReport = 5;
+    public final static Integer statusTaskReady = 6;
+    public final static Integer statusTaskDelete = 7;
+
     final static Integer defaultStatusTask = 1;
     //    private Transaction transaction = null;
     //    Session session = HibernateUtil.getHibernateUtil().getSession();
 
     private TaskService() {
     }
-
+    public static Task getTask(Account account, Long taskId) {
+        User user = account.getUser();
+        Task task = null;
+        if (user.getRole() == UserService.employeeRole) {
+            task = getTaskDao().getTaskToUser(taskId, user.getUserId());
+        } else {
+            try {
+                task = getTaskDao().get(taskId);
+            } catch (DaoException e) {
+                log.error(e, e);
+            }
+        }
+        return task;
+    }
+//TODO 1 сессия, транзакции
     public static Account updateTaskList(Account ac) {
-        //обновить количество постов
+        //TODO убрать дефолтную загрузку контента после решения проблем с КЭШЕМ
         if (ac.getUser().getRole() == UserService.employeeRole) {
             updateTaskOutFilter(ac.getCurrentTasksFilter(), ac.getUser().getUserId());
-
             ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), ac.getUser().getUserId()));
-
         } else if (ac.getUser().getRole() == UserService.superiorRole) {
             updateTaskOutFilter(ac.getCurrentTasksFilter(), null);
             ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter()));
@@ -47,24 +67,19 @@ public class TaskService {
         Set<Integer> usersId = new HashSet<>(1);
         usersId.add(userId);
         ArrayList<Task> userList = (ArrayList<Task>) getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk(),usersId);
-//        for (Task task:userList ) {
-//            System.out.println(task.getTaskId());
-//        }
         return userList;
     }
-
     public static List<Task> getTasksList(TaskOutFilter f) {
         return getTaskDao().getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk());
     }
-
     public static long getCountTask(Set<Integer> includeStatus, int userId) {
 
         return getTaskDao().getCountTask(includeStatus, userId);
     }
-
+//TODO 2 сессия, транзакции
     public static Task addNewTask(Account account, int employeeId,
                                   String titleTask, String bodyTask, String strTaskDeadline) throws DaoException {
-        Date taskDeadline = convertDate(strTaskDeadline);
+        Date taskDeadline = UtilService.convertDate(strTaskDeadline);
         Set<User> users = new HashSet<>();
         if (employeeId == 0) {
             users.add(account.getUser());
@@ -78,20 +93,12 @@ public class TaskService {
         return newTask;
     }
 
-    public static Date convertDate(String postDate) {
-        String[] dl = postDate.split("/");
-        int year = Integer.parseInt(dl[2]);
-        int month = Integer.parseInt(dl[0]);
-        int dayOfMonth = Integer.parseInt(dl[1]);
-        int defaultHour = 20;
-        int defaultMinute = 15;
-        Date bodyDeadline = new Date(year, month, dayOfMonth, defaultHour, defaultMinute);
-        return bodyDeadline;
-    }
-
+//TODO 3 сессия, транзакции
     public static boolean updateTask(Account account, long taskId, Integer status) {
         Session session = HibernateUtil.getHibernateUtil().getSession();
         Transaction transaction = session.beginTransaction();
+
+
         boolean b = false;
         Task task;
         try {
@@ -112,11 +119,8 @@ public class TaskService {
             task.getContent().setHistory(history);
 //            getBaseDao().saveOrUpdate(task.getContent());
             System.out.println("TASK UPDATE 3 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
-
 //            getTaskDao().saveOrUpdate(task);
-
             transaction.commit();
-
             System.out.println("TASK UPDATE 4 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
 //            account.getCurrentTasks().put(task.getTaskId(), task);
             System.out.println("TASK UPDATE 5 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
@@ -130,32 +134,13 @@ public class TaskService {
         return b;
     }
 
-    public static Task getTask(Account account, Long taskId) {
-        User user = account.getUser();
-        int role = user.getRole();
-        Task task = null;
-        if (role == 1) {
-            System.out.println(user.getUserId());
-            task = getTaskDao().getTaskToUser(taskId, user.getUserId());
-        } else {
-            try {
-                task = getTaskDao().get(taskId);
-            } catch (DaoException e) {
-                log.error(e, e);
-            }
-        }
-        return task;
-    }
-
-    //    taskService.updateTaskBody(task,newStatus,bodyTask,account)
+    //TODO 4 сессия, транзакции
     public static boolean updateTaskBody(Account account, Task task, String bodyTask, Integer newStatus) {
         Session session = HibernateUtil.getHibernateUtil().getSession();
         Transaction transaction = session.beginTransaction();
 //        session.clear();
-        System.out.println(bodyTask);
         SimpleDateFormat dateFormat = account.getDateFormat();
         boolean b;
-
         try {
 //            getTaskDao().refresh(task);
 //            task = getTaskDao().get(task.getTaskId());
@@ -202,12 +187,10 @@ public class TaskService {
     public static TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) {
         return getTaskOutFilter(includeStatus, null);
     }
-
     public static TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) {
         TaskOutFilter taskOutFilter = new TaskOutFilter(includeStatus);
         return updateTaskOutFilter(taskOutFilter, userId);
     }
-
     public static TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) {
         long totalCount = 1L;
         if (userId != null) {
@@ -224,6 +207,27 @@ public class TaskService {
         return taskOutFilter;
     }
 
+    public static Set<Integer> getSuperiorReportStatusList() {
+        Set<Integer> statusList = new HashSet<>(1);
+        statusList.add(TaskService.statusTaskReport); //Назначено время
+        return statusList;
+    }
+    public static Set<Integer> getDefaultSuperiorStatusList() {
+        Set<Integer> statusList = new HashSet<>(2);
+        statusList.add(TaskService.statusTaskInApprove);
+        statusList.add(TaskService.statusTaskInChecking);
+        return statusList;
+    }
+    public static Set<Integer> getDefaultEmployeeStatusList() {
+        Set<Integer> statusList = new HashSet<>(5);
+        statusList.add(statusTaskNew);
+        statusList.add(statusTaskInApprove);
+        statusList.add(statusTaskInProduction);
+        statusList.add(statusTaskInChecking);
+        statusList.add(statusTaskReport);
+        return statusList;
+    }
+
     public static TaskDao getTaskDao() {
 
         if (taskDao == null) {
@@ -231,7 +235,6 @@ public class TaskService {
         }
         return taskDao;
     }
-
     public static BaseDao getBaseDao() {
 
         if (baseDao == null) {
@@ -239,4 +242,5 @@ public class TaskService {
         }
         return baseDao;
     }
+
 }

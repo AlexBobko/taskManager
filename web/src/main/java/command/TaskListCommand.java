@@ -6,8 +6,8 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-public class GoTaskListCommand implements ICommand {
-    private static Logger log = Logger.getLogger(GoTaskListCommand.class);
+public class TaskListCommand implements ICommand {
+    private static Logger log = Logger.getLogger(TaskListCommand.class);
     @Override
     public String execute(RequestHandler content) {
         String page=null;

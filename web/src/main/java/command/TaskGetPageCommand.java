@@ -7,8 +7,8 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-public class PageCommand implements ICommand {
-    private static Logger log = Logger.getLogger(PageCommand.class);
+public class TaskGetPageCommand implements ICommand {
+    private static Logger log = Logger.getLogger(TaskGetPageCommand.class);
     @Override
     public String execute(RequestHandler content) {
         String page = null;
@@ -16,15 +16,8 @@ public class PageCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             int pageNumber = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
-
-            System.out.println(account.getCurrentTasksFilter());
-
             account.getCurrentTasksFilter().setPage(pageNumber);
-
-            System.out.println("new task F " + account.getCurrentTasksFilter());
-
             account=TaskService.updateTaskList(account);
-
             page = PageManager.getProperty("path.page.user");
             content.getSessionAttributes().put(ACCOUNT, account);
         } catch (Exception e) {

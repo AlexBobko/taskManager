@@ -14,9 +14,7 @@ import java.lang.reflect.ParameterizedType;
 public class BaseDao<T> implements Dao<T> {
     private static Logger log = Logger.getLogger(BaseDao.class);
 
-
     Session session = HibernateUtil.getHibernateUtil().getSession();
-
 //    Session session = PersonLoader.util.getSession();
 //    transaction = session.beginTransaction();
 //    transaction.commit();
