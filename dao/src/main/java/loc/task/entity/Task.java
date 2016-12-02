@@ -1,14 +1,19 @@
 package loc.task.entity;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table//(name = "task")
-//@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="task")
-public class Task {
+@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_WRITE, region="task")
+public class Task implements Serializable {
+//    private static final long serialVersionUID = 1L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +29,15 @@ public class Task {
 
     @Column(name = "title")
     private String title;
+
+    @Version
+    @Column(name="optlock")
+    private Integer version = 1;
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+    public Integer getVersion() { return version; }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deadline",length = 19)

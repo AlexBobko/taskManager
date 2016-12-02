@@ -18,7 +18,7 @@ public class TaskDetailCommand implements ICommand {
 		try {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			Long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-			Task task = TaskService.getTask(account,taskId);
+			Task task = TaskService.getTaskService().getTask(account,taskId);
 			if (task!=null) {
 				content.getSessionAttributes().put(TASK, task);
 				account.setCurrentTasks(null); //чистим коллекции, чтобы не таскать в сессию

@@ -10,7 +10,7 @@ public class TaskOutFilter {
     private int tasksPerPage = 3;
     private long totalCount;
     long countPage;
-    private int sort = 1;
+    private int sort = 2;
     boolean ask = true;
 
     public TaskOutFilter() {

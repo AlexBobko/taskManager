@@ -36,7 +36,6 @@ public class BaseDao<T> implements Dao<T> {
         try {
             session.saveOrUpdate(t);
             session.flush();
-
             log.info("saveOrUpdate(t):" + t);
 //            System.out.println("saveOrUpdate(t):" + t);
             System.out.println("TASK UPDATE 4 "+ session.getStatistics()+ ": " );

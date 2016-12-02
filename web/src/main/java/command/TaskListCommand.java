@@ -15,7 +15,7 @@ public class TaskListCommand implements ICommand {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             int role=account.getUser().getRole();
 //            TaskService taskService = new TaskService();
-            TaskService.updateTaskList(account);
+            TaskService.getTaskService().updateTaskList(account);
             if (role==employeeRole){
                 page=PageManager.getProperty("path.page.user");
             }else if (role==superiorRole){

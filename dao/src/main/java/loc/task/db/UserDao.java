@@ -29,6 +29,7 @@ public class UserDao extends BaseDao<User> {
 //            p.setName(newName);
             System.out.println(p);
             session.flush();
+
             System.out.println(p);
         } catch (HibernateException e) {
             log.error("Error Flush person" + e);
@@ -38,9 +39,13 @@ public class UserDao extends BaseDao<User> {
     }
     public User findEntityByLogin(String userLogin){
 //        Session session = util.getSession();
-        String hql = "SELECT User FROM User U WHERE U.login IN (:login)";
+        String hql = "SELECT User FROM User U WHERE U.login =:login";
+        System.out.println(hql);
+        System.out.println(session.getStatistics());
+
         Query query = session.createQuery(hql);
-        query.setParameter("login", userLogin);
+        query.setParameter("login", "l Большой Ух");
+//        query.setParameter("login", userLogin);
         return (User)query.uniqueResult();
     }
 

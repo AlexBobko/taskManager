@@ -17,7 +17,7 @@ public class TaskGetPageCommand implements ICommand {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             int pageNumber = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
             account.getCurrentTasksFilter().setPage(pageNumber);
-            account=TaskService.updateTaskList(account);
+            account=TaskService.getTaskService().updateTaskList(account);
             page = PageManager.getProperty("path.page.user");
             content.getSessionAttributes().put(ACCOUNT, account);
         } catch (Exception e) {

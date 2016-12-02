@@ -57,10 +57,9 @@ public class HibernateUtil {
     public Session getSession () {
         Session session = (Session) sessions.get();
         if (session == null) {
-            int i=0;
-            System.out.println("NEW Session OPEN: " + ++i);
             session = sessionFactory.openSession();
             sessions.set(session);
+            System.out.println("*****NEW Session OPEN****");
         }
         return session;
     }
@@ -72,6 +71,12 @@ public class HibernateUtil {
         return util;
     }
 
+    public void removeSession() {
+        sessions.remove();
+
+    }
+
+
     public Statistics getStats() {
         return stats;
     }
@@ -79,5 +84,18 @@ public class HibernateUtil {
     public Session getOtherSession() {
         otherSession = sessionFactory.openSession();
         return otherSession;
+    }
+    public void printStats(int i) {
+        System.out.println("***** " + i + " *****");
+        System.out.println("Fetch Count="
+                + stats.getEntityFetchCount());
+        System.out.println("Second Level Hit Count="
+                + stats.getSecondLevelCacheHitCount());
+        System.out
+                .println("Second Level Miss Count="
+                        + stats
+                        .getSecondLevelCacheMissCount());
+        System.out.println("Second Level Put Count="
+                + stats.getSecondLevelCachePutCount());
     }
 }

@@ -18,7 +18,7 @@ import service.TaskService;
 
 public class TaskUpdateCommand implements ICommand {
     private static Logger log = Logger.getLogger(TaskUpdateCommand.class);
-    final private Integer newTaskStatus = 2;
+
 
     @Override
     public String execute(RequestHandler content) {
@@ -29,7 +29,7 @@ public class TaskUpdateCommand implements ICommand {
             account = (Account) content.getSessionAttributes().get(ACCOUNT);
             Task task = (Task) content.getSessionAttributes().get(TASK);
             String bodyTask = (String) content.getRequestAttributes().get(POST_BODY);
-            if (TaskService.updateTaskBody(account,task,bodyTask, newTaskStatus)) {
+            if (TaskService.getTaskService().updateTaskBody(account,task,bodyTask, TaskService.statusTaskNew)) {
                 System.out.println("1" + task);
 
                 page = PageManager.getProperty("path.page.task");

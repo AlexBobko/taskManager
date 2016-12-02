@@ -10,7 +10,12 @@
         <property name="hibernate.connection.password">111</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.pool_size">10</property>
+        <!--level transaction-->
+        <property name="hibernate.connection.isolation">2</property>
         <property name="hibernate.hbm2ddl.auto">validate</property>
+        <!-- generate_statistics to session factory-->
+        <property name="hibernate.generate_statistics" />
+        <property name="hibernate.cache.use_structured_entries" />
         <!-- second level cache -->
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.show_sql">true</property>
@@ -18,8 +23,8 @@
         <!-- For singleton factory -->
         <!-- <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property>-->
         <!-- enable second level cache and query cache -->
-        <property name="hibernate.cache.use_second_level_cache">false</property>
-        <property name="hibernate.cache.use_query_cache">false</property>
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.use_query_cache">true</property>
         <property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
         <!-- Mapping files -->
         <mapping class="loc.task.entity.Task"/>

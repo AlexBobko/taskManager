@@ -8,12 +8,14 @@ import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity //(name = "users")
+@Entity
+//(name = "users")
+
 public class User {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id",unique = true, nullable = false)
     private int userId;
     @Column
     private int personnelNumber; //табельный номер

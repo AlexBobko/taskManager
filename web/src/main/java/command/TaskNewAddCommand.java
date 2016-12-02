@@ -47,7 +47,7 @@ public class TaskNewAddCommand implements ICommand {
                 responsiblePersonId = 0;
             }
             try {
-                Task newTask = TaskService.addNewTask(account, responsiblePersonId, titleTask, bodyTask, strTaskDeadline);
+                Task newTask = TaskService.getTaskService().addNewTask(account, responsiblePersonId, titleTask, bodyTask, strTaskDeadline);
                 message.append(MessageManager.getProperty("message.task.add") + newTask.getTaskId());
                 content.getSessionAttributes().put(TASK, newTask);
                 page = PageManager.getProperty("path.page.task");

@@ -22,7 +22,7 @@ public class TaskReadyCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-            if (TaskService.updateTask(account, taskId, newStatus)) {
+            if (TaskService.getTaskService().updateTask(account, taskId, newStatus)) {
                 page = PageManager.getProperty("path.page.user");
                 message = message.append(MessageManager.getProperty("task.update")).append(taskId);
             }

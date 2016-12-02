@@ -33,9 +33,9 @@ public class LoginUserCommand implements ICommand {
             String userPassword = (String) content.getRequestAttributes().get(PASSWORD);
             try {
                 int userId = Integer.parseInt(userLogin);
-                account= UserService.getAccount(userId, userPassword);
+                account= UserService.getUserService().getAccount(userId, userPassword);
             } catch (NumberFormatException e) {
-                account= UserService.getAccount(userLogin, userPassword);
+                account= UserService.getUserService().getAccount(userLogin, userPassword);
             }
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);

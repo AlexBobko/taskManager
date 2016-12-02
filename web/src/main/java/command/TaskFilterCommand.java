@@ -40,7 +40,7 @@ public class TaskFilterCommand implements ICommand {
             taskOutFilter.setSort(Integer.parseInt((String) content.getRequestAttributes().get("sorting_column")));
             taskOutFilter.setTasksPerPage(Integer.parseInt((String) content.getRequestAttributes().get("task_per_page")));
 
-            TaskService.updateTaskList(account);
+            TaskService.getTaskService().updateTaskList(account);
             if (role == employeeRole) {
                 page = PageManager.getProperty("path.page.user");
             } else if (role == superiorRole) {

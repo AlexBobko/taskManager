@@ -2,8 +2,10 @@ package controller;
 
 import command.CommandList;
 import command.ICommand;
+import loc.task.util.HibernateUtil;
 import managers.StatusManager;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,6 +17,7 @@ import java.util.Map;
  * Изоляция запросов для передачи в bsu
  */
 public class RequestHandler {
+    Session sessionHibernate = null;
     private static Logger log = Logger.getLogger(RequestHandler.class); //log.error(e,e);
     private HashMap<String, Object> requestAttributes;
     private HashMap<String, String[]> requestParameters;
@@ -34,18 +37,19 @@ public class RequestHandler {
             String key = attributeSessionNames.nextElement();
             sessionAttributes.put(key, session.getAttribute(key));
         }
+
+
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String key = parameterNames.nextElement();
-
             //TODO хардкод
-            if (key.equals("include_status")){
+            if (key.equals("include_status")) {
                 String[] statuses = request.getParameterValues(key);
                 requestAttributes.put(key, statuses);
                 continue;
             }
 
-            String value= request.getParameter(key);
+            String value = request.getParameter(key);
             //String[] statuses = request.getParameterValues();
             System.out.println(RequestHandler.class + ":*1**key: " + key + "| - value:|" + value + "|-успешно </b>***<br/>");
             //отсеиваем пустые значения
@@ -60,6 +64,15 @@ public class RequestHandler {
 //					System.out.println("<br/>***<b>key:" + key + "| - value:|" + value + "|-успешно </b>***<br/>");
                 }
             }
+        }
+
+        //TODO открываем сессию
+        sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
+        HibernateUtil.getHibernateUtil().printStats(2);
+        if (sessionHibernate.isOpen()) {
+            System.out.println("1 sessionHibernate.open" + sessionHibernate.getStatistics());
+        } else
+        {
         }
         return currentCommand;
     }
@@ -87,6 +100,25 @@ public class RequestHandler {
                 //закинуть данные обратно в ответ
             }
         }
+
+
+
+        HibernateUtil.getHibernateUtil().printStats(1);
+        sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
+        sessionHibernate.flush();
+        sessionHibernate.clear();
+        HibernateUtil.getHibernateUtil().printStats(2);
+
+        System.out.println("2 sessionHibernate.clear " + sessionHibernate.getStatistics());
+        System.out.println("sessionHibernate.getCacheMode() " + sessionHibernate.getCacheMode());
+//        sessionHibernate.getTransaction().commit();
+        if (sessionHibernate.isOpen()) {
+//            sessionHibernate.close();
+//            HibernateUtil.getHibernateUtil().removeSession();
+
+//            System.out.println("3 sessionHibernate.close + null ");
+        }
+
         return request;
     }
 
