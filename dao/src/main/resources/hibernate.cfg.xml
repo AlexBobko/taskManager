@@ -27,7 +27,7 @@
         <property name="hibernate.cache.use_query_cache">true</property>
         <property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
         <!-- Mapping files -->
-        <mapping class="loc.task.entity.Task"/>
+        <mapping class="loc.task.entity.Task" />
         <mapping class="loc.task.entity.User"/>
         <mapping class="loc.task.entity.PersonalData"/>
     </session-factory>

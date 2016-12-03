@@ -5,6 +5,7 @@ import loc.task.entity.Task;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class DirectorPrivileges implements Privileges {
     private Set<Task> tasksForApprove = new HashSet<Task>();
     private Set<Task> currentTasks = new HashSet<Task>();

@@ -22,7 +22,7 @@ public class TaskInApproveCommand implements ICommand {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
             if (account.getUser().getRole() == employeeRole) {
-                if (TaskService.getTaskService().updateTask(account, taskId, newStatus)) {
+                if (TaskService.getTaskService().updateTaskStatus(account, taskId, newStatus)) {
                     page = PageManager.getProperty("path.page.user");
                     message = message.append(MessageManager.getProperty("task.update")).append(taskId);
                 }

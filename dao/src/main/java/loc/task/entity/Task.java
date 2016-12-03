@@ -1,6 +1,7 @@
 package loc.task.entity;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OptimisticLockType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +9,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity //TODO ?? dynamicUpdate = false как работает если изменилось 2 поля? по каждой ячейке или без измененного поля
+@org.hibernate.annotations.Entity (dynamicUpdate = false, optimisticLock = OptimisticLockType.VERSION)
 @Table//(name = "task")
 @org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_WRITE, region="task")
 public class Task implements Serializable {

@@ -8,10 +8,8 @@
         <groupId>loc.task</groupId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-
     <artifactId>dao</artifactId>
     <packaging>jar</packaging>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>4.3.6.Final</hibernate.version>
@@ -23,14 +21,10 @@
         <mysql.version>5.1.34</mysql.version>
         <!--<mysql.connector.version>5.1.39</mysql.connector.version>-->
         <ehcache.version>2.6.9</ehcache.version>
-
         <cobertura.version>2.7</cobertura.version>
         <c3p0.version>0.9.5.1</c3p0.version>
         <jdbc.version>0.6.1</jdbc.version>
         <slf4j.version>1.5.6</slf4j.version>
-
-
-
     </properties>
     <name>DaoTaskMan</name>
     <url>http://maven.apache.org</url>
@@ -101,15 +95,8 @@
             <artifactId>java.jdbc</artifactId>
             <version>${jdbc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
 
-
-
-<!--остатки от прошлого-->
+<!--остатки от прошлого /-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -130,7 +117,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -167,6 +153,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

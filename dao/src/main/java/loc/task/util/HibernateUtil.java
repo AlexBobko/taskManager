@@ -11,7 +11,9 @@
 package loc.task.util;
 
 //import net.sf.ehcache.config.Configuration;
+
 import org.apache.log4j.Logger;
+import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -58,6 +60,8 @@ public class HibernateUtil {
         Session session = (Session) sessions.get();
         if (session == null) {
             session = sessionFactory.openSession();
+            //TODO ?? CacheMode.GET где прописать по умолчанию?
+            session.setCacheMode(CacheMode.GET);
             sessions.set(session);
             System.out.println("*****NEW Session OPEN****");
         }

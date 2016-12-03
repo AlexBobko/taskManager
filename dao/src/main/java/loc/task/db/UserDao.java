@@ -38,13 +38,13 @@ public class UserDao extends BaseDao<User> {
 
     }
     public User findEntityByLogin(String userLogin){
-//        Session session = util.getSession();
-        String hql = "SELECT User FROM User U WHERE U.login =:login";
+        String hql = "SELECT U FROM User U WHERE U.login =:login";
         System.out.println(hql);
         System.out.println(session.getStatistics());
 
         Query query = session.createQuery(hql);
-        query.setParameter("login", "l Большой Ух");
+
+        query.setParameter("login", "l Бонифаций");
 //        query.setParameter("login", userLogin);
         return (User)query.uniqueResult();
     }

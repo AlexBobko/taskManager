@@ -8,17 +8,10 @@ import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
-
-
-
 // TODO ВНЕСТИ обновление таска в список выводимых тасков! кэш?
-
-
-
 
 public class TaskUpdateCommand implements ICommand {
     private static Logger log = Logger.getLogger(TaskUpdateCommand.class);
-
 
     @Override
     public String execute(RequestHandler content) {
@@ -29,15 +22,14 @@ public class TaskUpdateCommand implements ICommand {
             account = (Account) content.getSessionAttributes().get(ACCOUNT);
             Task task = (Task) content.getSessionAttributes().get(TASK);
             String bodyTask = (String) content.getRequestAttributes().get(POST_BODY);
-            if (TaskService.getTaskService().updateTaskBody(account,task,bodyTask, TaskService.statusTaskNew)) {
-                System.out.println("1" + task);
+            if (TaskService.getTaskService().updateTaskBody(account,task,bodyTask)) {
+
+                System.out.println("command update task:" + task.getTaskId());
 
                 page = PageManager.getProperty("path.page.task");
                 message = message.append(MessageManager.getProperty("task.update")).append(task.getTaskId());
-//                System.out.println(meta.toString());
             }
             content.getSessionAttributes().put(ACCOUNT, account);
-            // System.out.println("addNewTask: " + meta.getId());
         } catch (Exception e) {
             log.error(e,e);
             message = message.append(MessageManager.getProperty("task.update.false"));
