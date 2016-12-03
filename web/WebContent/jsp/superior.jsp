@@ -18,35 +18,34 @@
                     <th>Действие</th>
                 </tr>
                 <c:forEach items="${account.currentTasks}" var="task">
-                    <td><c:out value="${task.value.taskId}"/></td>
-                    <td>
-                    </td>
-                    <td><c:out value="${task.value.statusId}"/></td>
-                    <tr id="<c:out value="${task.key}" />">
-                        <td><c:out value="${task.value.id}"/></td>
-                        <c:out value="${account.dateFormat.format(task.value.dateCreation)}"/>
-
-                        <td><c:forEach items="${task.personList}" var="user">
-                            <%--<c:out value="${user.userId}"/>:--%>
-                            <c:out value="${user.login}"/><br/>
-                        </c:forEach>
-                        <td><c:out value="${task.value.title}"/></td>
-                        <td><c:out value="${task.value.statusId}"/></td>
-                        <td><c:out value="${account.dateFormat.format(task.value.deadline)}"/></td>
+                    <tr id="<c:out value="${task.taskId}"/>">
+                        <td><c:out value="${task.taskId}"/></td>
                         <td>
-                            <button name="TASK_DETAIL" type="submit" value="${task.key}">Детали</button>
-                            <c:choose><c:when test="${task.value.statusId == 2}">
-                                <button name="PRODUCTION" type="submit" value="${task.key}">В работу</button>
+                            <c:out value="${account.dateFormat.format(task.dateCreation)}"/>
+                        </td>
+                        <td><c:forEach items="${task.userList}" var="user">
+                            <c:out value="${user.login}"/> - <c:out value="${user.userId}"/><br/>
+                        </c:forEach>
+                        </td>
+                        <td><c:out value="${task.title}"/></td>
+                        <td><c:out value="${task.statusId}"/></td>
+                        <td>
+                            <c:out value="${account.dateFormat.format(task.deadline)}"/>
+                        </td>
+                        <td>
+                            <button name="TASK_DETAIL" type="submit" value="${task.taskId}">Детали</button>
+                            <c:choose><c:when test="${task.statusId == 2}">
+                                <button name="PRODUCTION" type="submit" value="${task.taskId}">В работу</button>
                             </c:when>
-                                <c:when test="${task.value.statusId == 4}">
-                                    <button name="PRODUCTION" type="submit" value="${task.key}">Вернуть на доработку
+                                <c:when test="${task.statusId == 4}">
+                                    <button name="PRODUCTION" type="submit" value="${task.taskId}">Вернуть на доработку
                                     </button>
-                                    <button name="PAY_TASK" type="submit" value="${task.key}">Назначить приём</button>
+                                    <button name="PAY_TASK" type="submit" value="${task.taskId}">Назначить приём</button>
                                 </c:when>
-                                <c:when test="${task.value.statusId == 5}">
-                                    <button name="PRODUCTION" type="submit" value="${task.key}">Вернуть на доработку
+                                <c:when test="${task.statusId == 5}">
+                                    <button name="PRODUCTION" type="submit" value="${task.taskId}">Вернуть на доработку
                                     </button>
-                                    <button name="TASK_READY" type="submit" value="${task.key}">Принять</button>
+                                    <button name="TASK_READY" type="submit" value="${task.taskId}">Принять</button>
                                 </c:when>
                                 <c:otherwise>
                                 </c:otherwise>

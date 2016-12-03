@@ -1,10 +1,13 @@
 package managers;
 
+import lombok.extern.log4j.Log4j;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@Log4j
 public class StatusManager {
     private static StatusManager statusManager = null;
     private Map<Integer, String> status =null;

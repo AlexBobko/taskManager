@@ -7,14 +7,12 @@ import loc.task.util.HibernateUtil;
 import loc.task.vo.Account;
 import loc.task.vo.AccountSuperior;
 import loc.task.vo.TaskOutFilter;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.hibernate.Transaction;
 import utils.org.mindrot.jbcrypt.BCrypt;
-
+@Log4j
 public class UserService {
-    //    private Transaction transaction = null;
-    //    Session session = HibernateUtil.getHibernateUtil().getSession();
-    private static Logger log = Logger.getLogger(UserService.class);
+//    private static Logger log = Logger.getLogger(UserService.class);
     private static UserService userService = null;
 
     private static UserDao userDao = null;
@@ -43,7 +41,6 @@ public class UserService {
     public Account getAccount(int userId, String userPassword) {
         return getAccount(userId, null, userPassword);
     }
-
     public Account getAccount(String userLogin, String userPassword) {
         return getAccount(0, userLogin, userPassword);
     }
@@ -77,7 +74,6 @@ public class UserService {
         return account;
     }
 
-
     private Account createAccount(User user) {
         Account account = null;
         TaskService ts = TaskService.getTaskService();
@@ -91,6 +87,7 @@ public class UserService {
             TaskOutFilter reportTaskFilter = ts.getTaskOutFilter(ts.getSuperiorReportStatusList());//дополнительный фильтр
             account = new AccountSuperior(user, currentTasksFilter, ts.getTasksList(currentTasksFilter),
                     reportTaskFilter, ts.getTasksList(reportTaskFilter));
+
             //TODO ?? загружается полностью юзер обленили юзера )))
         }
         return account;

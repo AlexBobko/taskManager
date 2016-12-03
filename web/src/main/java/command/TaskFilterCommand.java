@@ -3,16 +3,16 @@ package command;
 import controller.RequestHandler;
 import loc.task.vo.Account;
 import loc.task.vo.TaskOutFilter;
+import lombok.extern.log4j.Log4j;
 import managers.PageManager;
-import org.apache.log4j.Logger;
 import service.TaskService;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Log4j
 public class TaskFilterCommand implements ICommand {
-    private static Logger log = Logger.getLogger(TaskFilterCommand.class); //log.error(e,e);
-
+//    private static Logger log = Logger.getLogger(TaskFilterCommand.class); //log.error(e,e);
     @Override
     public String execute(RequestHandler content) {
         String page = null;

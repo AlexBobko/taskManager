@@ -1,16 +1,17 @@
 package loc.task.db;
 
 import loc.task.entity.Task;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.hibernate.Query;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+@Log4j
 public class TaskDao extends BaseDao<Task> {
 
-    private static Logger log = Logger.getLogger(TaskDao.class);
+//    private static Logger log = Logger.getLogger(TaskDao.class);
+//TODO уникальный заголовок?
 
     public Task getTaskToUser(long taskId, int userId) {
         String hql = "SELECT T FROM Task T JOIN T.userList U WHERE T.taskId =:taskId AND U.userId=:userId";
@@ -154,7 +155,7 @@ public class TaskDao extends BaseDao<Task> {
                 sorting = sorting.append(" ORDER BY U.login");
                 break;
             case 5:
-                sorting = sorting.append(" ORDER BY U.title");
+                sorting = sorting.append(" ORDER BY T.title");
                 break;
             default:
                 break;

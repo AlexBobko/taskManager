@@ -61,7 +61,8 @@ public class HibernateUtil {
         if (session == null) {
             session = sessionFactory.openSession();
             //TODO ?? CacheMode.GET где прописать по умолчанию?
-            session.setCacheMode(CacheMode.GET);
+//            session.setCacheMode(CacheMode.GET);
+            session.setCacheMode(CacheMode.NORMAL);
             sessions.set(session);
             System.out.println("*****NEW Session OPEN****");
         }

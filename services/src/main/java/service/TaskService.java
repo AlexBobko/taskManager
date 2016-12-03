@@ -16,7 +16,6 @@ import org.hibernate.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 public class TaskService {
     private static Logger log = Logger.getLogger(TaskService.class); //TODO log add e  log.error(e, e);
     private static TaskDao taskDao = null;
@@ -24,9 +23,9 @@ public class TaskService {
     private static TaskService taskService = null;
 
     public final static Integer statusTaskNew = 1;
-    public final static Integer statusTaskInApprove = 2;
-    public final static Integer statusTaskInProduction = 3;
-    public final static Integer statusTaskInChecking = 4;
+    public final static Integer statusTaskApprove = 2;
+    public final static Integer statusTaskProcess = 3;
+    public final static Integer statusTaskReview = 4;
     public final static Integer statusTaskReport = 5;
     public final static Integer statusTaskReady = 6;
     public final static Integer statusTaskDelete = 7;
@@ -66,6 +65,7 @@ public class TaskService {
     //TODO транзакция updateTaskStatus
     public boolean updateTaskStatus(Account ac, long taskId, Integer status) {
 //        Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
+        //TODO ?? в каком месте лучше ограничить операции пользователя
         Session session = HibernateUtil.getHibernateUtil().getSession();
         Transaction transaction = session.beginTransaction();
         boolean b = false;
@@ -113,7 +113,7 @@ public class TaskService {
             String currentTaskBody = task.getContent().getBody();
             Calendar calendar = Calendar.getInstance();
 
-            task.setStatusId(statusTaskInApprove);// устанавливаем статус на проверке
+            task.setStatusId(statusTaskApprove);// устанавливаем статус на проверке
 
             updateTaskHistory(task, ac, reasonUpdateBody);
             currentTaskBody = currentTaskBody.concat("\n\r").concat(dateFormat.format(calendar.getTime())).concat(" user:" + userId).concat(bodyTask);
@@ -157,6 +157,7 @@ public class TaskService {
         transaction.commit();
         return newTask;
     }
+
     public void updateTaskHistory(Task task, Account account, String reason) {
         SimpleDateFormat dateFormat = account.getDateFormat();
         Calendar calendar = Calendar.getInstance();
@@ -167,7 +168,6 @@ public class TaskService {
                 concat(task.getStatusId()+"").concat("~user:").concat(account.getUser().getUserId()+"").concat("~~");
         task.getContent().setHistory(history);
     }
-
     public Task getTask(Account account, Long taskId) {
         User user = account.getUser();
         Task task = null;
@@ -204,8 +204,8 @@ public class TaskService {
         }
         taskOutFilter.setTotalCount(totalCount);
         taskOutFilter.setCountPage(countPage);
-        if ((int)totalCount<taskOutFilter.getPage()){
-            taskOutFilter.setPage((int)totalCount);
+        if ((int)countPage<taskOutFilter.getPage()){
+            taskOutFilter.setPage((int)countPage);
         }
         return taskOutFilter;
     }
@@ -227,20 +227,19 @@ public class TaskService {
     }
     public Set<Integer> getDefaultSuperiorStatusList() {
         Set<Integer> statusList = new HashSet<>(2);
-        statusList.add(TaskService.statusTaskInApprove);
-        statusList.add(TaskService.statusTaskInChecking);
+        statusList.add(TaskService.statusTaskApprove);
+        statusList.add(TaskService.statusTaskReview);
         return statusList;
     }
     public Set<Integer> getDefaultEmployeeStatusList() {
         Set<Integer> statusList = new HashSet<>(5);
         statusList.add(statusTaskNew);
-        statusList.add(statusTaskInApprove);
-        statusList.add(statusTaskInProduction);
-        statusList.add(statusTaskInChecking);
+        statusList.add(statusTaskApprove);
+        statusList.add(statusTaskProcess);
+        statusList.add(statusTaskReview);
         statusList.add(statusTaskReport);
         return statusList;
     }
-
     public TaskDao getTaskDao() {
 
         if (taskDao == null) {
@@ -248,7 +247,6 @@ public class TaskService {
         }
         return taskDao;
     }
-
     public BaseDao getBaseDao() {
 
         if (baseDao == null) {

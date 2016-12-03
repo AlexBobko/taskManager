@@ -1,30 +1,22 @@
 package command;
 
+import controller.PageMapper;
 import controller.RequestHandler;
 import loc.task.vo.Account;
+import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
-import managers.PageManager;
-import org.apache.log4j.Logger;
 import service.UserService;
 
 /**
  * Login
  */
+@Log4j
 public class LoginUserCommand implements ICommand {
-
-    private static Logger log = Logger.getLogger(LoginUserCommand.class);
 
     private static final String LOGIN = "username";
     private static final String PASSWORD = "password";
-    private static final int employeeRole =1;
-    private static final int superiorRole =2;
-
-    LoginUserCommand() {
-    }
-
     @Override
     public String execute(RequestHandler content) {
-
         String page=null;
         StringBuffer message = new StringBuffer();
         Account account;
@@ -39,23 +31,17 @@ public class LoginUserCommand implements ICommand {
             }
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
-                if (account.getUser().getRole() == employeeRole) {
-                    page=PageManager.getProperty("path.page.user");
-                }else if (account.getUser().getRole() == superiorRole){
-                    page=PageManager.getProperty("path.page.superior");
-                }
+                page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
                 message.append(MessageManager.getProperty("message.true.login"));
             }else{
+                //TODO EXP IllegalArgumentException
                 message.append(MessageManager.getProperty("message.login.error"));
-                page = PageManager.getProperty("path.page.login");
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             log.error(e,e);
-            page = PageManager.getProperty("path.page.login");
             message.append(MessageManager.getProperty("message.login.error"));
         }
         content.getSessionAttributes().put(MESSAGE, message.toString());
-//        content.getRequestAttributes().put(MESSAGE, message.toString());
         return page;
     }
 }

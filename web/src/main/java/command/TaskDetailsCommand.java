@@ -3,14 +3,12 @@ package command;
 import controller.RequestHandler;
 import loc.task.entity.Task;
 import loc.task.vo.Account;
+import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
 import managers.PageManager;
-import org.apache.log4j.Logger;
 import service.TaskService;
-
-public class TaskDetailCommand implements ICommand {
-	private static Logger log = Logger.getLogger(TaskDetailCommand.class);
-//TODO перенести в doGET
+@Log4j
+public class TaskDetailsCommand implements ICommand {
 	@Override
 	public String execute(RequestHandler content) {
 		StringBuffer message = new StringBuffer();
@@ -23,7 +21,6 @@ public class TaskDetailCommand implements ICommand {
 				content.getSessionAttributes().put(TASK, task);
 				account.setCurrentTasks(null); //чистим коллекции, чтобы не таскать в сессию
 				account.getUser().setTaskList(null);
-
 				page = PageManager.getProperty("path.page.task");
 				content.getSessionAttributes().put(ACCOUNT, account);
 			}

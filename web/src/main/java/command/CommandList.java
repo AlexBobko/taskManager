@@ -28,17 +28,17 @@ public enum CommandList {
     },
     PRODUCTION {
         {
-            this.command = new TaskInProductionCommand(); // set status 3
+            this.command = new TaskInProcessCommand(); // set status 3
         }
     },
     FOR_CHECKING {
         {
-            this.command = new TaskInCheckingCommand(); // set status 4
+            this.command = new TaskInReviewCommand(); // set status 4
         }
     },
     PAY_TASK {
         {
-            this.command = new TaskInPayCommand(); // set status 5
+            this.command = new TaskInReportingCommand(); // set status 5
         }
     },
     TASK_READY {
@@ -48,7 +48,7 @@ public enum CommandList {
     },
     TASK_DETAIL {
         {
-            this.command = new TaskDetailCommand(); //детали, подробное описание //TODO перенести в GET?
+            this.command = new TaskDetailsCommand(); //детали, подробное описание //TODO перенести в GET?
         }
     },
     GO_ADD{

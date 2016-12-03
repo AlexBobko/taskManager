@@ -1,6 +1,7 @@
 package command;
 
 import controller.RequestHandler;
+import service.UserService;
 
 /** ICommand */
 public interface ICommand {
@@ -15,7 +16,8 @@ public interface ICommand {
 	static final String POST_TITLE = "titleTask";
 	static final String POST_BODY = "bodyTask";
 	static final String POST_DEADLINE = "taskDeadline";
-	static final Integer employeeRole = 1;
-	static final Integer superiorRole = 2;
+	static final Integer employeeRole = UserService.employeeRole;
+	static final Integer superiorRole = UserService.superiorRole;
+
 	String execute(RequestHandler content);
 }

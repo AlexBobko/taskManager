@@ -15,6 +15,7 @@
         <junit.version>4.12</junit.version>
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <!--<log4j.version>2.6.1</log4j.version>-->
+        <lombok.version>1.16.6</lombok.version>
         <!--добавить лог-->
     </properties>
 
@@ -41,13 +42,18 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <modules>
         <module>dao</module>
         <module>services</module>
         <module>web</module>
-        <!--<module>dao</module>-->
     </modules>
 
     <build>
@@ -66,7 +72,6 @@
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
-                    <!--<version>2.2</version>-->
                     <configuration>
                         <server>tomcatLocal</server>
                         <username>ideaUs</username>

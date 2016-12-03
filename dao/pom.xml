@@ -14,17 +14,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <!--<hibernate.version>4.3.9.Final</hibernate.version>-->
-        <lombok.version>1.16.6</lombok.version>
         <lang3.version>3.5</lang3.version>
         <log4j.version>1.2.17</log4j.version>
-        <!--<log4j.version>1.2.17</log4j.version>-->
+        <slf4j.version>1.7.5</slf4j.version>
+        <!--<slf4j.version>1.5.6</slf4j.version>-->
         <mysql.version>5.1.34</mysql.version>
         <!--<mysql.connector.version>5.1.39</mysql.connector.version>-->
         <ehcache.version>2.6.9</ehcache.version>
         <cobertura.version>2.7</cobertura.version>
         <c3p0.version>0.9.5.1</c3p0.version>
         <jdbc.version>0.6.1</jdbc.version>
-        <slf4j.version>1.5.6</slf4j.version>
+        <lombok.version>1.16.8</lombok.version>
     </properties>
     <name>DaoTaskMan</name>
     <url>http://maven.apache.org</url>
@@ -48,6 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <!--запустить модуль отдельно-->
                 <!--<configuration>-->
                 <!--<archive>-->
                 <!--<manifest>-->
@@ -63,7 +64,7 @@
     <repositories>
         <repository>
             <id>JBoss</id>
-            <name>JBoss Repsitory</name>
+            <name>JBoss Repository</name>
             <layout>default</layout>
             <url>http://repository.jboss.org/maven2</url>
         </repository>
@@ -84,7 +85,7 @@
         </repository>
     </repositories>
     <dependencies>
-<!--остатки от прошлого-->
+        <!--остатки от прошлого-->
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
@@ -96,7 +97,7 @@
             <version>${jdbc.version}</version>
         </dependency>
 
-<!--остатки от прошлого /-->
+        <!--остатки от прошлого /-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -152,23 +153,19 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${lang3.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 //@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_ONLY, region="task")
 public class TaskContent {
     @Column
-//            (columnDefinition = "text")
+//    (columnDefinition = "text") //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится
 //    @Column(name = "task_body")
     public String getBody() {return body;}
 
