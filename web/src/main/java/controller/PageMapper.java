@@ -15,9 +15,7 @@ public class PageMapper {
 
     private static synchronized PageMapper getInstance() {
         if (pageMapper == null) {
-            if (pageMapper == null) {
-                pageMapper = new PageMapper();
-            }
+            pageMapper = new PageMapper();
         }
         return pageMapper;
     }
@@ -38,7 +36,8 @@ public class PageMapper {
         }
         return page;
     }
-    public String getTaskDetailsPage(Integer role){
+
+    public String getTaskDetailsPage(Integer role) {
         String page = null;
         if (role == employeeRole) {
             page = PageManager.getProperty("path.page.task");
@@ -46,6 +45,19 @@ public class PageMapper {
             //TODO добавить: возм. установить любой статус, вкл. удаление, переназначить ответственного и даты.
             //расширить возможности редактирования
             page = PageManager.getProperty("path.page.task");
+        }
+        return page;
+
+    }
+
+    public String getNewTaskPage(Integer role) {
+        String page = null;
+        if (role == employeeRole) {
+            page = PageManager.getProperty("path.page.add.task");
+        } else if (role == superiorRole) {
+            //TODO добавить: возм. установить любой статус, вкл. удаление, переназначить ответственного и даты.
+            //расширить возможности добавления
+            page = PageManager.getProperty("path.page.add.task");
         }
         return page;
 

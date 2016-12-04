@@ -12,18 +12,41 @@ package loc.task.db;
 
 import loc.task.db.exceptions.DaoException;
 import loc.task.entity.User;
-import org.apache.log4j.Logger;
+import loc.task.util.HibernateUtil;
+import lombok.extern.log4j.Log4j;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
-
+@Log4j
 public class UserDao extends BaseDao<User> {
 
-    private static Logger log = Logger.getLogger(UserDao.class);
+    private static UserDao userDao = null;
+
+    private UserDao() {
+        log.info("SINGLE TONE: create new UserDao()");
+//        super.getBaseDao();
+    }
+
+    private static synchronized UserDao getInstance() {
+        if (userDao == null) {
+            userDao = new UserDao();
+        }
+        return userDao;
+    }
+
+    public static UserDao getUserDao() {
+        if (userDao == null) {
+            return getInstance();
+        }
+        return userDao;
+    }
+
+
 
     public void flush(Integer id, String newName) throws DaoException {
         try {
-//            Session session = util.getSession();
+            Session session = HibernateUtil.getHibernateUtil().getSession();
             User p = (User)session.get(User.class, id);
             System.out.println(p);
 //            p.setName(newName);
@@ -38,6 +61,7 @@ public class UserDao extends BaseDao<User> {
 
     }
     public User findEntityByLogin(String userLogin){
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         String hql = "SELECT U FROM User U WHERE U.login =:login";
         System.out.println(hql);
         System.out.println(session.getStatistics());

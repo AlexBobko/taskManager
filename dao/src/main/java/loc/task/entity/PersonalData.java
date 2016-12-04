@@ -23,7 +23,7 @@ public class PersonalData {
     private String surname;
     @Column(nullable = false)
     private String position;
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private User user;
 

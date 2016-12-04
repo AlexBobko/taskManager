@@ -31,6 +31,7 @@ public class LoginUserCommand implements ICommand {
             }
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
+
                 page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
                 message.append(MessageManager.getProperty("message.true.login"));
             }else{

@@ -3,10 +3,13 @@
 <%@ include file="/jsp/header.jsp" %>
 <!-- superior.jsp -->
 <div class="content">
-    <div class="main">
-        <h1>Список текущих задач</h1>
-        <form name="user-form" action="go" method="post">
+    <form name="user-form" action="go" method="post">
+        <div class="main">
+            <h1>Список текущих задач</h1>
+
             <button name="GO_ADD" type="submit" value="GO_ADD">Новая задача</button>
+            Результатов: <c:out value="${account.currentTasksFilter.totalCount}"/>
+            <%@ include file="/jsp/taskFilter.jsp" %>
             <table class="tasks">
                 <tr>
                     <th>номер</th>
@@ -40,7 +43,8 @@
                                 <c:when test="${task.statusId == 4}">
                                     <button name="PRODUCTION" type="submit" value="${task.taskId}">Вернуть на доработку
                                     </button>
-                                    <button name="PAY_TASK" type="submit" value="${task.taskId}">Назначить приём</button>
+                                    <button name="PAY_TASK" type="submit" value="${task.taskId}">Назначить приём
+                                    </button>
                                 </c:when>
                                 <c:when test="${task.statusId == 5}">
                                     <button name="PRODUCTION" type="submit" value="${task.taskId}">Вернуть на доработку
@@ -54,8 +58,9 @@
                     </tr>
                 </c:forEach>
             </table>
-        </form>
-    </div>
+        </div>
+        <%@ include file="/jsp/pagination.jsp" %>
+    </form>
 </div>
 <br/>
 <br/>

@@ -1,9 +1,9 @@
 package command;
 
+import controller.PageMapper;
 import controller.RequestHandler;
 import loc.task.vo.Account;
 import managers.MessageManager;
-import managers.PageManager;
 import org.apache.log4j.Logger;
 import service.TaskService;
 
@@ -18,14 +18,11 @@ public class TaskGetPageCommand implements ICommand {
             int pageNumber = Integer.parseInt((String) content.getRequestAttributes().get(CMD_VALUE));
             account.getCurrentTasksFilter().setPage(pageNumber);
             account=TaskService.getTaskService().updateTaskList(account);
-            page = PageManager.getProperty("path.page.user");
+            page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
             content.getSessionAttributes().put(ACCOUNT, account);
         } catch (Exception e) {
             log.error(e, e);
             message = message.append(MessageManager.getProperty("error.illegal.operation"));
-        }
-        if (page == null) {
-            page = PageManager.getProperty("path.page.login");
         }
         content.getSessionAttributes().put(MESSAGE, message.toString());
         return page;

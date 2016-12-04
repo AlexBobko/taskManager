@@ -1,19 +1,44 @@
 package loc.task.db;
 
 import loc.task.entity.Task;
+import loc.task.util.HibernateUtil;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 @Log4j
 public class TaskDao extends BaseDao<Task> {
+    private static TaskDao taskDao = null;
+
+    private TaskDao() {
+        log.info("SINGLE TONE: create new TaskDao()");
+//        super.getBaseDao();
+    }
+
+    private static synchronized TaskDao getInstance() {
+        if (taskDao == null) {
+            taskDao = new TaskDao();
+        }
+        return taskDao;
+    }
+
+    public static TaskDao getTaskDao() {
+        if (taskDao == null) {
+            return getInstance();
+        }
+        return taskDao;
+    }
+
+
 
 //    private static Logger log = Logger.getLogger(TaskDao.class);
 //TODO уникальный заголовок?
 
     public Task getTaskToUser(long taskId, int userId) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         String hql = "SELECT T FROM Task T JOIN T.userList U WHERE T.taskId =:taskId AND U.userId=:userId";
         Query query = session.createQuery(hql);
         query.setParameter("taskId", taskId);
@@ -23,6 +48,7 @@ public class TaskDao extends BaseDao<Task> {
     }
 
     public Integer setStatus(long taskId, int statusId) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         String hql = "UPDATE FROM Task T SET T.statusId = :statusId WHERE T.taskId =:taskId";
         System.out.println(hql);
         Query query = session.createQuery(hql);
@@ -61,6 +87,7 @@ public class TaskDao extends BaseDao<Task> {
 
     public List<Object[]> getCurrentTask(int page, int tasksPerPage, long totalCount,
                                          HashSet<Integer> includeStatus, int sort, boolean ask) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         long countPage = totalCount / (long) tasksPerPage;
         if (totalCount % (long) tasksPerPage > 0) {
             countPage++;
@@ -103,7 +130,8 @@ public class TaskDao extends BaseDao<Task> {
 
     //РАБОЧИЙ ВАРИАНТ
     public List<Task> getTasks(int page, int tasksPerPage, long totalCount,
-                                         Set<Integer> includeStatus, int sort, boolean ask, Set<Integer> usersId) {
+                               Set<Integer> includeStatus, int sort, boolean ask, Set<Integer> usersId) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         long countPage = totalCount / (long) tasksPerPage;
         if (totalCount % (long) tasksPerPage > 0) {
             countPage++;
@@ -168,6 +196,7 @@ public class TaskDao extends BaseDao<Task> {
     }
 
     public long getCountTask(Set<Integer> includeStatus) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         String hql = "SELECT COUNT (T) FROM Task T WHERE T.statusId IN (:statusId)";
         System.out.println(hql);
 
@@ -183,6 +212,7 @@ public class TaskDao extends BaseDao<Task> {
 
     //TODO объединить
     public long getCountTask(Set<Integer> includeStatus, int userId) {
+        Session session = HibernateUtil.getHibernateUtil().getSession();
         System.out.println("includeStatus: " + includeStatus);
         String hql = "SELECT DISTINCT COUNT (T) FROM Task T JOIN T.userList U WHERE T.statusId IN (:statusId) AND U.userId IN(:userId)";
         System.out.println(hql);

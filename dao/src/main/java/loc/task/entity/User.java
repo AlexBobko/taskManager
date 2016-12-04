@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,6 +32,7 @@ public class User implements Serializable {
     @Column(name = "role")
     private int role = 1;
 
+    //TODO почему лези не сработало?? PersonalData
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private PersonalData personalData;
 

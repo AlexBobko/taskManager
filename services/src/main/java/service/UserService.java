@@ -10,11 +10,10 @@ import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.Transaction;
 import utils.org.mindrot.jbcrypt.BCrypt;
+
 @Log4j
 public class UserService {
-//    private static Logger log = Logger.getLogger(UserService.class);
     private static UserService userService = null;
-
     private static UserDao userDao = null;
     public final static Integer employeeRole = 1;
     public final static Integer superiorRole = 2;
@@ -24,13 +23,11 @@ public class UserService {
 
     private static synchronized UserService getInstance() {
         if (userService == null) {
-            if (userService == null) {
-                userService = new UserService();
-            }
+            userService = new UserService();
         }
+
         return userService;
     }
-
     public static UserService getUserService() {
         if (userService == null) {
             return getInstance();
@@ -41,6 +38,7 @@ public class UserService {
     public Account getAccount(int userId, String userPassword) {
         return getAccount(userId, null, userPassword);
     }
+
     public Account getAccount(String userLogin, String userPassword) {
         return getAccount(0, userLogin, userPassword);
     }
@@ -62,7 +60,7 @@ public class UserService {
 //                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
                 if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
                     account = createAccount(user);
-                    System.out.println("It matches");
+//                    System.out.println("It matches");
                 } else {
                     user = null;
                 }
@@ -84,7 +82,10 @@ public class UserService {
 
             //TODO могут быть проблемы с LAZY userID  можно еще размер мапки ограничить
             TaskOutFilter currentTasksFilter = ts.getTaskOutFilter(ts.getDefaultSuperiorStatusList()); //общий фильтр
+
+
             TaskOutFilter reportTaskFilter = ts.getTaskOutFilter(ts.getSuperiorReportStatusList());//дополнительный фильтр
+
             account = new AccountSuperior(user, currentTasksFilter, ts.getTasksList(currentTasksFilter),
                     reportTaskFilter, ts.getTasksList(reportTaskFilter));
 
@@ -97,9 +98,11 @@ public class UserService {
         return getUserDao().get(userId);
     }
 
+//TODO перекинуть в поле класса
     public UserDao getUserDao() {
         if (userDao == null) {
-            userDao = new UserDao();
+            userDao = UserDao.getUserDao();
+//            userDao = new UserDao();
         }
         return userDao;
     }

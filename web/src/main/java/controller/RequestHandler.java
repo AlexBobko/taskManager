@@ -2,7 +2,6 @@ package controller;
 
 import command.CommandList;
 import command.ICommand;
-import loc.task.util.HibernateUtil;
 import managers.StatusManager;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -38,7 +37,6 @@ public class RequestHandler {
             sessionAttributes.put(key, session.getAttribute(key));
         }
 
-
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String key = parameterNames.nextElement();
@@ -54,7 +52,6 @@ public class RequestHandler {
             System.out.println(RequestHandler.class + ":*1**key: " + key + "| - value:|" + value + "|-успешно </b>***<br/>");
             //отсеиваем пустые значения
             if (value != null && !(value.isEmpty())) {
-//                log.info("log:***currentCommand:");
                 try {
                     currentCommand = CommandList.valueOf(key.toUpperCase());
                     requestAttributes.put(ICommand.CMD_VALUE, value); //.trim()
@@ -64,15 +61,6 @@ public class RequestHandler {
 //					System.out.println("<br/>***<b>key:" + key + "| - value:|" + value + "|-успешно </b>***<br/>");
                 }
             }
-        }
-
-        //TODO открываем сессию
-        sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
-        HibernateUtil.getHibernateUtil().printStats(2);
-        if (sessionHibernate.isOpen()) {
-            System.out.println("1 sessionHibernate.open" + sessionHibernate.getStatistics());
-        } else
-        {
         }
         return currentCommand;
     }
@@ -101,23 +89,6 @@ public class RequestHandler {
             }
         }
 
-
-
-        HibernateUtil.getHibernateUtil().printStats(1);
-        sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
-        sessionHibernate.flush();
-        sessionHibernate.clear();
-        HibernateUtil.getHibernateUtil().printStats(2);
-
-        System.out.println("2 sessionHibernate.clear " + sessionHibernate.getStatistics());
-        System.out.println("sessionHibernate.getCacheMode() " + sessionHibernate.getCacheMode());
-//        sessionHibernate.getTransaction().commit();
-        if (sessionHibernate.isOpen()) {
-//            sessionHibernate.close();
-//            HibernateUtil.getHibernateUtil().removeSession();
-
-//            System.out.println("3 sessionHibernate.close + null ");
-        }
 
         return request;
     }
