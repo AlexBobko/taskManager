@@ -1,11 +1,12 @@
-package service;
+package loc.task.service;
 
-import loc.task.db.BaseDao;
 import loc.task.db.TaskDao;
+import loc.task.db.UserDao;
 import loc.task.db.exceptions.DaoException;
 import loc.task.entity.Task;
 import loc.task.entity.TaskContent;
 import loc.task.entity.User;
+import loc.task.service.exc.TaskServiceException;
 import loc.task.util.HibernateUtil;
 import loc.task.vo.Account;
 import loc.task.vo.TaskOutFilter;
@@ -17,12 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Log4j
-public class TaskService {
-//    private static Logger log = Logger.getLogger(TaskService.class); //TODO log add e  log.error(e, e);
+public class TaskService implements ITaskService{
     private static TaskService taskService = null;
-
-    private final static TaskDao taskDao = TaskDao.getTaskDao();;
-    private final static BaseDao baseDao = BaseDao.getBaseDao();
+    private final static TaskDao taskDao = TaskDao.getTaskDao();
 
     public final static Integer statusTaskNew = 1;
     public final static Integer statusTaskApprove = 2;
@@ -31,7 +29,7 @@ public class TaskService {
     public final static Integer statusTaskReport = 5;
     public final static Integer statusTaskReady = 6;
     public final static Integer statusTaskDelete = 7;
-    public final static String reasonUpdate = "~status:";
+    public final static String reasonUpdateStatus = "~status:";
     public final static String reasonUpdateBody = "~body:";
 
     //TODO ?? вариант создания синглтона
@@ -52,26 +50,34 @@ public class TaskService {
         return taskService;
     }
 
-    //TODO транзакция updateTaskList
+
+    //TODO транзакция updateTaskList ОБРАБОТАТЬ ДАО ЭКС
     public Account updateTaskList(Account ac) {
         //TODO убрать дефолтную загрузку контента после решения проблем с КЭШЕМ
-        if (ac.getUser().getRole() == UserService.employeeRole) {
-            updateTaskOutFilter(ac.getCurrentTasksFilter(), ac.getUser().getUserId());
-            ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), ac.getUser().getUserId()));
-        } else if (ac.getUser().getRole() == UserService.superiorRole) {
-            updateTaskOutFilter(ac.getCurrentTasksFilter(), null);
-            ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter()));
+        try {
+            if (ac.getUser().getRole() == UserService.employeeRole) {
+
+                updateTaskOutFilter(ac.getCurrentTasksFilter(), ac.getUser().getUserId());
+
+                ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), ac.getUser().getUserId()));
+            } else if (ac.getUser().getRole() == UserService.superiorRole) {
+                updateTaskOutFilter(ac.getCurrentTasksFilter(), null);
+                ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter()));
+            }
+
+        } catch (DaoException e) {
+            e.printStackTrace();
         }
         return ac;
     }
 
-    //TODO транзакция updateTaskStatus
-    public boolean updateTaskStatus(Account ac, long taskId, Integer status) {
-
+    //TODO транзакция updateTaskStatus +
+    public void updateTaskStatus(Account ac, long taskId, Integer status) throws TaskServiceException {
         //TODO ?? в каком месте лучше ограничить операции пользователя (оставить спрингу?)
+        //TODO (Spring) легализация операций + фильрация данных
         Session session = HibernateUtil.getHibernateUtil().getSession();
         Transaction transaction = session.beginTransaction();
-        boolean b = false;
+
         Task task;
         Integer userId = null;
         try {
@@ -86,111 +92,101 @@ public class TaskService {
                 //TODO для фильтрации по пользователю передать и присвоить userId из расширенного ака
             }
             task.setStatusId(status);
-            updateTaskHistory(task, ac, reasonUpdate);
+            updateTaskHistory(task, ac, reasonUpdateStatus);
             System.out.println("TASK UPDATE STATUS 4 " + session.getStatistics() + ": " + taskId);
             //Конфликт по количеству тасков? стоит ли разрешать и стоит ли обновлять, может просто присоединить к сессии?
             ac.setCurrentTasks(getTasksList(ac.getCurrentTasksFilter(), userId));
             transaction.commit();
-
             System.out.println("TASK UPDATE 5 " + session.getStatistics() + ": " + task.getTaskId() + " new status: " + task.getStatusId());
 
-            b = true;
         } catch (DaoException e) {
             transaction.rollback();
-//            session.close();
-            log.error(e, e);
+            log.error("Error updateTaskStatus " + e, e);
+            throw new TaskServiceException(e);
+            //TODO (Spring) вернуть ошибку на UI
+//            log.error(e, e);
         }
-        return b;
+
     }
 
     //TODO транзакция updateTaskBody
-    public boolean updateTaskBody(Account ac, Task task, String bodyTask) {
+    public void updateTaskBody(Account ac, Task task, String bodyTask) throws TaskServiceException {
         Session session = HibernateUtil.getHibernateUtil().getSession();
         Transaction transaction = session.beginTransaction();
-
         SimpleDateFormat dateFormat = ac.getDateFormat();
         boolean b;
         try {
-            taskDao.refresh(task);
-//            task = taskDao.get(task.getTaskId());
-//            session.refresh(task); //TODO ?? Вынести в ДАО?
+            // taskDao.refresh(task);
+            taskDao.replicate(task);
             int userId = ac.getUser().getUserId();
             String currentTaskBody = task.getContent().getBody();
             Calendar calendar = Calendar.getInstance();
-
-            task.setStatusId(statusTaskApprove);// устанавливаем статус на проверке
-
+            task.setStatusId(statusTaskApprove);    //устанавливаем статус 2
             updateTaskHistory(task, ac, reasonUpdateBody);
-            currentTaskBody = currentTaskBody.concat("\n\r").concat(dateFormat.format(calendar.getTime())).concat(" user:" + userId).concat(bodyTask);
+            currentTaskBody = currentTaskBody.concat("\n\r").concat(dateFormat.format(calendar.getTime())).concat(" ***user:" + userId).concat(bodyTask);
             task.getContent().setBody(currentTaskBody);
-
-            System.out.println("currentTaskBody: " + task.getContent().getBody());
-            System.out.println("currentTaskHistory: " + task.getContent().getHistory());
-
-//            session.replicate(task, ReplicationMode.OVERWRITE);
-            System.out.println("stat:1 " + session.getStatistics() + ": ");
-
-//            session.flush();
-            if (userId == -1) {
-                throw new DaoException(new Exception());
-            }
+            System.out.println("stat (updateTaskBody): " + session.getStatistics());
+            //TODO ?? резон вызывать сейфТоАпдейт?
             transaction.commit();
             b = true;
         } catch (DaoException e) {
             log.error(e, e);
             transaction.rollback();
-            b = false;
+            throw new TaskServiceException(e);
+            //TODO (Spring) вернуть ошибку на UI
         }
-        return b;
     }
 
-    //TODO транзакция addNewTask
+    //TODO транзакция addNewTask (обработка дао ЕХ)
     public Task addNewTask(Account account, int employeeId,
-                           String titleTask, String bodyTask, String strTaskDeadline) throws DaoException {
+                           String titleTask, String bodyTask, String strTaskDeadline) throws TaskServiceException {
         Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
-        Date taskDeadline = UtilService.convertDate(strTaskDeadline);
-        Set<User> users = new HashSet<>();
-        if (employeeId == 0) {
-            users.add(account.getUser());
-        } else {
-            User user = UserService.getUserService().getUser(employeeId);
-            users.add(user);
-        }
-        TaskContent content = new TaskContent(bodyTask);
-        Task newTask = new Task(statusTaskNew, new Date(), titleTask, taskDeadline, content, users);
-        taskDao.saveOrUpdate(newTask);
+        try {
+            Date taskDeadline = UtilService.convertDate(strTaskDeadline);
+            Set<User> users = new HashSet<>();
+            if (employeeId == 0) {
+                users.add(account.getUser());
+            } else {
+                User user = UserDao.getUserDao().load(employeeId);
+                users.add(user);
+            }
+            TaskContent content = new TaskContent(bodyTask);
+            Task newTask = new Task(statusTaskNew, new Date(), titleTask, taskDeadline, content, users);
+            taskDao.saveOrUpdate(newTask);
 
-        transaction.commit();
-        return newTask;
+            transaction.commit();
+            return newTask;
+        } catch (DaoException e) {
+            log.error(e, e);
+            transaction.rollback();
+            throw new TaskServiceException(e);
+            //TODO (Spring) вернуть ошибку на UI
+        }
     }
 
-    public void updateTaskHistory(Task task, Account account, String reason) {
+    private void updateTaskHistory(Task task, Account account, String reason) {
         SimpleDateFormat dateFormat = account.getDateFormat();
         Calendar calendar = Calendar.getInstance();
         String history = task.getContent().getHistory();
 
-        //TODO шлифануть формат истории
+        //TODO (ТЗ) шлифануть формат истории
         history = history.concat(dateFormat.format(calendar.getTime())).concat(reason).
                 concat(task.getStatusId() + "").concat("~user:").concat(account.getUser().getUserId() + "").concat("~~");
         task.getContent().setHistory(history);
     }
 
-    public Task getTask(Account account, Long taskId) {
+    protected Task getTask(Account account, Long taskId) throws DaoException {
         User user = account.getUser();
         Task task = null;
         if (user.getRole() == UserService.employeeRole) {
             task = taskDao.getTaskToUser(taskId, user.getUserId());
         } else {
-            try {
-                task = taskDao.get(taskId);
-            } catch (DaoException e) {
-                log.error(e, e);
-            }
+            task = taskDao.get(taskId);
         }
         return task;
     }
 
-    public List<Task> getTasksList(TaskOutFilter f, Integer userId) {
+    protected List<Task> getTasksList(TaskOutFilter f, Integer userId) throws DaoException {
         if (userId != null) {
             Set<Integer> usersId = new HashSet<>(1);
             usersId.add(userId);
@@ -199,11 +195,11 @@ public class TaskService {
             return getTasksList(f);
     }
 
-    public List<Task> getTasksList(TaskOutFilter f) {
+    protected List<Task> getTasksList(TaskOutFilter f) throws DaoException {
         return taskDao.getTasks(f.getPage(), f.getTasksPerPage(), f.getTotalCount(), f.getIncludeStatus(), f.getSort(), f.isAsk());
     }
 
-    public TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) {
+    protected TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) throws DaoException {
         long totalCount = 1L;
         if (userId != null) {
             totalCount = getCountTask(taskOutFilter.getIncludeStatus(), userId);
@@ -222,34 +218,34 @@ public class TaskService {
         return taskOutFilter;
     }
 
-    public TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) {
+    protected TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) throws DaoException {
         return getTaskOutFilter(includeStatus, null);
     }
 
-    public TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) {
+    protected TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) throws DaoException {
         TaskOutFilter taskOutFilter = new TaskOutFilter(includeStatus);
         return updateTaskOutFilter(taskOutFilter, userId);
     }
 
-    public long getCountTask(Set<Integer> includeStatus, int userId) {
+    protected long getCountTask(Set<Integer> includeStatus, int userId) throws DaoException {
 
         return taskDao.getCountTask(includeStatus, userId);
     }
 
-    public Set<Integer> getSuperiorReportStatusList() {
+    protected Set<Integer> getSuperiorReportStatusList() {
         Set<Integer> statusList = new HashSet<>(1);
         statusList.add(TaskService.statusTaskReport); //Назначено время
         return statusList;
     }
 
-    public Set<Integer> getDefaultSuperiorStatusList() {
+    protected Set<Integer> getDefaultSuperiorStatusList() {
         Set<Integer> statusList = new HashSet<>(2);
         statusList.add(TaskService.statusTaskApprove);
         statusList.add(TaskService.statusTaskReview);
         return statusList;
     }
 
-    public Set<Integer> getDefaultEmployeeStatusList() {
+    protected Set<Integer> getDefaultEmployeeStatusList() {
         Set<Integer> statusList = new HashSet<>(5);
         statusList.add(statusTaskNew);
         statusList.add(statusTaskApprove);
@@ -258,15 +254,5 @@ public class TaskService {
         statusList.add(statusTaskReport);
         return statusList;
     }
-
-
-//    public TaskDao getTaskDao() {
-//        //TODO перенести в статик поле, если с сингл ДАО гуд
-//        if (taskDao == null) {
-//            taskDao = TaskDao.getTaskDao();
-////            taskDao = new TaskDao();
-//        }
-//        return taskDao;
-//    }
 
 }

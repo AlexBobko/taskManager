@@ -1,7 +1,7 @@
 package command;
 
 import controller.RequestHandler;
-import service.UserService;
+import loc.task.service.UserService;
 
 /** ICommand */
 public interface ICommand {

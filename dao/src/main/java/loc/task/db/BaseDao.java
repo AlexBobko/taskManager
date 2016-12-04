@@ -1,6 +1,5 @@
 package loc.task.db;
 
-
 import loc.task.db.exceptions.DaoException;
 import loc.task.util.HibernateUtil;
 import lombok.extern.log4j.Log4j;
@@ -10,6 +9,7 @@ import org.hibernate.Session;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
+//TODO ?? типитизация через дженерики + синглтон? возможные проблемы, например при получении имени класса
 @Log4j
 public class BaseDao<T> implements Dao<T> {
     private static BaseDao baseDao = null;
@@ -36,11 +36,10 @@ public class BaseDao<T> implements Dao<T> {
         try {
             Session session = HibernateUtil.getHibernateUtil().getSession();
             session.saveOrUpdate(t);
-
             log.info("saveOrUpdate(t):" + t);
             System.out.println("TASK UPDATE 4 " + session.getStatistics() + ": ");
 
-        } catch (HibernateException e) {
+        } catch (HibernateException e) { //TODO ?? isDirty + нужна ли обработка Ех (ДАО)
             log.error("Error save or update " + getPersistentClass() + " in Dao" + e);
             throw new DaoException(e);
         }
@@ -61,14 +60,13 @@ public class BaseDao<T> implements Dao<T> {
         return t;
     }
 
-    //TODO ?? юзабельность такого метода (или проще создать профильный ДАО)
+    //TODO ?? юзабельность такого метода (или проще создать профильный ДАО) и сделать поиск по ИД
     public T get(T t, Serializable id) throws DaoException {
         Session session = HibernateUtil.getHibernateUtil().getSession();
         log.info("Get class by id:" + id);
 //        T t = null;
         try {
             t = (T) session.get(t.getClass(), id);
-//            log.info("get clazz:" + t);
         } catch (HibernateException e) {
             log.error("Error get " + getPersistentClass() + " in Dao" + e);
             throw new DaoException(e);
@@ -91,10 +89,14 @@ public class BaseDao<T> implements Dao<T> {
         return t;
     }
 
-
-    public void refresh(T t) {
-        Session session = HibernateUtil.getHibernateUtil().getSession();
-        session.refresh(t);
+    public void refresh(T t) throws DaoException {
+        try {
+            Session session = HibernateUtil.getHibernateUtil().getSession();
+            session.refresh(t);
+        } catch (HibernateException e) {
+            log.error("Error refresh() " + getPersistentClass() + " in Dao" + e);
+            throw new DaoException(e);
+        }
     }
 
     public void delete(T t) throws DaoException {

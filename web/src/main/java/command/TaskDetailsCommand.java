@@ -6,7 +6,7 @@ import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
 import managers.PageManager;
-import service.TaskService;
+import loc.task.service.TaskService;
 @Log4j
 public class TaskDetailsCommand implements ICommand {
 	@Override

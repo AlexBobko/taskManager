@@ -1,20 +1,22 @@
-package service;
+package loc.task.service;
 
 import loc.task.db.UserDao;
 import loc.task.db.exceptions.DaoException;
 import loc.task.entity.User;
+import loc.task.service.exc.UserServiceException;
 import loc.task.util.HibernateUtil;
+import loc.task.utils.jbcrypt.BCrypt;
 import loc.task.vo.Account;
 import loc.task.vo.AccountSuperior;
 import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.Transaction;
-import utils.org.mindrot.jbcrypt.BCrypt;
+
 
 @Log4j
-public class UserService {
+public class UserService implements IUserService{
     private static UserService userService = null;
-    private static UserDao userDao = null;
+    private static UserDao userDao = UserDao.getUserDao();
     public final static Integer employeeRole = 1;
     public final static Integer superiorRole = 2;
 
@@ -28,6 +30,7 @@ public class UserService {
 
         return userService;
     }
+
     public static UserService getUserService() {
         if (userService == null) {
             return getInstance();
@@ -35,25 +38,25 @@ public class UserService {
         return userService;
     }
 
-    public Account getAccount(int userId, String userPassword) {
+    public Account getAccount(int userId, String userPassword) throws UserServiceException {
         return getAccount(userId, null, userPassword);
     }
 
-    public Account getAccount(String userLogin, String userPassword) {
+    public Account getAccount(String userLogin, String userPassword) throws UserServiceException {
         return getAccount(0, userLogin, userPassword);
     }
 
     //TODO Trans+Session
-    private Account getAccount(int userId, String userLogin, String userPassword) {
+    private Account getAccount(int userId, String userLogin, String userPassword) throws UserServiceException {
         Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
         Account account = null;
-        User user;
+        User user = null;
         try {
             if (userLogin != null) {
                 System.out.println("userLogin: " + userLogin);
-                user = getUserDao().findEntityByLogin(userLogin);
+                user = userDao.findEntityByLogin(userLogin);
             } else {
-                user = getUserDao().get(userId);
+                user = userDao.get(userId);
             }
             if (user != null) {
                 userPassword = "sваываыsd" + "dsdf@@"; //TODO !ХАРДКОД //чтобы не вводить пароль :)
@@ -61,18 +64,17 @@ public class UserService {
                 if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
                     account = createAccount(user);
 //                    System.out.println("It matches");
-                } else {
-                    user = null;
                 }
             }
+            transaction.commit();
         } catch (DaoException e) {
             log.error(e, e);
+            throw new UserServiceException(e);
         }
-        transaction.commit();
         return account;
     }
 
-    private Account createAccount(User user) {
+    private Account createAccount(User user) throws DaoException {
         Account account = null;
         TaskService ts = TaskService.getTaskService();
         if (user.getRole() == employeeRole) {
@@ -93,18 +95,4 @@ public class UserService {
         }
         return account;
     }
-
-    public User getUser(int userId) throws DaoException {
-        return getUserDao().get(userId);
-    }
-
-//TODO перекинуть в поле класса
-    public UserDao getUserDao() {
-        if (userDao == null) {
-            userDao = UserDao.getUserDao();
-//            userDao = new UserDao();
-        }
-        return userDao;
-    }
-
 }

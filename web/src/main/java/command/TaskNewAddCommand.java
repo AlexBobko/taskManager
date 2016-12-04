@@ -1,13 +1,12 @@
 package command;
 
 import controller.RequestHandler;
-import loc.task.db.exceptions.DaoException;
 import loc.task.entity.Task;
+import loc.task.service.TaskService;
 import loc.task.vo.Account;
 import managers.MessageManager;
 import managers.PageManager;
 import org.apache.log4j.Logger;
-import service.TaskService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,7 +51,7 @@ public class TaskNewAddCommand implements ICommand {
                 content.getSessionAttributes().put(TASK, newTask);
                 page = PageManager.getProperty("path.page.task");
                 System.out.println("addNewTask: " + newTask.getTaskId()); //для лога
-            }catch (DaoException e)
+            }catch (Exception e)
             {
                 log.error(e, e);
             }

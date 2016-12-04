@@ -6,7 +6,7 @@ import loc.task.entity.Task;
 import loc.task.vo.Account;
 import managers.MessageManager;
 import org.apache.log4j.Logger;
-import service.TaskService;
+import loc.task.service.TaskService;
 
 public class TaskUpdateCommand implements ICommand {
     private static Logger log = Logger.getLogger(TaskUpdateCommand.class);

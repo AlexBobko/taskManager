@@ -1,20 +1,10 @@
-/*
- * Copyright (c) 2012 by VeriFone, Inc.
- * All Rights Reserved.
- *
- * THIS FILE CONTAINS PROPRIETARY AND CONFIDENTIAL INFORMATION
- * AND REMAINS THE UNPUBLISHED PROPERTY OF VERIFONE, INC.
- *
- * Use, disclosure, or reproduction is prohibited
- * without prior written approval from VeriFone, Inc.
- */
 package loc.task.db;
 
 import loc.task.db.exceptions.DaoException;
 import loc.task.entity.User;
 import loc.task.util.HibernateUtil;
 import lombok.extern.log4j.Log4j;
-import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -25,7 +15,6 @@ public class UserDao extends BaseDao<User> {
 
     private UserDao() {
         log.info("SINGLE TONE: create new UserDao()");
-//        super.getBaseDao();
     }
 
     private static synchronized UserDao getInstance() {
@@ -42,35 +31,21 @@ public class UserDao extends BaseDao<User> {
         return userDao;
     }
 
+    public User findEntityByLogin(String userLogin) throws DaoException {
 
-
-    public void flush(Integer id, String newName) throws DaoException {
         try {
             Session session = HibernateUtil.getHibernateUtil().getSession();
-            User p = (User)session.get(User.class, id);
-            System.out.println(p);
-//            p.setName(newName);
-            System.out.println(p);
-            session.flush();
+            String hql = "SELECT U FROM User U WHERE U.login =:login";
+//        System.out.println(hql);
+//        System.out.println(session.getStatistics());
+            Query query = session.createQuery(hql);
 
-            System.out.println(p);
-        } catch (HibernateException e) {
-            log.error("Error Flush person" + e);
+            query.setParameter("login", "l Бонифаций");
+            //        query.setParameter("login", userLogin); //TODO ХАРДКОР ЛОГИНА (лень)
+            return (User) query.uniqueResult();
+        } catch (NonUniqueResultException e) {
+            log.error("Error findEntityByLogin" + " in Dao" + e);
             throw new DaoException(e);
         }
-
     }
-    public User findEntityByLogin(String userLogin){
-        Session session = HibernateUtil.getHibernateUtil().getSession();
-        String hql = "SELECT U FROM User U WHERE U.login =:login";
-        System.out.println(hql);
-        System.out.println(session.getStatistics());
-
-        Query query = session.createQuery(hql);
-
-        query.setParameter("login", "l Бонифаций");
-//        query.setParameter("login", userLogin);
-        return (User)query.uniqueResult();
-    }
-
 }

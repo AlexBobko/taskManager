@@ -1,4 +1,4 @@
-package service;
+package loc.task.service;
 
 import java.util.Date;
 
@@ -11,6 +11,7 @@ public class UtilService {
         int defaultHour = 20;
         int defaultMinute = 15;
         Date bodyDeadline = new Date(year, month, dayOfMonth, defaultHour, defaultMinute);
+
         return bodyDeadline;
     }
 }

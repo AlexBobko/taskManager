@@ -2,7 +2,7 @@ package controller;
 
 import lombok.extern.log4j.Log4j;
 import managers.PageManager;
-import service.UserService;
+import loc.task.service.UserService;
 
 @Log4j
 public class PageMapper {
