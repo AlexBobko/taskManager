@@ -139,10 +139,9 @@ public class TaskService implements ITaskService {
 
     //TODO транзакция addNewTask (обработка дао ЕХ)
     public Task addNewTask(Account account, int employeeId,
-                           String titleTask, String bodyTask, String strTaskDeadline) throws TaskServiceException {
+                           String titleTask, String bodyTask,Date deadline) throws TaskServiceException {
         Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
         try {
-            Date taskDeadline = UtilService.convertDate(strTaskDeadline);
             Set<User> users = new HashSet<>();
             if (employeeId == 0) {
                 users.add(account.getUser());
@@ -151,11 +150,11 @@ public class TaskService implements ITaskService {
                 users.add(user);
             }
             TaskContent content = new TaskContent(bodyTask);
-            Task newTask = new Task(statusTaskNew, new Date(), titleTask, taskDeadline, content, users);
+            Task newTask = new Task(statusTaskNew, new Date(), titleTask, deadline, content, users);
             taskDao.saveOrUpdate(newTask);
-
             transaction.commit();
             return newTask;
+
         } catch (DaoException e) {
             log.error(e, e);
             transaction.rollback();

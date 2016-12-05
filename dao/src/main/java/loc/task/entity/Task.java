@@ -45,7 +45,21 @@ public class Task implements Serializable {
     @Column(name = "deadline",length = 19)
     private Date deadline;
 
-    @Basic(fetch = FetchType.LAZY)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_reporting",length = 19)
+    private Date dateReporting=null;
+
+    public Date getDateReporting() {
+        return dateReporting;
+    }
+
+    public void setDateReporting(Date dateReporting) {
+        this.dateReporting = dateReporting;
+    }
+
+
+
+    //    @Basic(fetch = FetchType.LAZY) //TODO ?? ругается на лези
     @Embedded
     private TaskContent content;
 
@@ -132,22 +146,27 @@ public class Task implements Serializable {
 
         Task task = (Task) o;
 
-        if (getTaskId() != task.getTaskId()) return false;
         if (getStatusId() != task.getStatusId()) return false;
+        if (!getTaskId().equals(task.getTaskId())) return false;
         if (!getDateCreation().equals(task.getDateCreation())) return false;
         if (!getTitle().equals(task.getTitle())) return false;
+        if (!getVersion().equals(task.getVersion())) return false;
         if (!getDeadline().equals(task.getDeadline())) return false;
+        if (getDateReporting() != null ? !getDateReporting().equals(task.getDateReporting()) : task.getDateReporting() != null)
+            return false;
         return getContent().equals(task.getContent());
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (getTaskId() ^ (getTaskId() >>> 32));
+        int result = getTaskId().hashCode();
         result = 31 * result + getStatusId();
         result = 31 * result + getDateCreation().hashCode();
         result = 31 * result + getTitle().hashCode();
+        result = 31 * result + getVersion().hashCode();
         result = 31 * result + getDeadline().hashCode();
+        result = 31 * result + (getDateReporting() != null ? getDateReporting().hashCode() : 0);
         result = 31 * result + getContent().hashCode();
         return result;
     }

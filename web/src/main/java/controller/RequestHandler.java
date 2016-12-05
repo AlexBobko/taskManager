@@ -31,16 +31,18 @@ public class RequestHandler {
 
     public CommandList extractValues(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
+
+
         Enumeration<String> attributeSessionNames = session.getAttributeNames();
         while (attributeSessionNames.hasMoreElements()) {
             String key = attributeSessionNames.nextElement();
             sessionAttributes.put(key, session.getAttribute(key));
-
         }
 
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String key = parameterNames.nextElement();
+
             //TODO хардкод
             if (key.equals("include_status")) {
                 String[] statuses = request.getParameterValues(key);
