@@ -29,6 +29,7 @@ public class User implements Serializable {
     @Where(clause = "accountStatus = 1 ")
     @Column
     private int accountStatus = 1; //1,2,3: deleted, block, active
+
     @Column(name = "role")
     private int role = 1;
 

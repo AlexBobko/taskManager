@@ -8,7 +8,7 @@ import java.util.*;
 public class AccountSuperior extends Account {
     private List<Task> reportTasks = new ArrayList<>();
     private TaskOutFilter reportTaskFilter = new TaskOutFilter();
-    private ArrayList<User> employee = new ArrayList<>();
+    private List<User> employee = new ArrayList<>();
 
     public AccountSuperior() {
         super();
@@ -41,11 +41,11 @@ public class AccountSuperior extends Account {
         this.reportTaskFilter = reportTaskFilter;
     }
 
-    public ArrayList<User> getEmployee() {
+    public List<User> getEmployee() {
         return employee;
     }
 
-    public void setEmployee(ArrayList<User> employee) {
+    public void setEmployee(List<User> employee) {
         this.employee = employee;
     }
 }

@@ -12,9 +12,11 @@ import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.Transaction;
 
+import java.util.List;
+
 
 @Log4j
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private static UserService userService = null;
     private static UserDao userDao = UserDao.getUserDao();
     public final static Integer employeeRole = 1;
@@ -85,8 +87,6 @@ public class UserService implements IUserService{
         } else if (user.getRole() == superiorRole) {
 
             TaskOutFilter currentTasksFilter = ts.getTaskOutFilter(ts.getDefaultSuperiorStatusList()); //общий фильтр
-
-
             TaskOutFilter reportTaskFilter = ts.getTaskOutFilter(ts.getSuperiorReportStatusList());//дополнительный фильтр
 
             account = new AccountSuperior(user, currentTasksFilter, ts.getTasksList(currentTasksFilter),
@@ -95,5 +95,14 @@ public class UserService implements IUserService{
             //TODO ?? загружается полностью юзер (персонал дата) обленили юзера )))
         }
         return account;
+    }
+
+    public List<User> getAllEmployee() throws UserServiceException {
+        Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
+        try {
+            return userDao.getAllEmployee();
+        } catch (DaoException e) {
+            throw new UserServiceException(e);
+        }
     }
 }

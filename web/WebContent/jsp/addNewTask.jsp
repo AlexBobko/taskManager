@@ -17,17 +17,18 @@
             <p>
                 <b>Срок сдачи (дедлайн):</b> <input type="text" name="taskDeadline" class="tcal" value=""
                                                     placeholder="Выберите дату"/>
-            </p>
-
-            <p><b>Исполнитель(не реализовано, закинуть в сессию исписок исполнителей): </b>
-                <select name="employee">
-                    <option selected="selected">Выберите исполнителя</option>
-                    <option value="1">Чебурашка</option>
-                    <option value="3">Крокодил Гена</option>
-                    <option value="1">Шапокляк</option>
-                    <option value="3">Крыса Лариса</option>
-                </select>
-            </p>
+            </p><c:choose>
+            <c:when test="${account.user.role == 2}">
+                <p><b>Исполнитель: </b>
+                    <select name="employee">
+                        <option selected="selected">Выберите исполнителя</option>
+                        <c:forEach items="${account.employee}" var="empl">
+                            <option value="<c:out value="${empl.userId}"/>"><c:out
+                                    value="${empl.login}"/></option>
+                        </c:forEach>
+                    </select>
+                </p>
+            </c:when></c:choose>
             <h3>Описание</h3>
 
             <p>

@@ -15,8 +15,6 @@ import java.util.Date;
 
 @Log4j
 public class TaskNewAddCommand implements ICommand {
-
-
     public TaskNewAddCommand() {
 
     }
@@ -66,7 +64,6 @@ public class TaskNewAddCommand implements ICommand {
             log.error(e, e);
             message.append(MessageManager.getProperty("task.incorrect.deadline"));
             message.append(MessageManager.getProperty("message.task.add.false"));
-//            page = PageManager.getProperty("path.page.add.task");
         } finally {
             content.getSessionAttributes().put(ACCOUNT, account);
             content.getSessionAttributes().put(MESSAGE, message.toString());

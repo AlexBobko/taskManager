@@ -8,6 +8,8 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.util.List;
+
 @Log4j
 public class UserDao extends BaseDao<User> {
 
@@ -47,5 +49,12 @@ public class UserDao extends BaseDao<User> {
             log.error("Error findEntityByLogin" + " in Dao" + e);
             throw new DaoException(e);
         }
+    }
+    //TODO ?? переделать в VO типа имя-ид, чтобы лишние данные не выгружать
+    public List<User> getAllEmployee() throws DaoException{
+        Session session = HibernateUtil.getHibernateUtil().getSession();
+        String hql = "FROM User U WHERE U.role =1 AND U.accountStatus = 1";
+        Query query = session.createQuery(hql);
+        return query.list();
     }
 }
