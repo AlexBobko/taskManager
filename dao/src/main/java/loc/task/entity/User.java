@@ -32,7 +32,7 @@ public class User implements Serializable {
     @Column(name = "role")
     private int role = 1;
 
-    //TODO почему лези не сработало?? PersonalData
+    //TODO ?? почему лези не работает?? PersonalData
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private PersonalData personalData;
 

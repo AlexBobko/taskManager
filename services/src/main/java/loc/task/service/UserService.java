@@ -19,6 +19,7 @@ public class UserService implements IUserService{
     private static UserDao userDao = UserDao.getUserDao();
     public final static Integer employeeRole = 1;
     public final static Integer superiorRole = 2;
+    private final static String soul = "dsdf@@";//локальная соль. не менять
 
     private UserService() {
     }
@@ -59,8 +60,8 @@ public class UserService implements IUserService{
                 user = userDao.get(userId);
             }
             if (user != null) {
-                userPassword = "sваываыsd" + "dsdf@@"; //TODO !ХАРДКОД //чтобы не вводить пароль :)
-//                userPassword = userPassword + "dsdf@@"; //проконтролить локальную соль Soul
+                userPassword = "sваываыsd" + soul; //TODO !ХАРДКОД //чтобы не вводить пароль :)
+//                userPassword = userPassword + soul; //проконтролить локальную соль Soul
                 if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
                     account = createAccount(user);
 //                    System.out.println("It matches");
@@ -68,6 +69,7 @@ public class UserService implements IUserService{
             }
             transaction.commit();
         } catch (DaoException e) {
+            transaction.rollback();//TODO ?? делаем только выборку, смысл в ролбек? просто закрыть транзакцию любым способом
             log.error(e, e);
             throw new UserServiceException(e);
         }
@@ -82,7 +84,6 @@ public class UserService implements IUserService{
             account = new Account(user, currentTasksFilter, ts.getTasksList(currentTasksFilter, user.getUserId()));
         } else if (user.getRole() == superiorRole) {
 
-            //TODO могут быть проблемы с LAZY userID  можно еще размер мапки ограничить
             TaskOutFilter currentTasksFilter = ts.getTaskOutFilter(ts.getDefaultSuperiorStatusList()); //общий фильтр
 
 
@@ -91,7 +92,7 @@ public class UserService implements IUserService{
             account = new AccountSuperior(user, currentTasksFilter, ts.getTasksList(currentTasksFilter),
                     reportTaskFilter, ts.getTasksList(reportTaskFilter));
 
-            //TODO ?? загружается полностью юзер обленили юзера )))
+            //TODO ?? загружается полностью юзер (персонал дата) обленили юзера )))
         }
         return account;
     }

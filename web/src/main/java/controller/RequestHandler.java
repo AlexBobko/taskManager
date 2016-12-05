@@ -2,8 +2,8 @@ package controller;
 
 import command.CommandList;
 import command.ICommand;
+import lombok.extern.log4j.Log4j;
 import managers.StatusManager;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +15,9 @@ import java.util.Map;
 /**
  * Изоляция запросов для передачи в bsu
  */
+@Log4j
 public class RequestHandler {
     Session sessionHibernate = null;
-    private static Logger log = Logger.getLogger(RequestHandler.class); //log.error(e,e);
     private HashMap<String, Object> requestAttributes;
     private HashMap<String, String[]> requestParameters;
     private HashMap<String, Object> sessionAttributes;
@@ -35,6 +35,7 @@ public class RequestHandler {
         while (attributeSessionNames.hasMoreElements()) {
             String key = attributeSessionNames.nextElement();
             sessionAttributes.put(key, session.getAttribute(key));
+
         }
 
         Enumeration<String> parameterNames = request.getParameterNames();

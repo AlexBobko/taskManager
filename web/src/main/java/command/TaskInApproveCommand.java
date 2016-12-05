@@ -2,6 +2,7 @@ package command;
 
 import controller.PageMapper;
 import controller.RequestHandler;
+import loc.task.service.exc.TaskServiceException;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
@@ -20,14 +21,18 @@ public class TaskInApproveCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-            page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
-            if (TaskService.getTaskService().updateTaskStatus(account, taskId, newStatus)) {
+            try {
+                TaskService.getTaskService().updateTaskStatus(account, taskId, newStatus);
                 message = message.append(MessageManager.getProperty("task.update")).append(taskId);
+            }catch (TaskServiceException e){
+                message = message.append(MessageManager.getProperty("task.update.false"));
             }
+            page = PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
             content.getSessionAttributes().put(ACCOUNT, account);
         } catch (Exception e) {
             log.error(e, e);
-            message = message.append(MessageManager.getProperty("task.update.false"));
+            //TODO Exception на UI для простоты ;)
+            message = message.append(e);
         }
         content.getSessionAttributes().put(MESSAGE, message.toString());
         return page;

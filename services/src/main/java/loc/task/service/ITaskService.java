@@ -11,4 +11,5 @@ public interface ITaskService {
 
     Task addNewTask(Account account, int employeeId,
                     String titleTask, String bodyTask, String strTaskDeadline) throws TaskServiceException;
+    Task getTask(Account account, Long taskId) throws TaskServiceException;
 }

@@ -2,11 +2,11 @@ package command;
 
 import controller.PageMapper;
 import controller.RequestHandler;
+import loc.task.service.TaskService;
+import loc.task.service.exc.TaskServiceException;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
-import managers.PageManager;
-import loc.task.service.TaskService;
 
 /**
  * назначить время приема 5
@@ -23,18 +23,18 @@ public class TaskInReportingCommand implements ICommand {
         try {
             Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
             long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
-            if (TaskService.getTaskService().updateTaskStatus(account, taskId, newStatus)) {
+            try {
+                TaskService.getTaskService().updateTaskStatus(account, taskId, newStatus);
                 message = message.append(MessageManager.getProperty("task.update")).append(taskId);
+            }catch (TaskServiceException e){
+                message = message.append(MessageManager.getProperty("task.update.false"));
             }
-            page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
+            page = PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
             content.getSessionAttributes().put(ACCOUNT, account);
-
         } catch (Exception e) {
             log.error(e, e);
-            message = message.append(MessageManager.getProperty("task.update.false"));
-        }
-        if (page == null) {
-            page = PageManager.getProperty("path.page.login");
+            //TODO Exception на UI для простоты ;)
+            message = message.append(e);
         }
         content.getSessionAttributes().put(MESSAGE, message.toString());
         return page;

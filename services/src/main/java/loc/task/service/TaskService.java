@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Log4j
-public class TaskService implements ITaskService{
+public class TaskService implements ITaskService {
     private static TaskService taskService = null;
     private final static TaskDao taskDao = TaskDao.getTaskDao();
 
@@ -175,15 +175,23 @@ public class TaskService implements ITaskService{
         task.getContent().setHistory(history);
     }
 
-    protected Task getTask(Account account, Long taskId) throws DaoException {
-        User user = account.getUser();
-        Task task = null;
-        if (user.getRole() == UserService.employeeRole) {
-            task = taskDao.getTaskToUser(taskId, user.getUserId());
-        } else {
-            task = taskDao.get(taskId);
+    public Task getTask(Account account, Long taskId) throws TaskServiceException {
+        Transaction transaction = HibernateUtil.getHibernateUtil().getSession().beginTransaction();
+        try {
+            User user = account.getUser();
+            Task task;
+            if (user.getRole() == UserService.employeeRole) {
+                task = taskDao.getTaskToUser(taskId, user.getUserId());
+            } else {
+                task = taskDao.get(taskId);
+            }
+            return task;
+        } catch (DaoException e) {
+            log.error(e, e);
+            transaction.rollback();
+            throw new TaskServiceException(e);
         }
-        return task;
+
     }
 
     protected List<Task> getTasksList(TaskOutFilter f, Integer userId) throws DaoException {

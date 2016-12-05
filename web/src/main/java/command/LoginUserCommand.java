@@ -13,8 +13,6 @@ import loc.task.service.UserService;
 @Log4j
 public class LoginUserCommand implements ICommand {
 
-    private static final String LOGIN = "username";
-    private static final String PASSWORD = "password";
     @Override
     public String execute(RequestHandler content) {
         String page=null;
@@ -29,18 +27,16 @@ public class LoginUserCommand implements ICommand {
             } catch (NumberFormatException e) {
                 account= UserService.getUserService().getAccount(userLogin, userPassword);
             }
+            //TODO удалить проверку + проверка ЕХ юзер сервис
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
-
                 page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
                 message.append(MessageManager.getProperty("message.true.login"));
-            }else{
-                //TODO EXP IllegalArgumentException
-                message.append(MessageManager.getProperty("message.login.error"));
-            }
+            }else message.append(MessageManager.getProperty("message.login.error"));
         } catch (Exception e) {
             log.error(e,e);
             message.append(MessageManager.getProperty("message.login.error"));
+            message.append(e);
         }
         content.getSessionAttributes().put(MESSAGE, message.toString());
         return page;
