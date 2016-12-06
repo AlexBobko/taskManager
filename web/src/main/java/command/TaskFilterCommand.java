@@ -2,16 +2,19 @@ package command;
 
 import controller.PageMapper;
 import controller.RequestHandler;
-import loc.task.services.TaskService;
+import loc.task.services.ITaskService;
 import loc.task.vo.Account;
 import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Log4j
 public class TaskFilterCommand implements ICommand {
+    @Autowired
+    private ITaskService taskService;
 
     @Override
     public String execute(RequestHandler content) {
@@ -39,9 +42,9 @@ public class TaskFilterCommand implements ICommand {
 
             taskOutFilter.setSort(Integer.parseInt((String) content.getRequestAttributes().get("sorting_column")));
             taskOutFilter.setTasksPerPage(Integer.parseInt((String) content.getRequestAttributes().get("task_per_page")));
-            TaskService.getTaskService().updateTaskList(account); //TODO (spring) Serv ex
+            taskService.updateTaskList(account); //TODO (spring) Serv ex
 
-            page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
+            page = PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
         } catch (Exception e) {
             log.error(e, e);
         }

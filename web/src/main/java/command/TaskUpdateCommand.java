@@ -3,14 +3,19 @@ package command;
 import controller.PageMapper;
 import controller.RequestHandler;
 import loc.task.entity.Task;
-import loc.task.services.TaskService;
+import loc.task.services.ITaskService;
 import loc.task.services.exc.TaskServiceException;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Log4j
 public class TaskUpdateCommand implements ICommand {
+
+    @Autowired
+    private ITaskService taskService;
+
     @Override
     public String execute(RequestHandler content) {
         StringBuffer message = new StringBuffer();
@@ -21,7 +26,7 @@ public class TaskUpdateCommand implements ICommand {
             Task task = (Task) content.getSessionAttributes().get(TASK);
             String bodyTask = (String) content.getRequestAttributes().get(POST_BODY);
             try {
-                TaskService.getTaskService().updateTaskBody(account, task, bodyTask);
+                taskService.updateTaskBody(account, task, bodyTask);
             } catch (TaskServiceException e) {
                 message = message.append(MessageManager.getProperty("task.update.false"));
                 content.getSessionAttributes().put(POST_BODY, bodyTask); //TODO вывести на UI

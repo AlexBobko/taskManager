@@ -2,10 +2,11 @@ package command;
 
 import controller.PageMapper;
 import controller.RequestHandler;
+import loc.task.services.IUserService;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
-import loc.task.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Login
@@ -13,26 +14,35 @@ import loc.task.services.UserService;
 @Log4j
 public class LoginUserCommand implements ICommand {
 
+    @Autowired
+    private IUserService userService;
+
     @Override
     public String execute(RequestHandler content) {
         String page=null;
         StringBuffer message = new StringBuffer();
         Account account;
+        System.out.println("login1");
         try {
             String userLogin = (String) content.getRequestAttributes().get(LOGIN);
             String userPassword = (String) content.getRequestAttributes().get(PASSWORD);
+            System.out.println("login2");
             try {
                 int userId = Integer.parseInt(userLogin);
-                account= UserService.getUserService().getAccount(userId, userPassword);
+                account= userService.getAccount(userId, userPassword);
             } catch (NumberFormatException e) {
-                account= UserService.getUserService().getAccount(userLogin, userPassword);
+                System.out.println("login3");
+                account= userService.getAccount(userLogin, userPassword);
+                System.out.println("login4");
             }
+
             //TODO удалить проверку + проверка ЕХ юзер сервис
             if (account != null) {
                 content.getSessionAttributes().put(ACCOUNT, account);
                 page= PageMapper.getPageMapper().getTaskListPage(account.getUser().getRole());
                 message.append(MessageManager.getProperty("message.true.login"));
             }else message.append(MessageManager.getProperty("message.login.error"));
+            System.out.println("login4");
         } catch (Exception e) {
             log.error(e,e);
             message.append(MessageManager.getProperty("message.login.error"));

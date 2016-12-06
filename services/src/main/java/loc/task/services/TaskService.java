@@ -1,16 +1,18 @@
 package loc.task.services;
 
-import loc.task.dao.TaskDao;
-import loc.task.dao.UserDao;
+import loc.task.dao.ITaskDao;
+import loc.task.dao.IUserDao;
 import loc.task.entity.Task;
 import loc.task.entity.TaskContent;
 import loc.task.entity.User;
 import loc.task.services.exc.TaskServiceException;
 import loc.task.vo.Account;
+import loc.task.vo.AccountSuperior;
 import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
@@ -22,9 +24,9 @@ import java.util.*;
 public class TaskService implements ITaskService {
 
     @Autowired
-    private TaskDao taskDao;
+    private ITaskDao taskDao;
     @Autowired
-    private UserDao userDao;
+    private IUserDao userDao;
 
     public final static Integer statusTaskNew = 1;
     public final static Integer statusTaskApprove = 2;
@@ -38,8 +40,30 @@ public class TaskService implements ITaskService {
 
     public TaskService() {
     }
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY,readOnly = true)
+    public Account createAccount(User user) throws TaskServiceException {
+        Account account = null;
+        //TODO костыли
+        int employeeRole =1;
+        int superiorRole =2;
+        if (user.getRole() == employeeRole) {
+            TaskOutFilter currentTasksFilter = getTaskOutFilter(getDefaultEmployeeStatusList(), user.getUserId());
+            account = new Account(user, currentTasksFilter, getTasksList(currentTasksFilter, user.getUserId()));
+        } else if (user.getRole() == superiorRole) {
+            TaskOutFilter currentTasksFilter = getTaskOutFilter(getDefaultSuperiorStatusList()); //общий фильтр
+            TaskOutFilter reportTaskFilter = getTaskOutFilter(getSuperiorReportStatusList());//дополнительный фильтр
+            account = new AccountSuperior(user, currentTasksFilter, getTasksList(currentTasksFilter),
+                    reportTaskFilter, getTasksList(reportTaskFilter));
+            //TODO ?? загружается полностью юзер (персонал дата) обленили юзера )))
+        }
+        return account;
+    }
+
 
     //TODO транзакция updateTaskList ОБРАБОТАТЬ ДАО ЭКС
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public Account updateTaskList(Account ac) throws TaskServiceException {
         //TODO убрать дефолтную загрузку контента после решения проблем с КЭШЕМ
         if (ac.getUser().getRole() == UserService.employeeRole) {
@@ -55,6 +79,8 @@ public class TaskService implements ITaskService {
     }
 
     //TODO транзакция updateTaskStatus +
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public void updateTaskStatus(Account ac, long taskId, Integer status) throws TaskServiceException {
         //TODO ?? в каком месте лучше ограничить операции пользователя (оставить спрингу?)
         //TODO (Spring) легализация операций + фильрация данных
@@ -85,6 +111,8 @@ public class TaskService implements ITaskService {
     }
 
     //TODO транзакция updateTaskBody
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public void updateTaskBody(Account ac, Task task, String bodyTask) throws TaskServiceException {
         SimpleDateFormat dateFormat = ac.getDateFormat();
         taskDao.replicate(task);         // taskDao.refresh(task);
@@ -106,6 +134,8 @@ public class TaskService implements ITaskService {
     }
 
     //TODO транзакция addNewTask (обработка дао ЕХ)
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public Task addNewTask(Account account, int employeeId,
                            String titleTask, String bodyTask, Date deadline) throws TaskServiceException {
         Set<User> users = new HashSet<>();
@@ -139,6 +169,8 @@ public class TaskService implements ITaskService {
     }
 
     //TODO TRANSACTION
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public Task getTask(Account account, Long taskId) throws TaskServiceException {
         User user = account.getUser();
         Task task;

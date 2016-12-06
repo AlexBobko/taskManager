@@ -3,13 +3,17 @@ package command;
 import controller.PageMapper;
 import controller.RequestHandler;
 import loc.task.entity.Task;
-import loc.task.services.TaskService;
+import loc.task.services.ITaskService;
 import loc.task.services.exc.TaskServiceException;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Log4j
 public class TaskDetailsCommand implements ICommand {
+	@Autowired
+	private ITaskService taskService;
 	@Override
 	public String execute(RequestHandler content) {
 		StringBuffer message = new StringBuffer();
@@ -18,7 +22,7 @@ public class TaskDetailsCommand implements ICommand {
 			Account account = (Account) content.getSessionAttributes().get(ACCOUNT);
 			Long taskId = Long.parseLong((String) content.getRequestAttributes().get(CMD_VALUE));
 			try {
-				Task task = TaskService.getTaskService().getTask(account,taskId);
+				Task task = taskService.getTask(account, taskId);
 				if (task!=null) {
 					content.getSessionAttributes().put(TASK, task);
 					account.setCurrentTasks(null); //чистим коллекции, чтобы не таскать на страницу

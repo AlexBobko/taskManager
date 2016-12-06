@@ -7,6 +7,8 @@ import loc.task.services.UserService;
  * ICommand
  */
 public interface ICommand {
+
+
     // Attribute name
     static final String CMD_VALUE = "cmdValue";
 //    static final String PARAM_SESSION_USER = "currentUser";

@@ -4,6 +4,7 @@ public class TaskServiceException extends Exception {
 
     private Exception exception;
 
+
     public TaskServiceException(Exception exception) {
         this.exception = exception;
     }

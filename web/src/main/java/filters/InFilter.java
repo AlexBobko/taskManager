@@ -1,7 +1,6 @@
 package filters;
 
 import managers.PageManager;
-import org.hibernate.Session;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -38,20 +37,20 @@ public class InFilter implements Filter {
         }
         chain.doFilter(request, response);
 
-        Session sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
-        if (sessionHibernate.isOpen()) {
-
-            HibernateUtil.getHibernateUtil().printStats(8);
-            System.out.println("sessionHibernate: " + sessionHibernate.getStatistics());
-            System.out.println("sessionHibernate.clear ");
-            sessionHibernate.clear();
-            HibernateUtil.getHibernateUtil().printStats(9);
-
-            System.out.println("sessionHibernate: " + sessionHibernate.getStatistics());
-            sessionHibernate.close();
-            HibernateUtil.getHibernateUtil().removeSession();
-            System.out.println("*****sessionHibernate.close + null*******");
-        }
+//        Session sessionHibernate = HibernateUtil.getHibernateUtil().getSession();
+//        if (sessionHibernate.isOpen()) {
+//
+//            HibernateUtil.getHibernateUtil().printStats(8);
+//            System.out.println("sessionHibernate: " + sessionHibernate.getStatistics());
+//            System.out.println("sessionHibernate.clear ");
+//            sessionHibernate.clear();
+//            HibernateUtil.getHibernateUtil().printStats(9);
+//
+//            System.out.println("sessionHibernate: " + sessionHibernate.getStatistics());
+//            sessionHibernate.close();
+//            HibernateUtil.getHibernateUtil().removeSession();
+//            System.out.println("*****sessionHibernate.close + null*******");
+//        }
     }
 
     /**
