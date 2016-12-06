@@ -55,7 +55,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war.plugin.version}</version>
                 <configuration>
-                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <warSourceDirectory>src/main/WebContent</warSourceDirectory>
                     <webappDirectory>/usr/share/tomcat7/webapps/taskManager</webappDirectory>
                 </configuration>
             </plugin>

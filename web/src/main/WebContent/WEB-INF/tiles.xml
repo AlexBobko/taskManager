@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+    <definition name="default" template="/WEB-INF/index.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="body" value="/WEB-INF/view/login.jsp"/>
+    </definition>
+
+    <definition name="welcome" extends="default">
+        <put-attribute name="title" value="Welcome user"/>
+        <put-attribute name="body" value="/WEB-INF/view/welcome/login.jspx"/>
+    </definition>
+
+    <definition name="user/main" extends="default">
+        <put-attribute name="title" value="Main page"/>
+        <put-attribute name="body" value="/WEB-INF/view/user/main.jspx"/>
+    </definition>
+
+    <definition name="persons/main" extends="default">
+        <put-attribute name="title" value="Persons Info"/>
+        <put-attribute name="body" value="/WEB-INF/view/person/main.jspx"/>
+    </definition>
+
+    <definition name="login" extends="default">
+        <put-attribute name="title" value="Login page"/>
+    </definition>
+
+    <definition name="products/main" extends="default">
+        <put-attribute name="title" value="Products"/>
+        <put-attribute name="body" value="/WEB-INF/view/product/main.jspx"/>
+    </definition>
+</tiles-definitions>
+
+        path.page.index= /index.jsp
+        path.page.login= /jsp/login.jsp
+        path.page.user= /jsp/user.jsp
+        path.page.admin= /jsp/admin.jsp
+        path.page.superior= /jsp/superior.jsp
+        path.page.main= /jsp/main.jsp
+        path.page.task= /jsp/taskDetail.jsp
+        path.page.add.task= /jsp/addNewTask.jsp

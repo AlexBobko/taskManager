@@ -17,7 +17,7 @@ import java.util.List;
 
 @Log4j
 @Service
-@Transactional
+//@Transactional
 public class UserService implements IUserService {
 
     @Autowired

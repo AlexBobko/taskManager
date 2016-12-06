@@ -12,6 +12,7 @@ import loc.task.vo.TaskOutFilter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +41,14 @@ public class TaskService implements ITaskService {
 
     public TaskService() {
     }
+
     @Override
-    @Transactional(propagation = Propagation.MANDATORY,readOnly = true)
+    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
     public Account createAccount(User user) throws TaskServiceException {
         Account account = null;
         //TODO костыли
-        int employeeRole =1;
-        int superiorRole =2;
+        int employeeRole = 1;
+        int superiorRole = 2;
         if (user.getRole() == employeeRole) {
             TaskOutFilter currentTasksFilter = getTaskOutFilter(getDefaultEmployeeStatusList(), user.getUserId());
             account = new Account(user, currentTasksFilter, getTasksList(currentTasksFilter, user.getUserId()));
@@ -63,7 +65,7 @@ public class TaskService implements ITaskService {
 
     //TODO транзакция updateTaskList ОБРАБОТАТЬ ДАО ЭКС
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public Account updateTaskList(Account ac) throws TaskServiceException {
         //TODO убрать дефолтную загрузку контента после решения проблем с КЭШЕМ
         if (ac.getUser().getRole() == UserService.employeeRole) {
@@ -80,7 +82,7 @@ public class TaskService implements ITaskService {
 
     //TODO транзакция updateTaskStatus +
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void updateTaskStatus(Account ac, long taskId, Integer status) throws TaskServiceException {
         //TODO ?? в каком месте лучше ограничить операции пользователя (оставить спрингу?)
         //TODO (Spring) легализация операций + фильрация данных
@@ -112,14 +114,14 @@ public class TaskService implements ITaskService {
 
     //TODO транзакция updateTaskBody
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void updateTaskBody(Account ac, Task task, String bodyTask) throws TaskServiceException {
         SimpleDateFormat dateFormat = ac.getDateFormat();
         taskDao.replicate(task);         // taskDao.refresh(task);
         int userId = ac.getUser().getUserId();
         String currentTaskBody = task.getContent().getBody();
         Calendar calendar = Calendar.getInstance();
-        task.setStatusId(statusTaskApprove);    //устанавливаем статус 2
+        task.setStatusId(statusTaskApprove);    //TODO (ТЗ) устанавливаем статус 2 )
         updateTaskHistory(task, ac, reasonUpdateBody);
         currentTaskBody = currentTaskBody.concat("\n\r").concat(dateFormat.format(calendar.getTime())).concat(" ***user:" + userId).concat(bodyTask);
         task.getContent().setBody(currentTaskBody);
@@ -135,7 +137,7 @@ public class TaskService implements ITaskService {
 
     //TODO транзакция addNewTask (обработка дао ЕХ)
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, isolation = Isolation.REPEATABLE_READ)
     public Task addNewTask(Account account, int employeeId,
                            String titleTask, String bodyTask, Date deadline) throws TaskServiceException {
         Set<User> users = new HashSet<>();
@@ -170,7 +172,7 @@ public class TaskService implements ITaskService {
 
     //TODO TRANSACTION
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Task getTask(Account account, Long taskId) throws TaskServiceException {
         User user = account.getUser();
         Task task;
@@ -185,7 +187,7 @@ public class TaskService implements ITaskService {
 //            throw new TaskServiceException(e);
     }
 
-    protected List<Task> getTasksList(TaskOutFilter f, Integer userId) throws TaskServiceException {
+    private List<Task> getTasksList(TaskOutFilter f, Integer userId) throws TaskServiceException {
         Set<Integer> usersId = new HashSet<>(1);
         usersId.add(userId);
         long countPage = f.getTotalCount() / (long) f.getTasksPerPage();
@@ -201,11 +203,11 @@ public class TaskService implements ITaskService {
         return taskDao.getTasks(firstResult, f.getTasksPerPage(), f.getIncludeStatus(), f.getSort(), f.isAsk(), usersId);
     }
 
-    protected List<Task> getTasksList(TaskOutFilter f) throws TaskServiceException {
+    private List<Task> getTasksList(TaskOutFilter f) throws TaskServiceException {
         return getTasksList(f, null);
     }
 
-    protected TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) throws TaskServiceException {
+    private TaskOutFilter updateTaskOutFilter(TaskOutFilter taskOutFilter, Integer userId) throws TaskServiceException {
         long totalCount = 1L;
         if (userId != null) {
             totalCount = getCountTask(taskOutFilter.getIncludeStatus(), userId);
@@ -224,34 +226,34 @@ public class TaskService implements ITaskService {
         return taskOutFilter;
     }
 
-    protected TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) throws TaskServiceException {
+    private TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus) throws TaskServiceException {
         return getTaskOutFilter(includeStatus, null);
     }
 
-    protected TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) throws TaskServiceException {
+    private TaskOutFilter getTaskOutFilter(Set<Integer> includeStatus, Integer userId) throws TaskServiceException {
         TaskOutFilter taskOutFilter = new TaskOutFilter(includeStatus);
         return updateTaskOutFilter(taskOutFilter, userId);
     }
 
-    protected long getCountTask(Set<Integer> includeStatus, int userId) throws TaskServiceException {
+    private long getCountTask(Set<Integer> includeStatus, int userId) throws TaskServiceException {
 
         return taskDao.getCountTask(includeStatus, userId);
     }
 
-    protected Set<Integer> getSuperiorReportStatusList() {
+    private Set<Integer> getSuperiorReportStatusList() {
         Set<Integer> statusList = new HashSet<>(1);
         statusList.add(TaskService.statusTaskReport); //Назначено время
         return statusList;
     }
 
-    protected Set<Integer> getDefaultSuperiorStatusList() {
+    private Set<Integer> getDefaultSuperiorStatusList() {
         Set<Integer> statusList = new HashSet<>(2);
         statusList.add(TaskService.statusTaskApprove);
         statusList.add(TaskService.statusTaskReview);
         return statusList;
     }
 
-    protected Set<Integer> getDefaultEmployeeStatusList() {
+    private Set<Integer> getDefaultEmployeeStatusList() {
         Set<Integer> statusList = new HashSet<>(5);
         statusList.add(statusTaskNew);
         statusList.add(statusTaskApprove);
