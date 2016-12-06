@@ -5,7 +5,7 @@ import controller.RequestHandler;
 import loc.task.vo.Account;
 import managers.MessageManager;
 import org.apache.log4j.Logger;
-import loc.task.service.TaskService;
+import loc.task.services.TaskService;
 
 public class TaskGetPageCommand implements ICommand {
     private static Logger log = Logger.getLogger(TaskGetPageCommand.class);

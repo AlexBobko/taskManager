@@ -1,6 +1,5 @@
 package filters;
 
-import loc.task.util.HibernateUtil;
 import managers.PageManager;
 import org.hibernate.Session;
 

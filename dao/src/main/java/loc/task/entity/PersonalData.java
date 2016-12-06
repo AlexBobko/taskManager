@@ -6,8 +6,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "personal_data") //++
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
 public class PersonalData {
+    private static final long serialVersionUID = 1L; //геттеры
     @Id
     @Column(name = "user_id")
     @GenericGenerator(name = "gen",
@@ -17,11 +19,11 @@ public class PersonalData {
 //    @Column (name = "user_id", updatable = false, insertable = false)
     @GeneratedValue(generator = "gen")
     private int userId;
-    @Column(nullable = false)
+    @Column(nullable = false,name = "F_name")
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false,name = "F_surname")
     private String surname;
-    @Column(nullable = false)
+    @Column(nullable = false,name = "F_position")
     private String position;
     @OneToOne (fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn

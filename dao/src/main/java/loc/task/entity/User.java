@@ -17,17 +17,17 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id",unique = true, nullable = false)
     private int userId;
-    @Column
+    @Column(name = "F_personnelNumber")
     private int personnelNumber; //табельный номер
-    @Column
+    @Column(name = "F_login" , unique = true) //TODO ошибка запуска ??? уник юзер
     private String login;
     @Basic (fetch = FetchType.LAZY)
-    @Column
+    @Column(name = "F_passwordHash")
     private String passwordHash;
 
     @Basic (fetch = FetchType.LAZY)
     @Where(clause = "accountStatus = 1 ")
-    @Column
+    @Column (name = "F_accountStatus")
     private int accountStatus = 1; //1,2,3: deleted, block, active
 
     @Column(name = "role")

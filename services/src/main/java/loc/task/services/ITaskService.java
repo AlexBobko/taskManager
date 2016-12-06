@@ -1,7 +1,7 @@
-package loc.task.service;
+package loc.task.services;
 
 import loc.task.entity.Task;
-import loc.task.service.exc.TaskServiceException;
+import loc.task.services.exc.TaskServiceException;
 import loc.task.vo.Account;
 
 import java.util.Date;

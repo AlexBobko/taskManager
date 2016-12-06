@@ -19,7 +19,7 @@ public class UserDAOTest extends TestCase {
         connection = PoolConnection.getInstance().getConnection();
         UserDAO userDAO = new UserDAO(connection);
         assertEquals("findEntityById true", getUserDTO().getLogin(), userDAO.findEntityById(1).getLogin());
-        assertEquals("findEntityByLogin true",getUserDTO().getId(),userDAO.findEntityByLogin("testik").getId());
+        assertEquals("findUserByLogin true",getUserDTO().getId(),userDAO.findEntityByLogin("testik").getId());
     }
     @Before
     public UserDTO getUserDTO(){

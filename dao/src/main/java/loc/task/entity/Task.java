@@ -10,11 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity //TODO ?? dynamicUpdate = false как работает если изменилось 2 поля? по каждой ячейке или без измененного поля
-@org.hibernate.annotations.Entity (dynamicUpdate = false, optimisticLock = OptimisticLockType.VERSION)
+@org.hibernate.annotations.Entity(dynamicUpdate = false, optimisticLock = OptimisticLockType.VERSION)
 @Table//(name = "task")
-@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_WRITE, region="task")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "task")
 public class Task implements Serializable {
-//    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; //геттеры
 
 
     @Id
@@ -22,49 +22,42 @@ public class Task implements Serializable {
     @Column(name = "task_id")
     private Long taskId;
 
-    @Column (name = "status_id")
+    @Column(name = "status_id")
     private int statusId = 1;   // 7 с удалением
 
-    @Temporal(TemporalType.TIMESTAMP )
-    @Column(name = "date_creation",length = 19)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_creation", length = 19)
     private Date dateCreation;
 
     @Column(name = "title")
     private String title;
 
     @Version
-    @Column(name="optlock")
+    @Column(name = "optlock")
     private Integer version = 1;
 
     public void setVersion(Integer version) {
         this.version = version;
     }
-    public Integer getVersion() { return version; }
+
+    public Integer getVersion() {
+        return version;
+    }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "deadline",length = 19)
+    @Column(name = "deadline", length = 19)
     private Date deadline;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date_reporting",length = 19)
-    private Date dateReporting=null;
-
-    public Date getDateReporting() {
-        return dateReporting;
-    }
-
-    public void setDateReporting(Date dateReporting) {
-        this.dateReporting = dateReporting;
-    }
+    @Column(name = "date_reporting", length = 19)
+    private Date dateReporting = null;
 
 
-
-    //    @Basic(fetch = FetchType.LAZY) //TODO ?? ругается на лези
+    @Basic(fetch = FetchType.LAZY) //TODO ?? ругается на лези
     @Embedded
     private TaskContent content;
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY) //TODO ВКЛЮЧИТЬ ЛЕЗИ (админ проблемс ;))
-//    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY) //FetchType.EAGER
     @JoinTable(name = "user_task",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -81,6 +74,14 @@ public class Task implements Serializable {
         this.deadline = deadline;
         this.content = content;
         this.userList = userSet;
+    }
+
+    public Date getDateReporting() {
+        return dateReporting;
+    }
+
+    public void setDateReporting(Date dateReporting) {
+        this.dateReporting = dateReporting;
     }
 
     public Long getTaskId() {

@@ -6,31 +6,29 @@ import javax.persistence.Embeddable;
 @Embeddable
 //@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_ONLY, region="task")
 public class TaskContent {
-    @Column
-//    (columnDefinition = "text") //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится
-//    @Column(name = "task_body")
+    private static final long serialVersionUID = 1L; //геттеры
+
+    //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится
+    @Column(name = "F_BODY") //    @Column(name = "task_body") //    (columnDefinition = "text")
     public String getBody() {return body;}
 
-    @Column
-//            (columnDefinition = "text")
-//    @Column(name = "task_history")
+    @Column(name = "F_HISTORY")//    @Column(name = "task_history") (columnDefinition = "text")
     public String getHistory() {return history;}
 
     private String body;
     private String history=new String();
+
+    public TaskContent() {}
+
+    public TaskContent(String body) {
+        this.body = body;
+    }
 
     public void setBody(String body) {
         this.body = body;
     }
     public void setHistory(String history) {
         this.history = history;
-    }
-
-    public TaskContent() {
-    }
-
-    public TaskContent(String body) {
-        this.body = body;
     }
 
     @Override

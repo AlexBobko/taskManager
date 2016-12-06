@@ -2,5 +2,5 @@
 <p>Alexander Bobko</p>
 <p>Unfinished, working version.</p>
 <p>Hibernate.</p>
-<p>dao,loc.task.service,web.</p>
+<p>dao,loc.task.services,web.</p>
 <p>In developing...</p>

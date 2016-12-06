@@ -5,7 +5,7 @@ import controller.RequestHandler;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;
-import loc.task.service.UserService;
+import loc.task.services.UserService;
 
 /**
  * Login

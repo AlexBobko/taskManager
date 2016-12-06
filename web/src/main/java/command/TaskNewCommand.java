@@ -3,7 +3,7 @@ package command;
 import controller.PageMapper;
 import controller.RequestHandler;
 import loc.task.entity.User;
-import loc.task.service.UserService;
+import loc.task.services.UserService;
 import loc.task.vo.Account;
 import loc.task.vo.AccountSuperior;
 import lombok.extern.log4j.Log4j;

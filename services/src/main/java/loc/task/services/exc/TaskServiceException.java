@@ -1,4 +1,4 @@
-package loc.task.service.exc;
+package loc.task.services.exc;
 
 public class TaskServiceException extends Exception {
 

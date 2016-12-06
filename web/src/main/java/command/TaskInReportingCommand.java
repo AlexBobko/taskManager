@@ -2,8 +2,8 @@ package command;
 
 import controller.PageMapper;
 import controller.RequestHandler;
-import loc.task.service.TaskService;
-import loc.task.service.exc.TaskServiceException;
+import loc.task.services.TaskService;
+import loc.task.services.exc.TaskServiceException;
 import loc.task.vo.Account;
 import lombok.extern.log4j.Log4j;
 import managers.MessageManager;

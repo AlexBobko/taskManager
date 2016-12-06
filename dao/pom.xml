@@ -19,12 +19,18 @@
         <slf4j.version>1.7.5</slf4j.version>
         <!--<slf4j.version>1.5.6</slf4j.version>-->
         <mysql.version>5.1.34</mysql.version>
+        <dbcp.version>1.4</dbcp.version>
         <!--<mysql.connector.version>5.1.39</mysql.connector.version>-->
         <ehcache.version>2.6.9</ehcache.version>
         <cobertura.version>2.7</cobertura.version>
         <c3p0.version>0.9.5.1</c3p0.version>
         <jdbc.version>0.6.1</jdbc.version>
         <lombok.version>1.16.8</lombok.version>
+
+        <!--<maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>-->
+        <spring.version>4.2.4.RELEASE</spring.version>
+        <aspectj.version>1.8.9</aspectj.version>
+
     </properties>
     <name>DaoTaskMan</name>
     <url>http://maven.apache.org</url>
@@ -113,12 +119,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--MySQL-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
-
+        <!--Dbcp-->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${dbcp.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -167,5 +179,84 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+
+
+
+
+
+
+
+
+
     </dependencies>
 </project>
