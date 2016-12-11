@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity //TODO ?? dynamicUpdate = false как работает если изменилось 2 поля? по каждой ячейке или без измененного поля
 @org.hibernate.annotations.Entity(dynamicUpdate = false, optimisticLock = OptimisticLockType.VERSION)
-@Table//(name = "task")
+@Table(name = "task")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "task")
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L; //геттеры

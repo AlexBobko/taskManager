@@ -21,7 +21,7 @@ import java.util.*;
 
 @Log4j
 @Service
-@Transactional
+//@Transactional
 public class TaskService implements ITaskService {
 
     @Autowired

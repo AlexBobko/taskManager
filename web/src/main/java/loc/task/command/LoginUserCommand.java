@@ -17,6 +17,8 @@ public class LoginUserCommand implements ICommand {
     @Autowired
     private IUserService userService;
 
+
+
     @Override
     public String execute(RequestHandler content) {
         String page=null;
@@ -28,6 +30,7 @@ public class LoginUserCommand implements ICommand {
             String userPassword = (String) content.getRequestAttributes().get(PASSWORD);
             System.out.println("login2");
             try {
+                System.out.println("login3");
                 int userId = Integer.parseInt(userLogin);
                 account= userService.getAccount(userId, userPassword);
             } catch (NumberFormatException e) {

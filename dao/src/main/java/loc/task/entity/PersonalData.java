@@ -4,11 +4,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "personal_data") //++
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
-public class PersonalData {
+public class PersonalData implements Serializable {
     private static final long serialVersionUID = 1L; //геттеры
     @Id
     @Column(name = "user_id")

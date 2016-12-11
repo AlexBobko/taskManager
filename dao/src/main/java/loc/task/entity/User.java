@@ -1,40 +1,40 @@
 package loc.task.entity;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "user")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id",unique = true, nullable = false)
+    @Column(name = "user_id", unique = true, nullable = false)
     private int userId;
     @Column(name = "F_personnelNumber")
     private int personnelNumber; //табельный номер
-    @Column(name = "F_login" , unique = true) //TODO ошибка запуска ??? уник юзер
+    @Column(name = "F_login", unique = true) //TODO ошибка запуска ??? уник юзер
     private String login;
-    @Basic (fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "F_passwordHash")
     private String passwordHash;
 
-    @Basic (fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Where(clause = "accountStatus = 1 ")
-    @Column (name = "F_accountStatus")
+    @Column(name = "F_accountStatus")
     private int accountStatus = 1; //1,2,3: deleted, block, active
 
     @Column(name = "role")
     private int role = 1;
 
     //TODO ?? почему лези не работает?? PersonalData
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PersonalData personalData;
 
     @Where(clause = "status_id < 6 ")

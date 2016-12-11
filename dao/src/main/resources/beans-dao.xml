@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        ">
+    <!--https://habrahabr.ru/post/113945/-->
+    <!--добавил для кэша 2 строки последние выше -->
+    <!--http://www.springframework.org/schema/cache-->
+    <!--www.springframework.org/schema/cache/spring-cache.xsd-->
+
+    <!--<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+    <!--xmlns:cache="http://www.springframework.org/schema/cache"-->
+    <!--xsi:schemaLocation="http://www.springframework.org/schema/beans www.springframework.org/schema/beans/spring-beans.xsdhttp://www.springframework.org/schema/cache www.springframework.org/schema/cache/spring-cache.xsd">-->
+    <!--<cache:annotation-driven />-->
 
     <context:component-scan base-package="loc.task.dao"/>
 
     <aop:aspectj-autoproxy/>
 
+    <!--<cache:annotation-driven />-->
+
     <!--Translate exceptions to Spring-exceptions -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="url" value="jdbc:mysql://localhost:3306/java_annotation?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/java_annotation?useUnicode=true&amp;characterEncoding=UTF-8"/>
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="username" value="root"/>
         <property name="password" value="111"/>
         <property name="initialSize" value="5"/>
         <property name="maxActive" value="10"/>
-    <!--<property name="hibernate.connection.pool_size">10</property>-->
+        <!--<property name="hibernate.connection.pool_size">10</property>-->
     </bean>
 
     <bean id="sessionFactory"
@@ -32,7 +47,8 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan">
             <list>
-                <value>loc.task.entity</value>
+                <!--<value>loc.task.entity</value>-->
+                <value>loc.task</value>
             </list>
         </property>
 
@@ -50,21 +66,34 @@
                 <prop key="hibernate.generate_statistics">true</prop>
                 <prop key="hibernate.cache.use_structured_entries">true</prop>
                 <!-- second level cache -->
-                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <!-- For NOT singleton factory -->
+                <!--<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>-->
                 <!-- For singleton factory -->
-                <!--<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>-->
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
                 <!-- enable second level cache and query cache -->
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="net.sf.ehcache.configurationResourceName">/ehcache.xml</prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>
-
-                <!-- Mapping files -->
-                <!--<mapping class="loc.task.entity.Task" />-->
-                <!--<mapping class="loc.task.entity.User"/>-->
-                <!--<mapping class="loc.task.entity.PersonalData"/>-->
             </props>
         </property>
     </bean>
+
+
 </beans>
+
+        <!-- Mapping files -->
+        <!--<mapping class="loc.task.entity.Task" />-->
+        <!--<mapping class="loc.task.entity.User"/>-->
+        <!--<mapping class="loc.task.entity.PersonalData"/>-->
+        <!--ehcache-->
+        <!--<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">-->
+        <!--<property name="cacheManager" ref="ehcache"/>-->
+        <!--</bean>-->
+        <!--<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
+        <!--<property name="configLocation" value="classpath:config/ehcache.xml"/>-->
+        <!--<property name="shared" value="true"/>-->
+        <!--</bean>-->
+
+        <!--<bean id="cacheManager" class="org.springframework.cache.ehcache.EhcacheCacheManager" p:cache-manager="ehcache"/>-->

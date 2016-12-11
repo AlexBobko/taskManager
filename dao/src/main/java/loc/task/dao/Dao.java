@@ -1,5 +1,7 @@
 package loc.task.dao;
 
+import org.hibernate.Session;
+
 import java.io.Serializable;
 
 public interface Dao<T> {
@@ -17,6 +19,7 @@ public interface Dao<T> {
 //    void replicate(T t);
 
     void refresh(T t);
+    Session getSession();
 }
 
 

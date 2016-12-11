@@ -1,11 +1,12 @@
 package loc.task.dao;
 
 import lombok.extern.log4j.Log4j;
-import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -39,6 +40,7 @@ public class BaseDao<T> implements Dao<T> {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public T get(T t, Serializable id) {
         log.info("Get class "+ getPersistentClass() + " by id:" + id);
         return (T) getSession().get(t.getClass(), id);

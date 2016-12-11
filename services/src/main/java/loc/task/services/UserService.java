@@ -26,6 +26,8 @@ public class UserService implements IUserService {
     @Autowired
     private ITaskService taskService;
 
+
+
     public final static Integer employeeRole = 1;
     public final static Integer superiorRole = 2;
     private final static String soul = "dsdf@@";//локальная соль. не менять
@@ -42,22 +44,31 @@ public class UserService implements IUserService {
     }
 
     //TODO Trans+Session
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED) //,readOnly = true
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private Account getAccount(int userId, String userLogin, String userPassword) throws TaskServiceException {
+
+//        log.info(TRANSACTION_SUCCESS);
+        System.out.println("TRANSACTION ");
+
+
         Account account = null;
         User user;
         if (userLogin != null) {
             System.out.println("userLogin: " + userLogin);
             user = userDao.findUserByLogin(userLogin);
         } else {
+            System.out.println("TRANSACTION 2 ");
+//            user = (User)userDao.getSession().get(User.class , userId);
             user = userDao.get(userId);
+            System.out.println("TRANSACTION 3 " + user ) ;
         }
         if (user != null) {
             userPassword = "sваываыsd" + soul; //TODO !ХАРДКОД //чтобы не вводить пароль :)
 //                userPassword = userPassword + soul; //проконтролить локальную соль Soul
             if (BCrypt.checkpw(userPassword, user.getPasswordHash())) {
                 account = taskService.createAccount(user);
-//                    System.out.println("It matches");
+                    System.out.println("It matches");
             }
         }
         return account;

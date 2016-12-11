@@ -2,21 +2,21 @@ package loc.task.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
 //@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_ONLY, region="task")
-public class TaskContent {
+public class TaskContent implements Serializable {
     private static final long serialVersionUID = 1L; //геттеры
 
-    //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится
-    @Column(name = "F_BODY") //    @Column(name = "task_body") //    (columnDefinition = "text")
+    //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится + меняю на аннотирование через ГЕТ методов и тоже ошибка
+    @Column(name = "task_body") //    @Column(name = "task_body") //    (columnDefinition = "text")
+    private String body;
     public String getBody() {return body;}
 
-    @Column(name = "F_HISTORY")//    @Column(name = "task_history") (columnDefinition = "text")
-    public String getHistory() {return history;}
-
-    private String body;
+    @Column(name = "task_history")//    @Column(name = "task_history") (columnDefinition = "text")
     private String history=new String();
+    public String getHistory() {return history;}
 
     public TaskContent() {}
 
