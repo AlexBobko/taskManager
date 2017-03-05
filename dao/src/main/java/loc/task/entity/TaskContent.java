@@ -6,14 +6,22 @@ import javax.persistence.Embeddable;
 @Embeddable
 //@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_ONLY, region="task")
 public class TaskContent {
-    @Column(name = "task_body")
+
+//    (columnDefinition = "text") //TODO ??бд тип: меняю в бд на тип поля TEXT не грузится
+    @Column(name = "body")
+    private String body;
     public String getBody() {return body;}
 
-    @Column(name = "task_history")
+//            (columnDefinition = "text")
+    @Column(name = "history")
+    private String history=new String(); //TODO проверить или не мешает созданию
     public String getHistory() {return history;}
 
-    private String body;
-    private String history=new String();
+    public TaskContent() {
+    }
+    public TaskContent(String body) {
+        this.body = body;
+    }
 
     public void setBody(String body) {
         this.body = body;
@@ -21,14 +29,6 @@ public class TaskContent {
     public void setHistory(String history) {
         this.history = history;
     }
-
-    public TaskContent() {
-    }
-
-    public TaskContent(String body) {
-        this.body = body;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

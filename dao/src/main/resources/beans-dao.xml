@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx
+			               http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        ">
+    <!--https://habrahabr.ru/post/113945/-->
+    <!--добавил для кэша 2 строки последние выше -->
+    <!--http://www.springframework.org/schema/cache-->
+    <!--www.springframework.org/schema/cache/spring-cache.xsd-->
+
+    <!--<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+    <!--xmlns:cache="http://www.springframework.org/schema/cache"-->
+    <!--xsi:schemaLocation="http://www.springframework.org/schema/beans www.springframework.org/schema/beans/spring-beans.xsdhttp://www.springframework.org/schema/cache www.springframework.org/schema/cache/spring-cache.xsd">-->
+    <!--<cache:annotation-driven />-->
+
+    <context:component-scan base-package="loc.task.dao"/>
+
+    <aop:aspectj-autoproxy/>
+
+    <!--<cache:annotation-driven />-->
+
+
+    <!--Translate exceptions to Spring-exceptions -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/java_annotation?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <!--<property name="password" value="111"/>-->
+        <property name="password" value="fdg#jkKu8$R"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="10"/>
+        <!--<property name="hibernate.connection.pool_size">10</property>-->
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <!--<value>loc.task.entity</value>-->
+                <value>loc.task</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">validate</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="debug">true</prop>
+                <!--level transaction-->
+                <prop key="connection.isolation">2</prop>
+                <!--<property name="hibernate.connection.isolation">2</property>-->
+                <prop key="hibernate.cglib.use_reflection_optimizer">true</prop>
+                <!-- generate_statistics to session factory-->
+                <prop key="hibernate.generate_statistics">true</prop>
+                <prop key="hibernate.cache.use_structured_entries">true</prop>
+                <!-- second level cache -->
+                <!-- For singleton factory -->
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <!-- enable second level cache and query cache -->
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">/ehcache.xml</prop>
+            </props>
+        </property>
+    </bean>
+    <!--<mvc:interceptors>-->
+        <!--<bean class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">-->
+            <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+        <!--</bean>-->
+    <!--</mvc:interceptors>-->
+    <!--<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">-->
+        <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+    <!--</bean>-->
+
+    <!--<tx:annotation-driven transaction-manager="txManager"/>-->
+    <!--<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>-->
+
+</beans>

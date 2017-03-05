@@ -1,38 +1,45 @@
 package loc.task.entity;
 
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity //(name = "users")
-public class User {
+@Entity(name = "user")
+//@javax.persistence.Table(name = "user")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id",unique = true, nullable = false)
     private int userId;
-    @Column
+    @Column (name = "personnel_number")
     private int personnelNumber; //табельный номер
-    @Column
+    @Column(name = "login")
     private String login;
     @Basic (fetch = FetchType.LAZY)
-    @Column
+    @Column(name = "password")
     private String passwordHash;
-    // @Enumerated(EnumType.StatusE)
+
     @Basic (fetch = FetchType.LAZY)
-    @Column
-    private int accountStatus = 1; //TODO сделать ENUM: deleted, block, active
+    @Where(clause = "accountStatus = 1 ")
+    @Column(name = "account_status")
+    private int accountStatus = 1; //1,2,3: deleted, block, active
+
     @Column(name = "role")
     private int role = 1;
-    @Basic (fetch = FetchType.LAZY)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private PersonalData personalData; //TODO почему ругается? attribute type should not be
-    @Basic (fetch = FetchType.LAZY)
-    @Where(clause = "status_id < 6 ") //TODO проверить ограничение LIMIT 12
+
+    //TODO ?? почему лези не работает?? PersonalData
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    private PersonalData personalData;
+
+    @Where(clause = "status_id < 6 ")
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "user_task",
             joinColumns = @JoinColumn(name = "user_id"),

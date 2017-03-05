@@ -15,6 +15,7 @@
         <jstl.version>1.2</jstl.version>
         <war.plugin.version>3.0.0</war.plugin.version>
         <tomcat7.plugin.version>2.2</tomcat7.plugin.version>
+        <spring.security.version>4.0.3.RELEASE</spring.security.version>
     </properties>
 
     <dependencies>
@@ -29,11 +30,32 @@
             <version>${servlet.version}</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>${jstl.version}</version>
         </dependency>
+
+        <!-- Spring Security -->
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+
+
     </dependencies>
     <build>
         <plugins>
@@ -48,15 +70,17 @@
                     <password>ideaPas</password>
                     <url>http://localhost:8080/manager/text</url>
                     <path>/${project.build.finalName}</path>
-                    <warFile>target/${project.build.finalName}.war</warFile>
+                    <warFile>/usr/share/tomcat7/webapps/${project.build.finalName}.war</warFile>
+                    <!--<warFile>target/${project.build.finalName}.war</warFile>-->
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war.plugin.version}</version>
                 <configuration>
-                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <warSourceDirectory>src/main/WebContent</warSourceDirectory>
                     <webappDirectory>/usr/share/tomcat7/webapps/taskManager</webappDirectory>
+                    <!--<webappDirectory>/usr/share/tomcat7/webapps/taskManager</webappDirectory>-->
                 </configuration>
             </plugin>
         </plugins>

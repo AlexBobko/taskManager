@@ -4,10 +4,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity//(name = "personal_address")
+@Entity
+@Table(name = "personal_data")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "user")
-public class PersonalData {
+public class PersonalData implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "user_id")
     @GenericGenerator(name = "gen",
@@ -17,13 +20,13 @@ public class PersonalData {
 //    @Column (name = "user_id", updatable = false, insertable = false)
     @GeneratedValue(generator = "gen")
     private int userId;
-    @Column(nullable = false)
+    @Column(name = "name",nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(name = "surname",nullable = false)
     private String surname;
-    @Column(nullable = false)
+    @Column(name = "position",nullable = false)
     private String position;
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private User user;
 

@@ -3,15 +3,12 @@ package loc.task.vo;
 import loc.task.entity.Task;
 import loc.task.entity.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class AccountSuperior extends Account {
-    private Map<Long, Task> reportTasks = new HashMap<>();
+    private List<Task> reportTasks = new ArrayList<>();
     private TaskOutFilter reportTaskFilter = new TaskOutFilter();
-    private ArrayList<User> employee = new ArrayList<>();
+    private List<User> employee = new ArrayList<>();
 
     public AccountSuperior() {
         super();
@@ -21,18 +18,18 @@ public class AccountSuperior extends Account {
         super(user);
     }
 
-    public AccountSuperior(User user, TaskOutFilter currentTasksFilter, Map<Long, Task> currentTasks,
-                           TaskOutFilter reportTaskFilter, Map<Long, Task> reportTasks) {
+    public AccountSuperior(User user, TaskOutFilter currentTasksFilter, List<Task> currentTasks,
+                           TaskOutFilter reportTaskFilter, List<Task> reportTasks) {
         super(user, currentTasksFilter, currentTasks);
         this.reportTaskFilter = reportTaskFilter;
         this.reportTasks = reportTasks;
     }
 
-    public Map<Long, Task> getReportTasks() {
+    public List<Task> getReportTasks() {
         return reportTasks;
     }
 
-    public void setReportTasks(TreeMap<Long, Task> reportTasks) {
+    public void setReportTasks(List<Task> reportTasks) {
         this.reportTasks = reportTasks;
     }
 
@@ -44,11 +41,11 @@ public class AccountSuperior extends Account {
         this.reportTaskFilter = reportTaskFilter;
     }
 
-    public ArrayList<User> getEmployee() {
+    public List<User> getEmployee() {
         return employee;
     }
 
-    public void setEmployee(ArrayList<User> employee) {
+    public void setEmployee(List<User> employee) {
         this.employee = employee;
     }
 }

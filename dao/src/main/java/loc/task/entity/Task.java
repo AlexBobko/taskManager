@@ -1,21 +1,26 @@
 package loc.task.entity;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OptimisticLockType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table//(name = "task")
-//@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="task")
-public class Task {
+@Entity //TODO ?? dynamicUpdate = false как работает если изменилось 2 поля? по каждой ячейке или без измененного поля
+@org.hibernate.annotations.Entity (dynamicUpdate = false, optimisticLock = OptimisticLockType.VERSION)
+@org.hibernate.annotations.Cache(usage= CacheConcurrencyStrategy.READ_WRITE, region="task")
+@Table(name = "task")
+public class Task implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
-    private long taskId;
+    private Long taskId;
 
     @Column (name = "status_id")
     private int statusId = 1;   // 7 с удалением
@@ -27,39 +32,63 @@ public class Task {
     @Column(name = "title")
     private String title;
 
-    @Temporal(TemporalType.TIMESTAMP )
+    @Version
+    @Column(name="optlock")
+    private Integer version = 1;
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+    public Integer getVersion() { return version; }
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deadline",length = 19)
     private Date deadline;
 
-    @Basic(fetch = FetchType.LAZY) //TODO при ленивой добавление в equals??
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_reporting",length = 19)
+    private Date dateReporting=null;
+
+
+    //    @Basic(fetch = FetchType.LAZY) //TODO ?? ругается на лези
     @Embedded
     private TaskContent content;
 
-
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY) //TODO ВКЛЮЧИТЬ ЛЕЗИ (админ проблемс ;))
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "user_task",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> personList = new HashSet<User>();
+    private Set<User> userList = new HashSet<User>();
 
 
     public Task() {
     }
 
-    public Task(int statusId, Date dateCreation, String title, Date deadline, TaskContent content, Set<User> personList) {
+    public Task(int statusId, Date dateCreation, String title, Date deadline, TaskContent content, Set<User> userSet) {
         this.statusId = statusId;
         this.dateCreation = dateCreation;
         this.title = title;
         this.deadline = deadline;
         this.content = content;
-        this.personList = personList;
+        this.userList = userSet;
     }
 
-    public long getTaskId() {
+
+
+    public Date getDateReporting() {
+        return dateReporting;
+    }
+    public void setDateReporting(Date dateReporting) {
+        this.dateReporting = dateReporting;
+    }
+
+
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(long taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
@@ -103,12 +132,12 @@ public class Task {
         this.content = content;
     }
 
-    public Set<User> getPersonList() {
-        return personList;
+    public Set<User> getUserList() {
+        return userList;
     }
 
-    public void setPersonList(Set<User> personList) {
-        this.personList = personList;
+    public void setUserList(Set<User> personList) {
+        this.userList = personList;
     }
 
     @Override
@@ -118,22 +147,27 @@ public class Task {
 
         Task task = (Task) o;
 
-        if (getTaskId() != task.getTaskId()) return false;
         if (getStatusId() != task.getStatusId()) return false;
+        if (!getTaskId().equals(task.getTaskId())) return false;
         if (!getDateCreation().equals(task.getDateCreation())) return false;
         if (!getTitle().equals(task.getTitle())) return false;
+        if (!getVersion().equals(task.getVersion())) return false;
         if (!getDeadline().equals(task.getDeadline())) return false;
+        if (getDateReporting() != null ? !getDateReporting().equals(task.getDateReporting()) : task.getDateReporting() != null)
+            return false;
         return getContent().equals(task.getContent());
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (getTaskId() ^ (getTaskId() >>> 32));
+        int result = getTaskId().hashCode();
         result = 31 * result + getStatusId();
         result = 31 * result + getDateCreation().hashCode();
         result = 31 * result + getTitle().hashCode();
+        result = 31 * result + getVersion().hashCode();
         result = 31 * result + getDeadline().hashCode();
+        result = 31 * result + (getDateReporting() != null ? getDateReporting().hashCode() : 0);
         result = 31 * result + getContent().hashCode();
         return result;
     }
