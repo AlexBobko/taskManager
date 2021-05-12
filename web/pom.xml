@@ -15,7 +15,7 @@
         <jstl.version>1.2</jstl.version>
         <war.plugin.version>3.0.0</war.plugin.version>
         <tomcat7.plugin.version>2.2</tomcat7.plugin.version>
-        <spring.security.version>4.0.3.RELEASE</spring.security.version>
+        <spring.security.version>5.2.10.RELEASE</spring.security.version>
     </properties>
 
     <dependencies>
